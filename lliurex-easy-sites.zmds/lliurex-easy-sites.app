@@ -10,6 +10,6 @@ Icon=lliurex-easy-sites
 Category=Configuration
 Groups=admins;teachers;admin;adm
 ScriptPath=lliurex-easy-sites.zmd
-Using=pe
+Using=pkexec
 Service=False
 Depends=zero-server-wizard
