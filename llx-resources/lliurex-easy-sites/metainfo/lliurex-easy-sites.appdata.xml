@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='utf-8'?>
+<component type="desktop-application">
+<id>lliurex-easy-sites</id>
+<metadata_license>CC0-1.0</metadata_license>
+<name>lliurex-easy-sites</name>
+<name xml:lang="es">Creación de lugares Web</name>
+<name xml:lang="ca_ES.UTF-8@valencia">Creació de llocs Web</name>
+<name xml:lang="ca_ES@valencia">Creació de llocs Web</name>
+<name xml:lang="ca_ES">Creació de llocs Web</name>
+<summary>Creación de lugares Web</summary>
+<summary xml:lang="es">Creación de los sitios web de la pagina del servidor</summary>
+<summary xml:lang="ca_ES.UTF-8@valencia">Creació del llocs web a la pàgina del servidor</summary>
+<summary xml:lang="ca_ES@valencia">Creació del llocs web a la pàgina del servidor</summary>
+<summary xml:lang="ca_ES">Creació del llocs web a la pàgina del servidor</summary>
+<description>
+<p>Creación de lugares Web</p>
+<p xml:lang="es">Creación de los sitios web de la pagina del servidor. Los lugares web nos permiten compartir recursos con el alumnado y/o con otros profesores o profesoras. Por ejemplo, si queremos compartir los contenidos de un CD, se puede crear un sitio virtual donde volcaremos esos contenidos para que el alumnado pueda acceder a ellos. Al igual que con otras aplicaciones, LliureX incorpora una herramienta gráfica que simplifica, al máximo, esta labor: LliureX Easy sites.</p>
+<p xml:lang="ca_ES.UTF-8@valencia">Creació del llocs web a la pàgina del servidor. Els llocs web ens permeten compartir recursos amb l'alumnat i/o amb altres professors i professores. Per exemple, si volem compartir els continguts d'un CD, es pot crear un lloc virtual on penjarem aqueixos continguts perquè l'alumnat hi puga accedir. Igual que amb altres aplicacions, LliureX incorpora una eina gràfica que simplifica al màxim aquesta tasca: el LliureX Easy sites.</p>
+<p xml:lang="ca_ES@valencia">Creació del llocs web a la pàgina del servidor. Els llocs web ens permeten compartir recursos amb l'alumnat i/o amb altres professors i professores. Per exemple, si volem compartir els continguts d'un CD, es pot crear un lloc virtual on penjarem aqueixos continguts perquè l'alumnat hi puga accedir. Igual que amb altres aplicacions, LliureX incorpora una eina gràfica que simplifica al màxim aquesta tasca: el LliureX Easy sites.</p>
+<p xml:lang="ca_ES">Creació del llocs web a la pàgina del servidor. Els llocs web ens permeten compartir recursos amb l'alumnat i/o amb altres professors i professores. Per exemple, si volem compartir els continguts d'un CD, es pot crear un lloc virtual on penjarem aqueixos continguts perquè l'alumnat hi puga accedir. Igual que amb altres aplicacions, LliureX incorpora una eina gràfica que simplifica al màxim aquesta tasca: el LliureX Easy sites.</p>
+</description>
+<categories>
+<category>Network</category>
+</categories>
+<icon type="stock">lliurex-easy-sites</icon>
+<provides><binary>pe</binary></provides>
+<keywords>
+<keyword>lliurex-easy-sites</keyword>
+<keyword>Creación</keyword>
+<keyword>lugares</keyword>
+<keyword>Web</keyword>
+<keyword>Creació</keyword>
+<keyword>llocs</keyword>
+
+</keywords>
+<developer_name> </developer_name>
+</component>

@@ -1,0 +1,141 @@
+#!/bin/bash
+#
+# This script is licensed under GPL v3 or higher
+#
+# Author : Angel Berlanas Vicente
+# 	   <angel.berlanas@gmail.com>
+#
+
+#
+# SOME VALUES
+SITES_CONF_DIR="/var/www/srv/"
+NET_SERVER_SYNC="/net/server-sync/easy-sites/"
+TEMPLATE_PATH="/usr/share/lliurex-easy-sites/custom.json"
+
+#
+# Show the list of the easy-sites
+show_list()
+{
+	# List the directory files with a easy-sites pattern
+	find "$SITES_CONF_DIR" -maxdepth 1 -xtype d   -name "*easy*" -printf "%f\n" | sed -e "s%easy-%%g";
+}
+
+#
+# Copy files with the DISPLAY environment
+copy_files()
+{
+	orig_dir="${1}"
+	dest_dir="${2}"
+	if [ -n "${DISPLAY}" ]; then
+		cp -r "${orig_dir}"/* "${dest_dir}/"
+	else
+		gcp -r "${orig_dir}/*" "${dest_dir}/"
+	fi
+}
+
+#
+# Create and populate the dir under /net/server-sync
+replicate_dir()
+{
+	dest_dir="${2}"
+	dest_dir="${NET_SERVER_SYNC}/${dest_dir}"
+	orig_dir="${1}"
+	# Create dir
+	[ -d ${dest_dir} ] || mkdir -p ${dest_dir}
+	copy_files "${orig_dir}" "${dest_dir}"
+}
+
+#
+# Create the site
+create_site()
+{
+	# Create the site file
+	SITE_NAME="$1"
+	NAME=easy-"$1"
+	DIR="$2"
+	FINAL_DIR="${NET_SERVER_SYNC}/${NAME}"
+	DESCR="$3"
+	
+	# Replicate directory
+	echo " [ LliureX Easy Sites ] : Replicate dir : ${DIR} at ${NAME}"
+	replicate_dir "$DIR" "$NAME"
+
+	# Create the link
+	echo " [ LliureX Easy Sites ] : linking ${NET_SERVER_SYNC}/${NAME} -> ${SITES_CONF_DIR}${NAME}"
+	ln -s ${NET_SERVER_SYNC}/${NAME} ${SITES_CONF_DIR}${NAME}
+	
+	#  Prepare Json 
+	if [ -z $DESCR ] ; then
+		DESCR="Lloc web"
+	fi
+	cp ${TEMPLATE_PATH} ${SITES_CONF_DIR}links/$NAME.json
+	sed -i "s%DESCR%$DESCR%g" ${SITES_CONF_DIR}links/$NAME.json
+	sed -i "s%NAME%$SITE_NAME%g" ${SITES_CONF_DIR}links/$NAME.json
+}
+
+
+#
+# Remove the site
+remove_site()
+{
+	# Remove the site file 
+	# Closing bug 1 - > easy- must be append to all the names
+	NAME=easy-"$1"
+	
+	# Remove the link
+	echo " [ LliureX Easy Sites ] : Removing the link at /var/www/srv/${NAME}"
+	[ -f /var/www/srv/${NAME} ] || rm -f /var/www/srv/${NAME}
+
+	# Remove the folder under /net/server-sync
+	echo " [ LliureX Easy Sites ] : Removing the folder at ${NET_SERVER_SYNC}/${NAME}"
+	rm -rf ${NET_SERVER_SYNC}/${NAME}
+	
+	# Remove the json
+	echo " [ LliureX Easy Sites ] : Removing the .json file at /var/www/srv/links/${NAME}.json"
+	[ ! -f /var/www/srv/links/${NAME}.json ] || rm -f /var/www/srv/links/${NAME}.json
+	
+	
+}
+
+
+#
+# Show the USAGE
+show_usage()
+{
+	# Show the USAGE
+	echo "USAGE: 	lliurex-easy-sites-cli [OPTIONS]"
+	echo ""
+	echo "		list						- show the sites"
+	echo "		create NAME PATH DESCRIPTION			- create the site"
+	echo "		remove NAME					- delete the site" 	
+	exit 0
+}
+
+
+ACTION="$1"
+
+case "$ACTION" in
+	list)
+		show_list
+	;;
+	remove)
+		shift
+		SITE="$1"
+		remove_site "$SITE"
+	;;
+	create)
+		shift
+		NAME="$1"
+		shift
+		CUSTOM_PATH="$1"
+		shift 
+		DESCR="$1"
+		FULL_PATH="$(readlink -f $CUSTOM_PATH)"
+		create_site "$NAME" "$FULL_PATH" "$DESCR"
+	;;
+	*)
+		show_usage
+	;;
+esac 
+
+exit 0

@@ -1,0 +1,9 @@
+{
+        "06_easysites":{
+                        "path" : "/net/server-sync/easy-sites",
+                        "perm" : 2775 ,
+                        "owner" : "nobody",
+                        "group" : "nogroup",
+                        "acl" : [["-d -m","g:www-data:r-x"],["-d -m","g:10003:rwx"],["-d -m","g:10001:rwx"],["-d -m","g:10004:---"],["-d -m","u::rwx"],["-d -m","o::---"],["-d -m","m::rwx"],["-m","g:10003:rwx"],["-m","g:10001:rwx"],["-m","g:10004:---"],["-m","g:www-data:r-x"]]
+                        }
+}

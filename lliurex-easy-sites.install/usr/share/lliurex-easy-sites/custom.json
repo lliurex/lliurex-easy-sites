@@ -1,0 +1,16 @@
+{
+    "linkid":"NAME",
+    "link":"http://server/srv/easy-NAME",
+    "icon":"",
+    "fonticon":"icon-star",
+    "name": {
+        "default":"NAME",
+        "valencia":"NAME",
+        "es":"NAME"
+    },
+    "description": {
+        "default":"DESCR",
+        "valencia":"DESCR",
+        "es":"DESCR"
+    }
+}

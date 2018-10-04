@@ -1,0 +1,53 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-04-27 15:40+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites.glade:8
+msgid "LliureX Easy Sites"
+msgstr ""
+
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites.glade:48
+msgid ""
+"Welcome to LliureX Easy Sites, a simple tool to create and delete resources "
+"available at server main page."
+msgstr ""
+
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites.glade:103
+msgid "Add a new site"
+msgstr ""
+
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites.glade:126
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites.glade:127
+msgid "Add new site"
+msgstr ""
+
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites.glade:150
+msgid "List of available sites currently"
+msgstr ""
+
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites-gatherer.glade:42
+msgid "Title"
+msgstr ""
+
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites-gatherer.glade:83
+msgid "Directory"
+msgstr ""
+
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites-gatherer.glade:169
+msgid "<b>Creating a new site</b> "
+msgstr ""

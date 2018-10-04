@@ -1,0 +1,55 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: lliurex-easy-sites\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-04-27 15:40+0200\n"
+"PO-Revision-Date: 2015-04-01 21:23+0200\n"
+"Last-Translator: Angel Berlanas Vicente <angel.berlanas@gmail.com>\n"
+"Language-Team: Spanish <lliurex@lliurex.net>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites.glade:8
+msgid "LliureX Easy Sites"
+msgstr "Sitios fáciles de LliureX"
+
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites.glade:48
+msgid ""
+"Welcome to LliureX Easy Sites, a simple tool to create and delete resources "
+"available at server main page."
+msgstr ""
+"Os damos la bienvenida al creador de sitios fáciles de LliureX, una sencilla herramienta"
+"para añadir recursos y carpetas a la página web del servidor"
+
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites.glade:103
+msgid "Add a new site"
+msgstr "Añadir un sitio nuevo"
+
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites.glade:126
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites.glade:127
+msgid "Add new site"
+msgstr "Añadir un sitio nuevo"
+
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites.glade:150
+msgid "List of available sites currently"
+msgstr "Lista de los sitios disponibles actualmente"
+
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites-gatherer.glade:42
+msgid "Title"
+msgstr "Título"
+
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites-gatherer.glade:83
+msgid "Directory"
+msgstr "Carpeta"
+
+#: ../lliurex-easy-sites.install/usr/share/lliurex-easy-sites/rsrc/lliurex-easy-sites-gatherer.glade:169
+msgid "<b>Creating a new site</b> "
+msgstr "<b>Creando un nuevo sitio</b> "
