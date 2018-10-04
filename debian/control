@@ -1,0 +1,15 @@
+Source: lliurex-easy-sites
+Section: utils
+Priority: optional
+Maintainer: Equipo LliureX <lliurex@gva.es>
+Uploaders: Angel Berlanas Vicente <lliurex_devel2@edu.gva.es>, Raul Rodrigo Segura <lliurex_devel3@edu.gva.es>, Alfons Lloret Sananton <lliurex_devel5@edu.gva.es>, Enrique Medina Gremaldos <lliurex_devel4@edu.gva.es>, David Montalva Furio <dmontalf@gmail.com>, Héctor García Huerta <lliurex_devel1@edu.gva.es>, Jose Carlos Garcia Monsalvez <garcia_josmon@gva.es>, Jaime Munyoz Fayos <munyoz_jaifay@gva.es>, Miguel Garcia Gomez <garcia_miggom@gva.es>, José Alfredo Múrcia Andrés <joamuran@gmail.com>
+Build-Depends: llxsrchelper,debhelper (>= 7.0), cdbs, llxcfg-dev (>=1:0.40), zero-dev, librsvg2-bin
+Standards-Version: 3.9.3
+
+Package: lliurex-easy-sites
+Architecture: all
+PreDepends: n4d-server-plugins, gcp, llxcfg-runtime
+Depends: ${misc:Depends}
+Description: Contains lliurex-easy-sites
+ This package contains the : lliurex-easy-sites 
+ resources.
