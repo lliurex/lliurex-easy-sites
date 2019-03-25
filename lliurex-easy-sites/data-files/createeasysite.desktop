@@ -1,0 +1,18 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KonqPopupMenu/Plugin
+MimeType=inode/directory;
+Actions=createEasySite;
+X-KDE-AuthorizeAction=shell_access
+
+[Desktop Action createEasySite]
+TryExec=konsole
+Exec=/home/lliurex/Desarrollo/lliurex-easy-sites/lliurex-easysites-gui/python3-lliurex-easysites-gui/easy-sites %f
+Icon=utilities-terminal
+
+Name=Create Easy Site
+Name[ca@valencia]=Crea un site­
+Name[es]=Crea un site
+Comment[ca@valencia]=Crea un site
+Comment[es]=Crea un site
+

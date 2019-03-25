@@ -1,0 +1,14 @@
+Name=lliurex-easy-sites
+Name[es]=Creación de lugares Web
+Name[qcv]=Creació de llocs Web
+Name[ca_ES]=Creació de llocs Web
+Comment=Creación de lugares Web
+Comment[es]=Creación de los sitios web de la pagina del servidor
+Comment[qcv]=Creació del llocs web a la pàgina del servidor
+Comment[ca_ES]=Creació del llocs web a la pàgina del servidor
+Icon=lliurex-easy-sites
+Category=Configuration
+Groups=admins;teachers;admin;sudo
+ScriptPath=lliurex-easy-sites.zmd
+Service=False
+Depends=zero-server-wizard
