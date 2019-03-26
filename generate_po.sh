@@ -1,8 +1,8 @@
 #!/bin/bash
 
-xgettext --join-existing ./lliurex-easy-sites/python3-lliurex-easy-sites/MainWindow.py -o ./translations/lliurex-easy-sites.pot
-xgettext --join-existing ./lliurex-easy-sites/python3-lliurex-easy-sites/SiteBox.py -o ./translations/lliurex-easy-sites.pot
-xgettext --join-existing ./lliurex-easy-sites/python3-lliurex-easy-sites/EditBox.py -o ./translations/lliurex-easy-sites.pot
-xgettext --join-existing ./lliurex-easy-sites/python3-lliurex-easy-sites/rsrc/easy-sites.ui -o ./translations/lliurex-easy-sites.pot
+xgettext --join-existing ./lliurex-easy-sites/python3-easysites/MainWindow.py -o ./translations/lliurex-easy-sites.pot
+xgettext --join-existing ./lliurex-easy-sites/python3-easysites/SiteBox.py -o ./translations/lliurex-easy-sites.pot
+xgettext --join-existing ./lliurex-easy-sites/python3-easysites/EditBox.py -o ./translations/lliurex-easy-sites.pot
+xgettext --join-existing ./lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui -o ./translations/lliurex-easy-sites.pot
 
 

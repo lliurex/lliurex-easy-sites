@@ -14,7 +14,8 @@ class EasySitesManager(object):
 	def __init__(self):
 
 		self.config_dir=os.path.expanduser("/etc/easysites/")
-		self.tpl_env = Environment(loader=FileSystemLoader('/usr/share/lliurex-easy-sites/templates'))
+		self.images_folder="/usr/local/share/easySites/images"
+		self.tpl_env = Environment(loader=FileSystemLoader('/home/lliurex/Escritorio/easy-sites/plantillas'))
 		self.net_folder="/net/server-sync/easy-sites"
 		self.var_folder="/var/www/srv"
 		self.links_path=os.path.join(self.var_folder,"links")
