@@ -134,6 +134,7 @@ class EditBox(Gtk.VBox):
 
 		
 		self.site_name_entry.connect("changed",self.detect_changes)
+		self.site_visible_checkbt.connect("toggled",self.change_checkbt_tooltip,"1")
 		self.stock_rb.connect("toggled",self.image_toggled_button,"stock")
 		self.custom_rb.connect("toggled",self.image_toggled_button,"custom")
 		self.image_fc.connect("file-set",self.check_mimetype_image)
@@ -633,6 +634,16 @@ class EditBox(Gtk.VBox):
 		return color
 
 	#def get_color_rgba	
+
+	def change_checkbt_tooltip(self,button,name):
+
+		if self.site_visible_checkbt.get_active():
+			self.site_visible_checkbt.set_tooltip_text(_("Click to hide the site in the server main page"))
+		else:
+			self.site_visible_checkbt.set_tooltip_text(_("Click to show the site in the server main page"))
+
+	#def change_checkbt_tooltip		
+
 #class EditBox
 
 from . import Core

@@ -11,11 +11,8 @@ import os
 import subprocess
 import json
 import sys
-import syslog
 import time
 import threading
-import tempfile
-from shutil import copyfile
 
 import signal
 signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -352,7 +349,7 @@ class MainWindow:
 		elif code==19:
 			msg_text=_("Unabled to change the visibility of the site")	
 		elif code==20:
-			msg_text=_("Unabled to copy the image for the folder")
+			msg_text=_("Unabled to copy the image for the site")
 		elif code==21:
 			msg_text=_("Error reading configuration files of the sites")
 		elif code==22:
