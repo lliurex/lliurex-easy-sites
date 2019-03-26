@@ -3,13 +3,24 @@ Section: utils
 Priority: optional
 Maintainer: Equipo LliureX <lliurex@gva.es>
 Uploaders: Equipo LliureX <lliurex@gva.es>
-Build-Depends: llxsrchelper,debhelper (>= 10), cdbs, python3-poinstaller,zero-dev
+Build-Depends: llxsrchelper,debhelper (>= 10),dh-python, python3-poinstaller,python3-setuptools,python3-all,zero-dev
 Standards-Version: 4.1.2
 
 Package: lliurex-easy-sites
 Architecture: all
-PreDepends: n4d-server-plugins, gcp
-Depends: ${misc:Depends}
+Depends: n4d,n4d-lliurex-base,python3-jinja2
+Recommends:lliurex-easysites-zerocenter-files(=${binary:Version})
 Description: Contains lliurex-easy-sites
- This package contains the : lliurex-easy-sites 
- resources.
+ This package contains the : lliurex-easy-sites gui
+
+Package: n4d-easysites
+Architecture: all
+Depends: ${misc:Depends}, ${python3:Depends},n4d, n4d-server-plugins
+Description: Easy Sites plugin
+  Plugins supporting easy sites functionality
+
+Package: lliurex-easysites-zerocenter-files
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, zero-center
+Description: Files to zero-center 
+ Provides files to zero-center: app, zmd and banner files
