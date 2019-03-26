@@ -1,0 +1,21 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KonqPopupMenu/Plugin
+MimeType=inode/directory;
+Actions=createEasySite;
+X-KDE-AuthorizeAction=shell_access
+
+[Desktop Action createEasySite]
+TryExec=konsole
+Exec=/usr/sbin/lliurex-easy-sites %f
+Icon=utilities-terminal
+
+Name=Create Easy Site
+Name[ca_ES@valencia]=Crea un lloc web en el servidor
+Name[ca_ES.UTF-8@valencia]=Crea un lloc web en el servidor
+Name[es]=Crear un sitio web en el servidor
+Comment[ca_ES@valencia]=Crea un lloc web en el servidor
+Comment[ca_ES.UTF-8@valencia]=Crea un lloc web en el servidor
+Comment[es]=Crea un sitio web en el servidor
+
+

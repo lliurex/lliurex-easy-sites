@@ -1,0 +1,16 @@
+{
+    "linkid":"{{ ID }}",
+    "link":"http://server/srv/easy-{{ ID }}",
+    "icon":"{{ ICON }}"
+    "fonticon":"",
+    "name": {
+        "default":"{{ NAME }}",
+        "valencia":"{{ NAME }}",
+        "es":"{{ NAME }}"
+    },
+    "description": {
+        "default":"{{ DESCR}}" ,
+        "valencia":"{{ DESCR }}",
+        "es":"{{ DESCR}}"
+    }
+}

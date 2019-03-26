@@ -1,5 +1,0 @@
-#!/bin/bash
-exec /usr/sbin/lliurex-easy-sites $@
-exit 0
-
-
