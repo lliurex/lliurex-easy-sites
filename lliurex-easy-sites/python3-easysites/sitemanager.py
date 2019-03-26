@@ -10,7 +10,6 @@ import datetime
 from mimetypes import MimeTypes
 import xmlrpc.client as n4dclient
 import ssl
-import tempfile
 import shutil
 import glob
 import unicodedata
@@ -35,6 +34,7 @@ class SiteManager(object):
 		self.validation=None
 		self.net_folder="/net/server-sync/easy-sites"
 		self.image_dir=os.path.expanduser("~/.cache/")+"easy-sites"
+
 
 		if server!=None:
 			self.set_server(server)
@@ -296,3 +296,5 @@ class SiteManager(object):
 
 
 	#def copy_image_file	
+
+#class SiteManager

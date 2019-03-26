@@ -371,7 +371,7 @@ class EasySitesManager(object):
 			site_info["NAME"]=info["name"]
 			site_info["DESCR"]=info["description"]
 				
-			template= self.tpl_env.get_template("custom")
+			template= self.tpl_env.get_template("custom.json")
 			string_template = template.render(site_info).encode('UTF-8')
 				
 			if type(string_template) is not str:
