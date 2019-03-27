@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-26 16:40+0100\n"
-"PO-Revision-Date: 2019-03-26 16:43+0100\n"
+"PO-Revision-Date: 2019-03-27 08:10+0100\n"
 "Last-Translator: lliurex <lliurex@gva.es>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -177,7 +177,7 @@ msgstr "Haga clic para ocultar el sitio en la página principal del servidor"
 #: lliurex-easy-sites/python3-easysites/SiteBox.py:354
 #: lliurex-easy-sites/python3-easysites/EditBox.py:643
 msgid "Click to show the site in the server main page"
-msgstr "Haga clic pra mostar el sitio en lapágina principal del servidor"
+msgstr "Haga clic para mostrar el sitio en la página principal del servidor"
 
 #: lliurex-easy-sites/python3-easysites/SiteBox.py:376
 msgid "Please choose a folder to sync content"
