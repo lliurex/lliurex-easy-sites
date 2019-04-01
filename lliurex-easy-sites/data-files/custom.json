@@ -1,7 +1,7 @@
 {
     "linkid":"{{ ID }}",
     "link":"http://server/srv/easy-{{ ID }}",
-    "icon":"{{ ICON }}"
+    "icon":"{{ ICON }}",
     "fonticon":"",
     "name": {
         "default":"{{ NAME }}",
