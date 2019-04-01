@@ -25,6 +25,13 @@
 
 	}
 
+	#SITE_AUTHOR{
+		color: #000000;
+		font: 10pt Roboto Bold;
+
+
+	}
+
 
 	#HEADER-LABEL
 	{
@@ -32,6 +39,7 @@
 	font: 11pt Quattrocento Sans Bold;
 	font-weight: bold;
 	}	
+
 
 	#SEPARATOR{
 		
