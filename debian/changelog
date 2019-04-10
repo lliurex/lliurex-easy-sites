@@ -1,3 +1,9 @@
+lliurex-easy-sites (15.05.28) bionic; urgency=medium
+
+  * Improved error management
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 10 Apr 2019 17:03:33 +0200
+
 lliurex-easy-sites (15.05.27) bionic; urgency=medium
 
   * Added valencian translations
