@@ -118,7 +118,7 @@ class SiteManager(object):
 						if result['status']:
 							if copy_image!="":
 								self.copy_image_file(info["id"],copy_image)
-							result=self.n4d.write_conf(self.validation,'EasySitesManager',info)
+							#self.n4d.write_conf(self.validation,'EasySitesManager',info)
 						else:
 							self.n4d.delete_site(self.validation,'EasySitesManager',info["id"])	
 
@@ -140,7 +140,7 @@ class SiteManager(object):
 							if copy_image!="":
 								self.copy_image_file(info["id"],copy_image)
 
-							result=self.n4d.write_conf(self.validation,'EasySitesManager',info)		
+							#self.n4d.write_conf(self.validation,'EasySitesManager',info)		
 					
 					self.remove_tmp_files(pixbuf_path)
 					self._debug("Edit new site: ",result)
@@ -155,10 +155,11 @@ class SiteManager(object):
 			info=args[1]
 			visible=args[2]
 			result=self.n4d.change_site_visibility(self.validation,'EasySitesManager',info,visible)
+			'''
 			if result['status']:
 				info["visible"]=visible
-				result=self.n4d.write_conf(self.validation,'EasySitesManager',info)
-
+				self.n4d.write_conf(self.validation,'EasySitesManager',info)
+			'''
 			self._debug("Change visibility: ",result)
 
 		elif action=="sync":
@@ -170,7 +171,9 @@ class SiteManager(object):
 				info["sync_folder"]=sync_from
 				info["updated_by"]=args[3]
 				info["last_updated"]=args[4]
-				result=self.n4d.write_conf(self.validation,'EasySitesManager',info)
+				result_write=self.n4d.write_conf(self.validation,'EasySitesManager',info)
+				if not result_write['status']:
+					result=result_write
 			self._debug("Sync new content: ",result)
 		
 		return result	
@@ -279,7 +282,14 @@ class SiteManager(object):
 		dest_site_path=os.path.join(self.net_folder,dest_site)
 		sync_content=self.n4d_local.send_dir("","ScpManager",self.validation[0],self.validation[1],"server",sync_from,dest_site_path,True)
 		
-		return sync_content		
+		if not sync_content['status']:
+			result={}
+			result['status']=sync_content['status']
+			result['msg']=sync_content['msg']
+			result['code']=13
+			return result
+		else:
+			return sync_content		
 
 	#def sync_content
 
