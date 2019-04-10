@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-01 14:23+0200\n"
+"POT-Creation-Date: 2019-04-10 16:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,121 +22,128 @@ msgid "Validating user..."
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/MainWindow.py:200
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:231
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:232
 msgid "Invalid user"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:314
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:316
 msgid "You must indicate a name for the site"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:316
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:318
 msgid "The name site is duplicate"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:318
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:320
 msgid "Image file is not correct"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:320
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:322
 msgid "You must indicate a image file"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:322
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:324
 msgid "You must indicate a folder to sync content"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:324
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:326
 msgid "Site is now visible again"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:326
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:328
 msgid "Site has been hideen"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:328
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:330
 msgid "The content has been synchronized successfully"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:330
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:332
 msgid "Site has been successfully deleted"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:332
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:334
 msgid "Site has been successfully edited"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:334
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:336
 msgid "Site has been successfully created"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:336
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:338
 msgid "Unable to delete the site"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:338
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:340
 msgid "Unable to sync the content"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:340
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:342
 msgid "Unable to rename the site. Old site not exists"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:342
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:344
 msgid "Unable to rename the site due to problems in process"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:344
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:346
 msgid "Unable to create the link template for the site"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:346
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:348
 msgid "Unable to create the icon for the site"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:348
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:350
 msgid "Unable to create the symbolic link for the site"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:350
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:352
 msgid "Unabled to change the visibility of the site"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:352
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:354
 msgid "Unabled to copy the image for the site"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:354
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:358
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:356
 msgid "Error reading configuration files of the sites"
 msgstr ""
 
-#: lliurex-easy-sites/python3-easysites/MainWindow.py:356
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:358
 msgid "Sync the content. Wait a moment..."
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/MainWindow.py:360
-msgid "Validating the data entered..."
+msgid "Error writing changes in the site configuration file"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/MainWindow.py:362
-msgid "Deleting site. Wait a moment..."
+msgid "Validating the data entered..."
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/MainWindow.py:364
-msgid "Executing actions to show the site. Wait a moment..."
+msgid "Deleting site. Wait a moment..."
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/MainWindow.py:366
-msgid "Executin actions to hide the site. Wait a moment ..."
+msgid "Executing actions to show the site. Wait a moment..."
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/MainWindow.py:368
-msgid "Applying changes in the image. Wait a moment..."
+msgid "Executin actions to hide the site. Wait a moment ..."
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/MainWindow.py:370
+msgid "Applying changes in the image. Wait a moment..."
+msgstr ""
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:372
 msgid "Saving changes. Wait a moment..."
+msgstr ""
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:374
+msgid "Unabled to edit the site"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/SiteBox.py:156
@@ -174,14 +181,14 @@ msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/SiteBox.py:294
 #: lliurex-easy-sites/python3-easysites/SiteBox.py:368
-#: lliurex-easy-sites/python3-easysites/EditBox.py:641
+#: lliurex-easy-sites/python3-easysites/EditBox.py:642
 #: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:476
 msgid "Click to hide the site in the server main page"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/SiteBox.py:297
 #: lliurex-easy-sites/python3-easysites/SiteBox.py:371
-#: lliurex-easy-sites/python3-easysites/EditBox.py:643
+#: lliurex-easy-sites/python3-easysites/EditBox.py:644
 msgid "Click to show the site in the server main page"
 msgstr ""
 

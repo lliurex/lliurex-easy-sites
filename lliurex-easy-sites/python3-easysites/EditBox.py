@@ -477,6 +477,7 @@ class EditBox(Gtk.VBox):
 		if check !=None:
 			msg=self.core.mainWindow.get_msg(check["code"])
 			self.image_popover_msg.set_text(msg)
+			self.image_popover_msg.set_name("MSG_ERROR_LABEL")
 			self.image_popover_apply_bt.set_sensitive(False)
 		else:
 			self.image_popover_msg.set_text("")

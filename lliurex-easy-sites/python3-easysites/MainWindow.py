@@ -211,20 +211,21 @@ class MainWindow:
 				self.load_info()
 				#self.core.sitesmanager.cached_images()
 				self.core.siteBox.draw_site(False)
-				
-				if self.right_folder !=None:
-					if os.path.isdir(self.right_folder):
-						self.stack_opt.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
-						self.msg_label.set_text("")
-						self.core.editBox.init_form()
-						self.core.editBox.render_form()
-						self.core.editBox.sync_folder_dc.set_filename(self.right_folder)
-						self.stack_window.set_visible_child_name("editBox")
-					else:	
-						self.stack_opt.set_visible_child_name("siteBox")
+				if self.read_conf['status']:
+						if self.right_folder !=None:
+							if os.path.isdir(self.right_folder):
+								self.stack_opt.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+								self.msg_label.set_text("")
+								self.core.editBox.init_form()
+								self.core.editBox.render_form()
+								self.core.editBox.sync_folder_dc.set_filename(self.right_folder)
+								self.stack_window.set_visible_child_name("editBox")
+							else:	
+								self.stack_opt.set_visible_child_name("siteBox")
+						else:
+							self.stack_opt.set_visible_child_name("siteBox")
 				else:
-
-					self.stack_opt.set_visible_child_name("siteBox")
+					self.stack_opt.set_visible_child_name("siteBox")			
 		
 					
 			else:
@@ -251,6 +252,7 @@ class MainWindow:
 		self.read_conf=self.core.sitesmanager.read_conf()
 		self.sites_info=self.core.sitesmanager.sites_config.copy()
 		if not self.read_conf['status']:
+			self.add_button.set_sensitive(False)
 			self.manage_message(True,self.read_conf['code'])
 
 	#def load_info	
@@ -355,7 +357,7 @@ class MainWindow:
 		elif code==22:
 			msg_text=_("Sync the content. Wait a moment...")
 		elif code==23:
-			msg_text=_("Error reading configuration files of the sites")
+			msg_text=_("Error writing changes in the site configuration file")
 		elif code==24:
 			msg_text=_("Validating the data entered...")
 		elif code==25:
@@ -368,6 +370,9 @@ class MainWindow:
 			msg_text=_("Applying changes in the image. Wait a moment...")	
 		elif code==29:
 			msg_text=_("Saving changes. Wait a moment...")	
+		elif code==30:
+			msg_text=_("Unabled to edit the site")	
+			
 		return msg_text
 
 	#def get_msg	

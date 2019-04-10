@@ -108,16 +108,19 @@ class EasySitesManager(object):
 		new_file="easy-"+info["id"]+".json"		
 		new_path=os.path.join(self.config_dir,new_file)	
 		try:
+			
 			with codecs.open(new_path,'w',encoding="utf-8") as f:
 				json.dump(info,f,ensure_ascii=False)
 				f.close()
 				status=True
 				msg="Site config saved successfully"
+				code=""
 		except Exception as e:
 			status=False
 			msg="Unabled to saved site config: "+str(e)
+			code=23
 
-		return {"status":status,"msg":msg}			
+		return {"status":status,"msg":msg,"code":code}			
 
 	#def _write_conf	
 
@@ -157,7 +160,8 @@ class EasySitesManager(object):
 						if not info["visible"]:
 							result_visible=self._hide_show_site(info["id"],False)
 							if not result_visible['status']:
-								return result_visible
+								error=True
+								result=result_visible
 							
 					else:
 						error=True
@@ -174,7 +178,13 @@ class EasySitesManager(object):
 
 		if error:
 			self.delete_site(info["id"])
-		
+		else:
+			result_write=self.write_conf(info)
+			if result_write['status']:
+				return result
+			else:
+				self.delete_site(info["id"])
+				result=result_write
 		return result
 			
 	
@@ -186,39 +196,72 @@ class EasySitesManager(object):
 		'''
 		Result code:
 		-10: Site edit successfully
+		-30: Unable to edit the site
 
 		'''
 
 		actions_todo=self.get_actions_todo(info,origId)
 		rename=False
 		result_backup=self._make_tmp_site_backup(origId)
-
+		error=False
+		icon_changed=False
+		link_changed=False
+		visible_changed=False
+		
 		if result_backup['status']:
 			if "rename" in actions_todo:
-				rename=True
-			
 				result_rename=self._rename_site(info,pixbuf_path,origId)
 				if not result_rename["status"]:
-					return result_rename
+					error=True
+					result=result_rename 
+				else:
+					rename=True
 
 			if not rename:
 				if "icon" in actions_todo:
 					result_icon=self._create_site_icon(info["id"],pixbuf_path,origId)	
 					if not result_icon['status']:
-						return result_icon
-
-				if "link" in actions_todo:
-					result_link=self._create_link_template(info,origId)	
-					if not result_link['status']:
-						return result_link
-				
-			if "visible" in actions_todo:
-				result_visible=self._hide_show_site(info["id"],info["visible"])
-				if not result_visible['status']:
-					return result_visible
-		
-			result={"status":True,"msg":"","code":10,"data":""}			
-		return result
+						error=True
+						result=result_icon
+					else:
+						icon_changed=True
+				if not error:		
+					if "link" in actions_todo:
+						result_link=self._create_link_template(info,origId)	
+						if not result_link['status']:
+							self._undo_edit_changes(origId,info,rename,icon_changed,link_changed)
+							error=True
+							result=result_link
+						else:
+							link_changed=True
+			if not error:	
+				if "visible" in actions_todo:
+					result_visible=self._hide_show_site(info["id"],info["visible"])
+					if not result_visible['status']:
+						self._undo_edit_changes(origId,info,rename,icon_changed,link_changed)
+						error=True
+						result=result_visible
+					else:
+						visible_changed=True
+			
+			if error:
+				return result
+			else:
+				result_write=self.write_conf(info)
+				if result_write['status']:
+					result={"status":True,"msg":"","code":10,"data":""}	
+				else:
+					self._undo_edit_changes(origId,info,rename,icon_changed,link_changed)
+					if visible_changed:
+						if info["visible"]:
+							self._hide_show_site(info["id"],False)
+						else:
+							self._hide_show_site(info["id"],True)	
+					result=result_write
+				return result
+		else:
+			result={"status":False,"msg":"","code":30,"data":""}				
+			return result
 
 	#def edit_site		
 
@@ -268,6 +311,15 @@ class EasySitesManager(object):
 
 
 		result=self._hide_show_site(info["id"],visible)
+		if result['status']:
+			info['visible']=visible
+			result_write=self.write_conf(info)
+			if not result_write['status']:
+				if visible:
+					self._hide_show_site(info["id"],False)
+				else:
+					self._hide_show_site(info["id"],True)	
+				result=result_write
 
 		return result
 
@@ -502,10 +554,8 @@ class EasySitesManager(object):
 				os.mkdir(self.backup_path_config)
 
 			if os.path.exists(os.path.join(self.links_path,"easy-"+origId+".json")):
-				print("existe link")
 				shutil.copy2(os.path.join(self.links_path,"easy-"+origId+".json"),os.path.join(self.backup_path,"easy-"+origId+".json"))
 			if os.path.exists(os.path.join(self.icons_path,"easy-"+origId+".png")):		
-				print("existe icon")
 				shutil.copy2(os.path.join(self.icons_path,"easy-"+origId+".png"),os.path.join(self.backup_path,"easy-"+origId+".png"))
 			if os.path.exists(os.path.join(self.config_dir,"easy-"+origId+".json")):
 				shutil.copy2(os.path.join(self.config_dir,"easy-"+origId+".json"),os.path.join(self.backup_path_config,"easy-"+origId+".jon"))
@@ -536,6 +586,21 @@ class EasySitesManager(object):
 
 
 	#def _restore_site_backup
+	
+	def _undo_edit_changes(self,origId,info,rename,icon,link):
+		
+		if rename:
+			self._restore_site_backup(origId,info["id"])
+			self._rename_site_folder(origId,info["id"])
+			self._create_symlink_folder(origId,info["id"])
+			shutil.copy2(os.path.join(self.backup_path_config,"easy-"+origId+".jon"),os.path.join(self.config_dir,"easy-"+origId+".json"))
+		if icon:
+			shutil.copy2(os.path.join(self.backup_path,"easy-"+origId+".png"),os.path.join(self.icons_path,"easy-"+origId+".png"))
+		if link:
+			shutil.copy2(os.path.join(self.backup_path,"easy-"+origId+".json"),os.path.join(self.links_path,"easy-"+origId+".json"))
+		
+		
+	#def _undo_edit_changes
 				
 	def get_actions_todo(self,info,origId):
 
