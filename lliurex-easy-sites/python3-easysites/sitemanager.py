@@ -13,6 +13,7 @@ import ssl
 import shutil
 import glob
 import unicodedata
+import re
 import subprocess
 import urllib.request as urllib2
 
@@ -255,7 +256,10 @@ class SiteManager(object):
 	def get_siteId(self,name):
 
 		siteId= ''.join((c for c in unicodedata.normalize('NFD', name) if unicodedata.category(c) != 'Mn'))
-		siteId=siteId.lower().replace(" ","_").replace("'","").replace("·","")
+		siteId=siteId.lower().replace(" ","_")
+		siteId=re.sub('[^\w\s-]', '', siteId).strip()
+		siteId=re.sub('[-\s]+', '-', siteId)
+
 		return siteId
 
 	#def get_siteId

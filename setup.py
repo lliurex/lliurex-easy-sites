@@ -49,7 +49,6 @@ if __name__ == '__main__':
 		package_data = {'easysites':['rsrc/*']},
 		data_files = [('sbin',['lliurex-easy-sites/lliurex-easy-sites']),
 			      ('share/lliurex-easy-sites/templates',['lliurex-easy-sites/data-files/custom.json']),
-			      ('var/lib/lliurex-folders/local',['lliurex-easy-sites/data-files/easysites']),
 			      ('share/kservices5/ServiceMenus',['lliurex-easy-sites/data-files/createeasysite.desktop']),
 			      ('share/lliurex-easy-sites/images',listdir),
 			      ] + polist ,
