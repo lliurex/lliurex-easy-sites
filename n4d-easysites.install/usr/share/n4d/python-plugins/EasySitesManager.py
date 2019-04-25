@@ -615,6 +615,10 @@ class EasySitesManager(object):
 		if info["visible"]!=self.sites_config[origId]["visible"]:
 			actions.append("visible")
 
+		if info["name"]!=self.sites_config[origId]["name"]:
+			link=True
+			icon=True
+
 		if info["description"]!=self.sites_config[origId]["description"]:
 			link=True
 
