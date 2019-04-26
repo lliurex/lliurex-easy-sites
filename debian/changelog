@@ -1,3 +1,9 @@
+lliurex-easy-sites (15.05.30) bionic; urgency=medium
+
+  * Improved general performance
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Fri, 26 Apr 2019 14:07:15 +0200
+
 lliurex-easy-sites (15.05.29) bionic; urgency=medium
 
   * Changed function to normalized siteId
