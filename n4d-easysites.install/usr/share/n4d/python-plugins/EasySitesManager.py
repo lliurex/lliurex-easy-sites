@@ -176,6 +176,9 @@ class EasySitesManager(object):
 			error=True
 			result=result_create	
 
+		if os.path.exists(pixbuf_path):
+			os.remove(pixbuf_path)
+
 		if error:
 			self.delete_site(info["id"])
 		else:
@@ -207,7 +210,8 @@ class EasySitesManager(object):
 		icon_changed=False
 		link_changed=False
 		visible_changed=False
-		
+				
+
 		if result_backup['status']:
 			if "rename" in actions_todo:
 				result_rename=self._rename_site(info,pixbuf_path,origId)
@@ -244,6 +248,9 @@ class EasySitesManager(object):
 					else:
 						visible_changed=True
 			
+			if os.path.exists(pixbuf_path):
+				os.remove(pixbuf_path)
+
 			if error:
 				return result
 			else:
@@ -260,6 +267,9 @@ class EasySitesManager(object):
 					result=result_write
 				return result
 		else:
+			if os.path.exists(pixbuf_path):
+				os.remove(pixbuf_path)
+			self._remove_tmp_site_backup()
 			result={"status":False,"msg":"","code":30,"data":""}				
 			return result
 
@@ -377,6 +387,7 @@ class EasySitesManager(object):
 		if error:
 			self._restore_site_backup(origId,info["id"])
 			self._rename_site_folder(origId,info["id"])
+			self._remove_tmp_site_backup()
 			return result
 				
 
@@ -566,9 +577,15 @@ class EasySitesManager(object):
 			result={"status":False,"msg":str(e),"code":"",data:""}
 
 		return result	
-			
 
-	#def _make_tmp_site_backup					
+	#def _make_tmp_site_backup	
+			
+	def _remove_tmp_site_backup(self):
+	
+		if os.path.exists(self.backup_path):
+			shutil.rmtree(self.backup_path)
+
+	#def _remove_tmp_site_backup					
 
 	def _restore_site_backup(self,origId,siteId):
 
@@ -599,6 +616,7 @@ class EasySitesManager(object):
 		if link:
 			shutil.copy2(os.path.join(self.backup_path,"easy-"+origId+".json"),os.path.join(self.links_path,"easy-"+origId+".json"))
 		
+		self._remove_tmp_site_backup()
 		
 	#def _undo_edit_changes
 				

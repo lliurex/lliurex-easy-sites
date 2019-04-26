@@ -267,9 +267,23 @@ class SiteManager(object):
 
 	def copy_pixbuf_file(self,pixbuf_path):
 
+		'''
+		Result code:
+			-17: Unable to send file to server
+		
+		'''	
+
 		copy_pixbuf=self.n4d_local.send_file("","ScpManager",self.validation[0],self.validation[1],"server",pixbuf_path,"/tmp/")
-			
-		return copy_pixbuf
+		
+		if not copy_pixbuf['status']:
+			result={}
+			result['status']=copy_pixbuf['status']
+			result['msg']=copy_pixbuf['msg']
+			result['code']=17
+			return result
+		else:
+			return copy_pixbuf		
+
 
 	#def copy_pixbuf_file	
 
@@ -281,6 +295,12 @@ class SiteManager(object):
 	#def remove_tmp_files		
 
 	def sync_content(self,siteId,sync_from):
+
+		'''
+		Result code:
+			-13: Unable to sync content
+		
+		'''	
 		
 		dest_site="easy-"+siteId
 		dest_site_path=os.path.join(self.net_folder,dest_site)
