@@ -1,3 +1,9 @@
+lliurex-easy-sites (15.05.31) bionic; urgency=medium
+
+  * Improved function to remove tmp files
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 30 Apr 2019 09:24:32 +0200
+
 lliurex-easy-sites (15.05.30) bionic; urgency=medium
 
   * Improved general performance
