@@ -25,6 +25,7 @@ class Core:
 
 		return Core.singleton
 		
+	#def get_core
 	
 	def __init__(self,args=None):
 

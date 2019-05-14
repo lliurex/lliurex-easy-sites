@@ -177,7 +177,7 @@ class MainWindow:
 		self.login_button.set_sensitive(False)
 		self.validate_user(user,password)	
 
-
+	#def login_clicked
 
 	def validate_user(self,user,password):
 		
@@ -200,7 +200,7 @@ class MainWindow:
 			self.login_msg_label.set_markup("<span foreground='red'>"+_("Invalid user")+"</span>")
 		else:
 			group_found=False
-			for g in ["adm","admins","teachers"]:
+			for g in ["sudo","admins","teachers"]:
 				if g in self.core.sitesmanager.user_groups:
 					group_found=True
 					break
@@ -265,7 +265,7 @@ class MainWindow:
 		self.stack_window.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT)
 		self.stack_window.set_visible_child_name("editBox")
 
-	#def add_bell	
+	#def add_site	
 
 	def search_entry_changed(self,widget):
 
@@ -388,7 +388,7 @@ class MainWindow:
 
 		os.system(cmd)
 	
-	#def mouse_exit_popover
+	#def help_clicked
 
 	def quit(self,widget):
 
