@@ -78,7 +78,7 @@ class SiteBox(Gtk.VBox):
 		for item in tmp:
 			self.sites_list_box.remove(item)
 
-	#def init_bell_list
+	#def init_sites_list
 			
 
 	def draw_site(self,search,args=None):
@@ -96,7 +96,7 @@ class SiteBox(Gtk.VBox):
 			self.new_site_box(item,cont)
 			cont-=1
 		
-	#def draw_bell		
+	#def draw_site		
 
 	def new_site_box(self,siteId,cont,args=None):
 
@@ -324,7 +324,7 @@ class SiteBox(Gtk.VBox):
 		self.sites_list_box.set_valign(Gtk.Align.FILL)
 		hbox.queue_draw()	
 
-	#def new_bell_box	
+	#def new_site_box	
 		
 	def on_switch_activaded (self,switch,gparam,hbox):
 
@@ -568,6 +568,6 @@ class SiteBox(Gtk.VBox):
 		widget.set_name("POPOVER_OFF")		
 	
 
-#class BellBox
+#class SiteBox
 
 from . import Core

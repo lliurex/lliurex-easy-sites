@@ -43,6 +43,7 @@ class SiteManager(object):
 		context=ssl._create_unverified_context()
 		self.n4d_local = n4dclient.ServerProxy("https://localhost:9779",context=context,allow_none=True)	
 		self.detect_flavour()	
+	
 	#def __init__	
 	
 
