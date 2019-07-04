@@ -61,6 +61,7 @@ class MainWindow:
 		self.login_msg_label=builder.get_object("login_msg_label")
 
 		self.option_box=builder.get_object("options_box")
+		self.image_banner=builder.get_object("image_banner")
 		self.toolbar=builder.get_object("toolbar")
 		self.option_separator=builder.get_object("option_separator")
 		self.add_button=builder.get_object("add_button")
@@ -125,9 +126,10 @@ class MainWindow:
 		self.password_entry.set_name("CUSTOM-ENTRY")
 		self.server_ip_entry.set_name("CUSTOM-ENTRY")
 		self.search_entry.set_name("CUSTOM-ENTRY")
+
 		#self.waiting_label.set_name("WAITING_LABEL")
 
-		#self.banner_box.set_name("BANNER_BOX")
+		self.image_banner.set_name("BANNER-BOX")
 
 	#def set_css_info	
 				
