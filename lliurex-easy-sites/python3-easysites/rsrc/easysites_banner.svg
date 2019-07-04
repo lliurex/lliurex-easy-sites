@@ -7565,12 +7565,12 @@
        inkscape:collect="always"
        xlink:href="#linearGradient7463"
        id="radialGradient6266"
-       cx="182.44608"
-       cy="993.77661"
-       fx="182.44608"
-       fy="993.77661"
+       cx="111.5593"
+       cy="996.17865"
+       fx="111.5593"
+       fy="996.17865"
        r="120.35715"
-       gradientTransform="matrix(1.3801995,0,0,0.18699519,-87.486541,-137.36062)"
+       gradientTransform="matrix(0.51226959,-0.008266,0.00301697,0.18697085,37.5151,-136.11725)"
        gradientUnits="userSpaceOnUse" />
     <linearGradient
        inkscape:collect="always"
@@ -8594,17 +8594,17 @@
     </filter>
   </defs>
   <sodipodi:namedview
-     inkscape:window-y="0"
+     inkscape:window-y="36"
      inkscape:window-x="0"
-     inkscape:window-height="917"
+     inkscape:window-height="897"
      inkscape:window-width="1920"
      inkscape:document-units="px"
      inkscape:grid-bbox="true"
      showgrid="false"
      inkscape:current-layer="g6065"
-     inkscape:cy="3.2158418"
-     inkscape:cx="381.94079"
-     inkscape:zoom="0.94316065"
+     inkscape:cy="-32.621965"
+     inkscape:cx="415.01357"
+     inkscape:zoom="0.66691529"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1"
@@ -8637,7 +8637,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
         <dc:creator>
           <cc:Agent>
             <dc:title>Jakub Steiner</dc:title>
