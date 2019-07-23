@@ -1,3 +1,9 @@
+lliurex-easy-sites (15.05.36) bionic; urgency=medium
+
+  * Added link to help
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 23 Jul 2019 08:06:49 +0200
+
 lliurex-easy-sites (15.05.35) bionic; urgency=medium
 
   * Fixed login window
