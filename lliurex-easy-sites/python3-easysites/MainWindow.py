@@ -111,6 +111,9 @@ class MainWindow:
 	def init_threads(self):
 
 		
+		self.open_help_t=threading.Thread(target=self.open_help)
+		self.open_help_t.daemon=True
+
 		GObject.threads_init()
 
 	#def init_threads	
@@ -384,14 +387,22 @@ class MainWindow:
 		lang=os.environ["LANG"]
 
 		if 'ca_ES' in lang:
-			cmd='xdg-open http:'
+			self.help_cmd='xdg-open https://wiki.edu.gva.es/lliurex/tiki-index.php?page=Easy-Sites_va'
 		else:
-			cmd='xdg-open http:'
+			self.help_cmd='xdg-open https://wiki.edu.gva.es/lliurex/tiki-index.php?page=Easy-Sites'
 
-		os.system(cmd)
+		self.init_threads()
+		self.open_help_t.start()
+
+	#def help_clicked	
+
+	def open_help(self):
+
+		os.system(self.help_cmd)
+
+	#def open_help	
 	
-	#def help_clicked
-
+	
 	def quit(self,widget):
 
 		Gtk.main_quit()	
