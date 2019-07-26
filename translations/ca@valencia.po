@@ -1,0 +1,288 @@
+# Spanish translations for PACKAGE package
+# Traducciones al español para el paquete PACKAGE.
+# Copyright (C) 2019 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# lliurex <lliurex@gva.es>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-04-10 16:52+0200\n"
+"PO-Revision-Date: 2019-04-10 16:59+0200\n"
+"Last-Translator: lliurex <lliurex@gva.es>\n"
+"Language-Team: Spanish\n"
+"Language: ca_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.0.6\n"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:175
+msgid "Validating user..."
+msgstr "S'està validant l'usuari..."
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:200
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:232
+msgid "Invalid user"
+msgstr "L'usuari no és vàlid "
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:316
+msgid "You must indicate a name for the site"
+msgstr "Heu d'indicar un nom per al lloc"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:318
+msgid "The name site is duplicate"
+msgstr "El nom del lloc està duplicat"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:320
+msgid "Image file is not correct"
+msgstr "El fitxer d'imatge no és correcte"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:322
+msgid "You must indicate a image file"
+msgstr "Heu d'indicar un fitxer d'matge"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:324
+msgid "You must indicate a folder to sync content"
+msgstr "Heu d'indicar una carpeta per a sincronitzar el contingut"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:326
+msgid "Site is now visible again"
+msgstr "El lloc torna a ser visible"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:328
+msgid "Site has been hideen"
+msgstr "S'ha amagat el lloc web"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:330
+msgid "The content has been synchronized successfully"
+msgstr "S'ha sincronitzat el contingut amb èxit"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:332
+msgid "Site has been successfully deleted"
+msgstr "S'ha suprimit el lloc web amb èxit"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:334
+msgid "Site has been successfully edited"
+msgstr "S'ha editat el lloc web amb èxit"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:336
+msgid "Site has been successfully created"
+msgstr "S'ha creat el lloc web amb èxit"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:338
+msgid "Unable to delete the site"
+msgstr "No es pot suprimir el lloc web"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:340
+msgid "Unable to sync the content"
+msgstr "No es pot sincronitzar el contingut"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:342
+msgid "Unable to rename the site. Old site not exists"
+msgstr "No es pot canviar el nom del lloc web perquè el lloc antic no existeix"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:344
+msgid "Unable to rename the site due to problems in process"
+msgstr "No es pot canviar el nom del lloc web per problemes en el procés"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:346
+msgid "Unable to create the link template for the site"
+msgstr "No es pot crear la plantilla d'enllaç per al lloc web"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:348
+msgid "Unable to create the icon for the site"
+msgstr "No es pot crear la icona del lloc web"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:350
+msgid "Unable to create the symbolic link for the site"
+msgstr "No es pot crear l'enllaç simbòlic per al lloc web"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:352
+msgid "Unabled to change the visibility of the site"
+msgstr "No es pot canviar la visibilitat del lloc web"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:354
+msgid "Unabled to copy the image for the site"
+msgstr "No es pot copiar la imatge del lloc web"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:356
+msgid "Error reading configuration files of the sites"
+msgstr "S'ha produït un error en llegir els fitxers de configuració del lloc web"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:358
+msgid "Sync the content. Wait a moment..."
+msgstr "S'està sincronitzant el contingut. Espereu un moment..."
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:360
+msgid "Error writing changes in the site configuration file"
+msgstr "S'ha produït un error en escriure els canvis en el fitxer de configuració del lloc web"
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:362
+msgid "Validating the data entered..."
+msgstr "S'estan validant les dades introduïdes..."
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:364
+msgid "Deleting site. Wait a moment..."
+msgstr "S'està suprimint el lloc web. Espereu un moment..."
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:366
+msgid "Executing actions to show the site. Wait a moment..."
+msgstr "S'estan executant accions per a mostrar el lloc web. Espereu un moment..."
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:368
+msgid "Executin actions to hide the site. Wait a moment ..."
+msgstr "S'estan executant accions per a amagar el lloc web. Espereu un moment..."
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:370
+msgid "Applying changes in the image. Wait a moment..."
+msgstr "S'estan aplicant canvis en la imatge. Espereu un moment..."
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:372
+msgid "Saving changes. Wait a moment..."
+msgstr "S'estan guardant els canvis. Espereu un moment..."
+
+#: lliurex-easy-sites/python3-easysites/MainWindow.py:374
+msgid "Unabled to edit the site"
+msgstr "No es pot editar el lloc web"
+
+#: lliurex-easy-sites/python3-easysites/SiteBox.py:156
+msgid "Created by: "
+msgstr "Creat per: "
+
+#: lliurex-easy-sites/python3-easysites/SiteBox.py:169
+msgid "Updated by: "
+msgstr "Actualitzat per: "
+
+#: lliurex-easy-sites/python3-easysites/SiteBox.py:195
+msgid "Manage site"
+msgstr "Gestiona el lloc web"
+
+#: lliurex-easy-sites/python3-easysites/SiteBox.py:210
+msgid "Open site in browser"
+msgstr "Obri el lloc en al navegador"
+
+#: lliurex-easy-sites/python3-easysites/SiteBox.py:224
+msgid "Open folder"
+msgstr "Obri la carpeta"
+
+#: lliurex-easy-sites/python3-easysites/SiteBox.py:238
+msgid "Sync new content"
+msgstr "Sincronitza el contingut nou"
+
+#: lliurex-easy-sites/python3-easysites/SiteBox.py:252
+#: lliurex-easy-sites/python3-easysites/EditBox.py:205
+msgid "Edit site"
+msgstr "Edita el lloc web"
+
+#: lliurex-easy-sites/python3-easysites/SiteBox.py:266
+msgid "Delete site"
+msgstr "Suprimeix el lloc web"
+
+#: lliurex-easy-sites/python3-easysites/SiteBox.py:294
+#: lliurex-easy-sites/python3-easysites/SiteBox.py:368
+#: lliurex-easy-sites/python3-easysites/EditBox.py:642
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:476
+msgid "Click to hide the site in the server main page"
+msgstr "Feu clic per a amagar el lloc web en la pàgina principal del servidor"
+
+#: lliurex-easy-sites/python3-easysites/SiteBox.py:297
+#: lliurex-easy-sites/python3-easysites/SiteBox.py:371
+#: lliurex-easy-sites/python3-easysites/EditBox.py:644
+msgid "Click to show the site in the server main page"
+msgstr "Feu clic per a mostrar el lloc web en la pàgina principal del servidor"
+
+#: lliurex-easy-sites/python3-easysites/SiteBox.py:393
+msgid "Please choose a folder to sync content"
+msgstr "Trieu una carpeta per a sincronitzar el contingut"
+
+#: lliurex-easy-sites/python3-easysites/SiteBox.py:504
+msgid "Do you want delete the site?"
+msgstr "Voleu suprimir el lloc web?"
+
+#: lliurex-easy-sites/python3-easysites/EditBox.py:98
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:338
+msgid "New site"
+msgstr "Lloc web nou"
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:31
+msgid "User"
+msgstr "Usuari"
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:45
+msgid "Password"
+msgstr "Contrasenya  "
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:57
+msgid "Server IP    (Default value : server)"
+msgstr " IP del servidor  (valor per defecte : servidor) "
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:66
+msgid "Login"
+msgstr "Inicia la sessió  "
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:176
+msgid "Add new site"
+msgstr "Afig un lloc web nou"
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:190
+msgid "Help"
+msgstr "Ajuda "
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:210
+msgid "Search by site name"
+msgstr "Busca pel nom del lloc"
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:213
+msgid "Search..."
+msgstr "Busca… "
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:377
+msgid "Name"
+msgstr "Nom"
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:403
+msgid "Description"
+msgstr "Descripció "
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:438
+msgid "Sync content from"
+msgstr "Sincronitza el contingut de"
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:464
+msgid "Site visible in server main page"
+msgstr "El lloc web és visible en la pàgina principal del servidor"
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:533
+msgid "Image preview"
+msgstr "Previsualització de la imatge"
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:571
+msgid "Click to change the site image"
+msgstr "Feu clic per a canviar la imatge del lloc web"
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:628
+msgid "Font"
+msgstr "Tipus de lletra "
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:640
+msgid "Click to change the image font"
+msgstr "Feu clic per a canviar el tipus de lletra de la imatge"
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:656
+msgid "Font color"
+msgstr "Color del tipus de lletra"
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:669
+msgid "Click to change the image color font"
+msgstr "Feu clic per a canviar el color del tipus de lletra de la imatge"
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:784
+msgid "Default"
+msgstr "Per defecte "
+
+#: lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui:802
+msgid "Custom image"
+msgstr "Imatge personalitzada "
