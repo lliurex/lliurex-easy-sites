@@ -51,7 +51,7 @@ class MainWindow:
 		
 		self.main_window=builder.get_object("main_window")
 		self.main_window.set_title("Easy Sites")
-		self.main_window.resize(860,725)
+		self.main_window.resize(870,725)
 		self.main_box=builder.get_object("main_box")
 		self.login_box=builder.get_object("login_box")
 		self.login_button=builder.get_object("login_button")
