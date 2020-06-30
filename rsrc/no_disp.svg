@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -9,14 +7,14 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="235"
+   width="110"
    height="110"
-   viewBox="0 0 62.177084 29.104168"
+   viewBox="0 0 29.104167 29.104168"
    version="1.1"
    id="svg1212"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   inkscape:version="1.0 (1.0+r73)"
    sodipodi:docname="no_disp.svg"
-   inkscape:export-filename="/home/lliurex/Desarrollo/lliurex-easy-sites/lliurex-easysites-gui/python3-lliurex-easysites-gui/rsrc/no_disp.png"
+   inkscape:export-filename="/home/lliurex/Desarrollo/lliurex-easy-sites/lliurex-easy-sites/data-files/images/no_disp.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -32,15 +30,16 @@
      inkscape:cx="88.655323"
      inkscape:cy="78.756416"
      inkscape:document-units="mm"
-     inkscape:current-layer="g3867"
+     inkscape:current-layer="g827"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="917"
+     inkscape:window-height="903"
      inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-y="30"
      inkscape:window-maximized="1"
      units="px"
-     borderlayer="true" />
+     borderlayer="true"
+     inkscape:document-rotation="0" />
   <metadata
      id="metadata1209">
     <rdf:RDF>
@@ -63,17 +62,17 @@
        transform="matrix(0.83238654,0,0,0.83238654,127.19857,-749.27735)">
       <g
          id="g827"
-         transform="matrix(0.92216332,0,0,0.8358185,-2.7547694,291.84192)">
+         transform="matrix(0.92216332,0,0,0.8358185,-1.3911978,318.97354)">
         <rect
-           y="1112.8663"
-           x="-162.72295"
+           y="1080.4052"
+           x="-164.20161"
            height="41.832916"
-           width="81.002319"
+           width="37.915977"
            id="rect5335-12-7-7"
-           style="opacity:1;fill:#cccccc;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.33511597;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           style="opacity:1;fill:#cccccc;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.229275;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <g
            style="fill:#ff0000"
-           transform="matrix(0.32033149,0,0,0.32033149,-138.23836,1117.7662)"
+           transform="matrix(0.32033149,0,0,0.32033149,-161.2602,1085.3051)"
            id="g3011">
           <path
              style="fill:#ff0000"

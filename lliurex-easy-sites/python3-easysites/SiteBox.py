@@ -114,7 +114,7 @@ class SiteBox(Gtk.VBox):
 			image_name=os.path.basename(image_path)	
 			
 		image_info={}
-		image_info["x"]=235
+		image_info["x"]=110
 		image_info["y"]=110
 		image_info["image_id"]=image_name
 		image_info["image_url"]=image_path
