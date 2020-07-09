@@ -17,9 +17,9 @@ class EasySitesManager(object):
 		self.tpl_env = Environment(loader=FileSystemLoader('/usr/share/lliurex-easy-sites/templates'))
 		self.net_folder="/net/server-sync/easy-sites"
 		self.var_folder="/var/www/srv"
-		self.links_path=os.path.join(self.var_folder,"links")
-		self.icons_path=os.path.join(self.var_folder,"icons")
-		self.hide_folder=os.path.join(self.links_path,"hide_links")
+		self.links_path="/var/lib/lliurex-www/links"
+		self.icons_path=os.path.join("/var/lib/lliurex-www/icons")
+		#self.hide_folder=os.path.join(self.links_path,"hide_links")
 
 		server='localhost'
 		context=ssl._create_unverified_context()
@@ -46,9 +46,10 @@ class EasySitesManager(object):
 		if not os.path.isdir(self.net_folder):
 			os.makedirs(self.net_folder)
 
+		'''
 		if not os.path.isdir(self.hide_folder):
 			os.makedirs(self.hide_folder)
-
+		'''
 	#def _create_dirs			
 	
 	def _create_conf(self):
@@ -89,6 +90,11 @@ class EasySitesManager(object):
 					content=json.load(f)
 					siteId=element.split("-")[1].split(".")[0]
 					self.sites_config[siteId]=content
+					result=self._get_site_visibility(siteId)
+					if result["status"]:
+						self.sites_config[siteId]["visible"]=result["visible"]
+					else:
+						cont_errors+=1	
 					f.close()
 				except:	
 					cont_errors+=1
@@ -102,6 +108,23 @@ class EasySitesManager(object):
 		return result	
 
 	#def read_conf	
+
+	def _get_site_visibility(self,siteId):
+
+		site_link=os.path.join(self.links_path,"easy-"+siteId+".json")
+		print(site_link)
+		if os.path.exists(site_link):
+
+			f=open(site_link)
+			try:
+				content=json.load(f)
+				return {"status":True,"visible":content["visible"]}
+			except:
+				return {"status":False,"visible":False}
+		else:
+			return {"status":True,"visible":False}
+	
+	#def _get_site_visibility					
 
 	def write_conf(self,info):
 
@@ -156,14 +179,15 @@ class EasySitesManager(object):
 				result_icon=self._create_site_icon(info["id"],pixbuf_path)
 				if result_icon["status"]:
 					result_symlink=self._create_symlink_folder(info["id"])
-					if result_symlink['status']:
+					if not result_symlink['status']:
+						'''
 						if not info["visible"]:
 							result_visible=self._hide_show_site(info["id"],False)
 							if not result_visible['status']:
 								error=True
 								result=result_visible
-							
-					else:
+						'''	
+					#else:
 						error=True
 						result=result_symlink
 				else:
@@ -208,10 +232,10 @@ class EasySitesManager(object):
 		icon_changed=False
 		link_changed=False
 		visible_changed=False
-				
+		rename=actions_todo		
 
 		if result_backup['status']:
-			if "rename" in actions_todo:
+			if rename:
 				result_rename=self._rename_site(info,pixbuf_path,origId)
 				if not result_rename["status"]:
 					error=True
@@ -425,6 +449,12 @@ class EasySitesManager(object):
 			site_info["ICON"]="easy-"+info["id"]+".png"
 			site_info["NAME"]=info["name"]
 			site_info["DESCR"]=info["description"]
+			if info["visible"]:
+				visible="true"
+			else:
+				visible="false"	
+			site_info["VISIBLE"]=visible
+			site_info["EDITABLE"]="false"
 				
 			template= self.tpl_env.get_template("custom.json")
 			string_template = template.render(site_info).encode('UTF-8')
@@ -521,21 +551,35 @@ class EasySitesManager(object):
 			-19:Unable to execute action
 		'''
 		show_site=visible
-
+		print(show_site)
 		link_site="easy-"+siteId+".json"
-		hide_site_path=os.path.join(self.hide_folder,link_site)
+		#hide_site_path=os.path.join(self.hide_folder,link_site)
 		link_site_path=os.path.join(self.links_path,link_site)
 
 		try:
+			
 			if show_site:
 				action="show"
+				'''
 				if os.path.exists(hide_site_path):
 					shutil.move(hide_site_path,link_site_path)
+				'''
 			else:
 				action="hide"
+				'''
 				if os.path.exists(link_site_path):
 					shutil.move(link_site_path,hide_site_path)	
+				'''
+			
+			f=open(link_site_path)
+			content=json.load(f)
+			content["visible"]=visible
+			f.close()
 
+			with codecs.open(link_site_path,'w',encoding="utf-8") as f:
+				json.dump(content,f,ensure_ascii=False)
+				f.close()
+				
 			result={"status":True,"msg":"Action execute successfully: "+action,"code":"","data":""}		
 
 		except Exception as e:
