@@ -16,9 +16,9 @@ class EasySitesManager(object):
 		self.config_dir=os.path.expanduser("/etc/easysites/")
 		self.tpl_env = Environment(loader=FileSystemLoader('/usr/share/lliurex-easy-sites/templates'))
 		self.net_folder="/net/server-sync/easy-sites"
-		self.var_folder="/var/www/srv"
+		self.var_folder="/var/www/"
 		self.links_path="/var/lib/lliurex-www/links"
-		self.icons_path=os.path.join("/var/lib/lliurex-www/icons")
+		self.icons_path=os.path.join("/var/www/srv/icons")
 		#self.hide_folder=os.path.join(self.links_path,"hide_links")
 
 		server='localhost'
@@ -90,9 +90,13 @@ class EasySitesManager(object):
 					content=json.load(f)
 					siteId=element.split("-")[1].split(".")[0]
 					self.sites_config[siteId]=content
-					result=self._get_site_visibility(siteId)
+					result=self._update_from_site_link(siteId)
 					if result["status"]:
 						self.sites_config[siteId]["visible"]=result["visible"]
+						if result["url"]!="":
+							self.sites_config[siteId]["url"]=result["url"]
+						if "http://server/srv/" in self.sites_config[siteId]["image"]["img_path"]:
+							self.sites_config[siteId]["image"]["img_path"]=self.sites_config[siteId]["image"]["img_path"].replace("http://server/srv/","http://server/")	
 					else:
 						cont_errors+=1	
 					f.close()
@@ -109,20 +113,19 @@ class EasySitesManager(object):
 
 	#def read_conf	
 
-	def _get_site_visibility(self,siteId):
+	def _update_from_site_link(self,siteId):
 
 		site_link=os.path.join(self.links_path,"easy-"+siteId+".json")
-		print(site_link)
 		if os.path.exists(site_link):
 
 			f=open(site_link)
 			try:
 				content=json.load(f)
-				return {"status":True,"visible":content["visible"]}
+				return {"status":True,"visible":content["visible"],"url":content["link"]}
 			except:
-				return {"status":False,"visible":False}
+				return {"status":False,"visible":False,"url":""}
 		else:
-			return {"status":True,"visible":False}
+			return {"status":True,"visible":False,"url":""}
 	
 	#def _get_site_visibility					
 
@@ -526,13 +529,19 @@ class EasySitesManager(object):
 				pass
 			else:
 				new_symlink="easy-"+siteId	
+				print(new_symlink)
 				new_symlink_path=os.path.join(self.var_folder,new_symlink)
+				print(new_symlink_path)
 				source_symlink_path=os.path.join(self.net_folder,new_symlink)
+				print(source_symlink_path)
 				os.symlink(source_symlink_path,new_symlink_path)
-
+				print("1")
 				if origId!=None:
+					print("2")
 					old_symlink="easy-"+origId
+					print("2")
 					old_symlink_path=os.path.join(self.var_folder,old_symlink)
+					print("3")
 					os.unlink(old_symlink_path)
 
 			result={"status":True,"msg":"link to /net create successfully","code":"","data":""}

@@ -385,7 +385,7 @@ class EditBox(Gtk.VBox):
 		if self.image_op=="stock":
 			orig_img_path=self.custom_image
 		else:
-			orig_img_path="http://server/srv/easy-"+self.data_tocheck["id"]+"/."+os.path.basename(self.data_tocheck["image"]["path"])
+			orig_img_path=self.core.sitesmanager.url_site+self.data_tocheck["id"]+"/."+os.path.basename(self.data_tocheck["image"]["path"])
 			if self.edit:
 				if os.path.basename(self.data_tocheck["image"]["path"])!=self.orig_image:
 					copy_image=self.data_tocheck["image"]["path"]
@@ -396,8 +396,8 @@ class EditBox(Gtk.VBox):
 		site_info["image"]["font"]=self.img_font_chosser.get_font()
 		color=self.get_color_rgba()
 		site_info["image"]["color"]=color
-		site_info["url"]="http://server/srv/easy-"+self.data_tocheck["id"]
-		site_info["site_folder"]="/net/server-sync/easy-sites/easy-"+self.data_tocheck["id"]
+		site_info["url"]=self.core.sitesmanager.url_site+self.data_tocheck["id"]
+		site_info["site_folder"]=self.core.sitesmanager.net_folder+"/easy-"+self.data_tocheck["id"]
 
 		if self.edit:
 			action="edit"

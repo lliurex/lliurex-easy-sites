@@ -35,6 +35,7 @@ class SiteManager(object):
 		self.validation=None
 		self.net_folder="/net/server-sync/easy-sites"
 		self.image_dir=os.path.expanduser("~/.cache/")+"easy-sites"
+		self.url_site="http://server/easy-"
 
 
 		if server!=None:
