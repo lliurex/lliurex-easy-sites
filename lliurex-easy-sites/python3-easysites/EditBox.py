@@ -208,7 +208,7 @@ class EditBox(Gtk.VBox):
 		self.site_name_entry.set_text(site_to_edit["name"])
 		self.site_description_entry.set_text(site_to_edit["description"])
 
-		self.site_visible_checkbt.set_active(site_to_edit["visible"])
+		self.site_visible_checkbt.set_active(site_to_edit["visibility"])
 
 		self.image_op=site_to_edit["image"]["option"]
 
@@ -378,7 +378,7 @@ class EditBox(Gtk.VBox):
 		site_info["id"]=self.data_tocheck["id"]
 		site_info["name"]=self.data_tocheck["name"]
 		site_info["description"]=self.data_tocheck["description"]
-		site_info["visible"]=self.site_visible_checkbt.get_active()
+		site_info["visibility"]=self.site_visible_checkbt.get_active()
 		site_info["image"]={}
 		site_info["image"]["option"]=self.image_op
 

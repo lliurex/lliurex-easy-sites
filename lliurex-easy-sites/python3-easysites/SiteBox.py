@@ -289,7 +289,7 @@ class SiteBox(Gtk.VBox):
 		switch_button.set_margin_top(25)
 		
 
-		if self.sites_list[siteId]["visible"]:
+		if self.sites_list[siteId]["visibility"]:
 			switch_button.set_active(True)
 			switch_button.set_tooltip_text(_("Click to hide the site in the server main page"))
 		else:
@@ -362,7 +362,7 @@ class SiteBox(Gtk.VBox):
 			self.core.mainWindow.waiting_window.hide()
 			if self.result_visibiliy['status']:
 				self.core.mainWindow.sites_info[siteId]["visible"]=turn_on
-				self.sites_list[siteId]["visible"]=turn_on
+				self.sites_list[siteId]["visibility"]=turn_on
 				self.core.sitesmanager.read_conf()
 				if turn_on:
 					hbox.get_children()[1].get_children()[0].get_children()[1].set_tooltip_text(_("Click to hide the site in the server main page"))
