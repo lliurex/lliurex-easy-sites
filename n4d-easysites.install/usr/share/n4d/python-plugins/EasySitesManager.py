@@ -19,7 +19,7 @@ class EasySitesManager(object):
 		self.net_folder="/net/server-sync/easy-sites"
 		self.var_folder="/var/www/"
 		self.links_path="/var/lib/lliurex-www/links"
-		self.icons_path=os.path.join("/var/www/srv/icons")
+		self.icons_path="/usr/share/lliurex-www/srv/icons"
 		#self.hide_folder=os.path.join(self.links_path,"hide_links")
 
 		server='localhost'
