@@ -48,7 +48,6 @@ if __name__ == '__main__':
 		package_dir = {'easysites':'lliurex-easy-sites/python3-easysites'},
 		package_data = {'easysites':['rsrc/*']},
 		data_files = [('sbin',['lliurex-easy-sites/lliurex-easy-sites']),
-			      ('share/lliurex-easy-sites/templates',['lliurex-easy-sites/data-files/custom.json']),
 			      ('share/kservices5/ServiceMenus',['lliurex-easy-sites/data-files/create-easy-site.desktop']),
 			      ('share/lliurex-easy-sites/images',listdir),
 			      ] + polist ,
