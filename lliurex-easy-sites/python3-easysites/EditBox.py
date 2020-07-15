@@ -208,7 +208,7 @@ class EditBox(Gtk.VBox):
 		self.site_name_entry.set_text(site_to_edit["name"])
 		self.site_description_entry.set_text(site_to_edit["description"])
 
-		self.site_visible_checkbt.set_active(site_to_edit["visible"])
+		self.site_visible_checkbt.set_active(site_to_edit["visibility"])
 
 		self.image_op=site_to_edit["image"]["option"]
 
@@ -256,6 +256,7 @@ class EditBox(Gtk.VBox):
 
 		ctx.set_source_surface(img,0,0)
 		ctx.paint()
+		'''
 		if not no_disp:
 			color=self.get_color_rgba()
 			font=Pango.font_description_from_string(self.img_font_chosser.get_font())
@@ -264,7 +265,7 @@ class EditBox(Gtk.VBox):
 			pctx.set_font_description(font)
 			pctx.set_alignment(Pango.Alignment.CENTER)
 			pctx.set_justify(True)
-			pctx.set_width(225000)
+			pctx.set_width(110000)
 			pctx.set_height(1000)
 			if font_size>10:
 				font_size=font_size/1000
@@ -284,7 +285,7 @@ class EditBox(Gtk.VBox):
 			PangoCairo.show_layout(ctx,pctx)
 			#ctx.show_text(text)
 			#ctx.stroke()
-			
+		'''	
 		
 	#def drawing_event
 
@@ -297,7 +298,7 @@ class EditBox(Gtk.VBox):
 			no_disp=True
 		image.set_from_file(path)
 		pixbuf=image.get_pixbuf()
-		pixbuf=pixbuf.scale_simple(235,110,GdkPixbuf.InterpType.BILINEAR)
+		pixbuf=pixbuf.scale_simple(110,110,GdkPixbuf.InterpType.BILINEAR)
 		
 		return pixbuf,no_disp
 
@@ -377,14 +378,14 @@ class EditBox(Gtk.VBox):
 		site_info["id"]=self.data_tocheck["id"]
 		site_info["name"]=self.data_tocheck["name"]
 		site_info["description"]=self.data_tocheck["description"]
-		site_info["visible"]=self.site_visible_checkbt.get_active()
+		site_info["visibility"]=self.site_visible_checkbt.get_active()
 		site_info["image"]={}
 		site_info["image"]["option"]=self.image_op
 
 		if self.image_op=="stock":
 			orig_img_path=self.custom_image
 		else:
-			orig_img_path="http://server/srv/easy-"+self.data_tocheck["id"]+"/."+os.path.basename(self.data_tocheck["image"]["path"])
+			orig_img_path=self.core.sitesmanager.url_site+self.data_tocheck["id"]+"/."+os.path.basename(self.data_tocheck["image"]["path"])
 			if self.edit:
 				if os.path.basename(self.data_tocheck["image"]["path"])!=self.orig_image:
 					copy_image=self.data_tocheck["image"]["path"]
@@ -395,8 +396,8 @@ class EditBox(Gtk.VBox):
 		site_info["image"]["font"]=self.img_font_chosser.get_font()
 		color=self.get_color_rgba()
 		site_info["image"]["color"]=color
-		site_info["url"]="http://server/srv/easy-"+self.data_tocheck["id"]
-		site_info["site_folder"]="/net/server-sync/easy-sites/easy-"+self.data_tocheck["id"]
+		site_info["url"]=self.core.sitesmanager.url_site+self.data_tocheck["id"]
+		site_info["site_folder"]=self.core.sitesmanager.net_folder+"/easy-"+self.data_tocheck["id"]
 
 		if self.edit:
 			action="edit"
@@ -419,7 +420,7 @@ class EditBox(Gtk.VBox):
 
 
 		window=self.image_da.get_window()
-		pixbuf=Gdk.pixbuf_get_from_window(window,0,0,235,110)
+		pixbuf=Gdk.pixbuf_get_from_window(window,0,0,110,110)
 		self.args=[action,site_info,pixbuf,self.require_sync,copy_image,self.origId]
 
 		self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(29))			
@@ -548,15 +549,18 @@ class EditBox(Gtk.VBox):
 
 	def restore_image_popover(self):
 	
-		if self.restore_img:
-			if self.previous_image_op=="stock":
-				self.stock_rb.set_active(True)
-				
-			else:
-				self.custom_rb.set_active(True)	
-				self.image_fc.set_filename(self.previous_image_path)
+		try:
+			if self.restore_img:
+				if self.previous_image_op=="stock":
+					self.stock_rb.set_active(True)
+					
+				else:
+					self.custom_rb.set_active(True)	
+					self.image_fc.set_filename(self.previous_image_path)
 
-			self.image_path=self.previous_image_path
+				self.image_path=self.previous_image_path
+		except:
+			pass		
 
 	#def restore_image_popover		
 
