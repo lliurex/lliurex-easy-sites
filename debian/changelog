@@ -1,3 +1,9 @@
+lliurex-easy-sites (15.06) bionic; urgency=medium
+
+  * Added changes to work with the new server home page
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 15 Jul 2020 13:05:38 +0200
+
 lliurex-easy-sites (15.05.38) bionic; urgency=medium
 
   * Fixed desktop for right mouse button action
