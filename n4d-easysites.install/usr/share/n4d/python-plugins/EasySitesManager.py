@@ -19,7 +19,7 @@ class EasySitesManager(object):
 		self.net_folder="/net/server-sync/easy-sites"
 		self.var_folder="/var/www/"
 		self.links_path="/var/lib/lliurex-www/links"
-		self.icons_path="/usr/share/lliurex-www/srv/icons"
+		self.icons_path=os.path.join("/var/www/srv/icons")
 		#self.hide_folder=os.path.join(self.links_path,"hide_links")
 
 		server='localhost'
@@ -494,6 +494,8 @@ class EasySitesManager(object):
 				json.dump(content,f,ensure_ascii=False)
 				f.close()
 
+			cmd="chown www-data:www-data %s"%(link_template)
+			os.system(cmd)
 			
 			if info["id"]!=origId and origId!=None:
 				old_link_template=os.path.join(self.links_path,"easy-"+origId)+".json"
@@ -606,6 +608,9 @@ class EasySitesManager(object):
 			with codecs.open(link_site_path,'w',encoding="utf-8") as f:
 				json.dump(content,f,ensure_ascii=False)
 				f.close()
+			
+			cmd="chown www-data:www-data %s"%(link_site_path)
+			os.system(cmd)
 				
 			result={"status":True,"msg":"Action execute successfully: "+action,"code":"","data":""}		
 
