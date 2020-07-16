@@ -17,9 +17,9 @@ class EasySitesManager(object):
 		#self.tpl_env = Environment(loader=FileSystemLoader('/usr/share/lliurex-easy-sites/templates'))
 		self.site_template="/usr/share/lliurex-www/templates/link.json"
 		self.net_folder="/net/server-sync/easy-sites"
-		self.var_folder="/var/www/"
+		self.var_folder="/var/www/easy-sites/"
 		self.links_path="/var/lib/lliurex-www/links"
-		self.icons_path=os.path.join("/var/www/srv/icons")
+		self.icons_path="/usr/share/lliurex-www/srv/icons"
 		#self.hide_folder=os.path.join(self.links_path,"hide_links")
 
 		server='localhost'
@@ -97,7 +97,7 @@ class EasySitesManager(object):
 						if result["url"]!="":
 							self.sites_config[siteId]["url"]=result["url"]
 						if "http://server/srv/" in self.sites_config[siteId]["image"]["img_path"]:
-							self.sites_config[siteId]["image"]["img_path"]=self.sites_config[siteId]["image"]["img_path"].replace("http://server/srv/","http://server/")	
+							self.sites_config[siteId]["image"]["img_path"]=self.sites_config[siteId]["image"]["img_path"].replace("http://server/srv/","http://server/easy-sites/")	
 					else:
 						cont_errors+=1	
 					f.close()
@@ -480,7 +480,7 @@ class EasySitesManager(object):
 			f=open(current_link)
 			content=json.load(f)
 			content["linkId"]=info["id"]
-			content["link"]="http://server/"+"easy-"+info["id"]
+			content["link"]="http://server/easy-sites/"+"easy-"+info["id"]
 			content["name"]["default"]=info["name"]
 			content["icon"]="easy-"+info["id"]+".png"
 			content["description"]["default"]=info["description"]
