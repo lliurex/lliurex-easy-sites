@@ -47,10 +47,10 @@ class EasySitesManager(object):
 		if not os.path.isdir(self.net_folder):
 			os.makedirs(self.net_folder)
 
-		'''
-		if not os.path.isdir(self.hide_folder):
-			os.makedirs(self.hide_folder)
-		'''
+		
+		if not os.path.isdir(self.var_folder):
+			os.makedirs(self.var_folder)
+		
 	#def _create_dirs			
 	
 	def _create_conf(self):
