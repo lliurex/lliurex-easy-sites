@@ -1,3 +1,9 @@
+lliurex-easy-sites (15.06.3) bionic; urgency=medium
+
+  * Created easy-sites folder in /var/www/ if not exists
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 21 Jul 2020 11:15:34 +0200
+
 lliurex-easy-sites (15.06.2) bionic; urgency=medium
 
   * Fixed paths for site icons and symlink
