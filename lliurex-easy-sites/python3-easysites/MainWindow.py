@@ -387,7 +387,7 @@ class MainWindow:
 		lang=os.environ["LANG"]
 
 		if 'ca_ES' in lang:
-			self.help_cmd='xdg-open https://wiki.edu.gva.es/lliurex/tiki-index.php?page=Easy-Sites_va'
+			self.help_cmd='xdg-open https://wiki.edu.gva.es/lliurex/tiki-index.php?page=Easy+Sites.'
 		else:
 			self.help_cmd='xdg-open https://wiki.edu.gva.es/lliurex/tiki-index.php?page=Easy-Sites'
 
