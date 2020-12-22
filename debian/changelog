@@ -1,3 +1,9 @@
+lliurex-easy-sites (15.06.4) bionic; urgency=medium
+
+  * Updated link to the wiki
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 22 Dec 2020 18:01:34 +0100
+
 lliurex-easy-sites (15.06.3) bionic; urgency=medium
 
   * Created easy-sites folder in /var/www/ if not exists
