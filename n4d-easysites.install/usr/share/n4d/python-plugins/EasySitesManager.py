@@ -3,13 +3,24 @@ import os
 import json
 import codecs
 import shutil
-import xmlrpclib as n4dclient
-import ssl
-#from jinja2 import Environment
-#from jinja2.loaders import FileSystemLoader
-#from jinja2 import Template
+import n4d.responses
 
-class EasySitesManager(object):
+class EasySitesManager:
+
+	DELETE_SITE_ERROR=-12
+	SYNC_CONTENT_ERROR=-13
+	RENAME_SITE_OLD_NOT_EXISTS_ERROR=-14
+	RENAME_SITE_PROBLEMS_ERROR=-15
+	CREATE_LINK_TEMPLATE_ERROR=-16
+	CREATE_SITE_ICON_ERROR=-17
+	CREATE_SYMLINK_FOLDER_ERROR=-18
+	HIDE_SHOW_SITE_ERROR=-19
+	READING_CONFIGURATION_FILE_ERROR=-21
+	SAVING_SITE_ERROR=-23
+	EDIT_SITE_ERROR=-30
+
+	ALL_CORRECT_CODE=0
+	EDIT_SITE_SUCCESSFUL=10
 
 	def __init__(self):
 
@@ -22,16 +33,17 @@ class EasySitesManager(object):
 		self.icons_path="/usr/share/lliurex-www/srv/icons"
 		#self.hide_folder=os.path.join(self.links_path,"hide_links")
 
+		'''
 		server='localhost'
 		context=ssl._create_unverified_context()
 		self.n4d = n4dclient.ServerProxy("https://"+server+":9779",context=context,allow_none=True)
 		
 		self._get_n4d_key()
-
+		'''
 
 	#def __init__	
 
-
+	'''
 	def _get_n4d_key(self):
 
 		self.n4dkey=''
@@ -39,7 +51,7 @@ class EasySitesManager(object):
 			self.n4dkey = file_data.readlines()[0].strip()
 
 	#def _get_n4d_key
-
+	'''
 
 	def _create_dirs(self):
 
@@ -68,13 +80,6 @@ class EasySitesManager(object):
 
 	def read_conf(self):
 		
-		'''
-		Result code:
-			-21: Error reading configuration file
-			-0: All correct 
-
-		'''	
-
 		self._create_dirs()	
 		
 		if not os.path.isdir(self.config_dir):
@@ -106,11 +111,12 @@ class EasySitesManager(object):
 					pass	
 
 		if cont_errors==0:
-			result={"status":True,"msg":"Configurations files readed successfuly","code":0,"data":self.sites_config}
+			result={"status":True,"msg":"Configurations files readed successfuly","code":EasySitesManager.ALL_CORRECT_CODE,"data":self.sites_config}
 		else:				
-			result={"status":False,"msg":"","code":21,"data":self.sites_config}
+			result={"status":False,"msg":"","code":EasySitesManager.READING_CONFIGURATION_FILE_ERROR,"data":self.sites_config}
 
-		return result	
+		#Old n4d:return result
+		return n4d.responses.build_successful_call_response(result)	
 
 	#def read_conf	
 
@@ -147,9 +153,11 @@ class EasySitesManager(object):
 		except Exception as e:
 			status=False
 			msg="Unabled to saved site config: "+str(e)
-			code=23
+			code=EasySitesManager.SAVING_SITE_ERROR
 
-		return {"status":status,"msg":msg,"code":code}			
+		#Old n4d: return {"status":status,"msg":msg,"code":code}			
+		result={"status":status,"msg":msg,"code":code}
+		return n4d.responses.build_successful_call_response(result)			
 
 	#def _write_conf	
 
@@ -170,7 +178,10 @@ class EasySitesManager(object):
 			status=False
 			msg="Unabled to delete site config: "+str(e)
 
-		return {"status":status,"msg":msg}	
+		#Old n4d: return {"status":status,"msg":msg}	
+		result={"status":status,"msg":msg}
+		return n4d.responses.build_successful_call_response(result)	
+	
 
 	#def _delete_site_conf	
 
@@ -186,14 +197,6 @@ class EasySitesManager(object):
 				if result_icon["status"]:
 					result_symlink=self._create_symlink_folder(info["id"])
 					if not result_symlink['status']:
-						'''
-						if not info["visibility"]:
-							result_visible=self._hide_show_site(info["id"],False)
-							if not result_visible['status']:
-								error=True
-								result=result_visible
-						'''	
-					#else:
 						error=True
 						result=result_symlink
 				else:
@@ -212,25 +215,17 @@ class EasySitesManager(object):
 			self.delete_site(info["id"])
 		else:
 			result_write=self.write_conf(info)
-			if result_write['status']:
-				return result
-			else:
+			if not result_write['status']:
 				self.delete_site(info["id"])
 				result=result_write
-		return result
+		#Old n4d: return result
+		return n4d.responses.build_successful_call_response(result)
 			
 	
 	#def create_new_site
 	
 
 	def edit_site(self,info,pixbuf_path,origId):
-
-		'''
-		Result code:
-		-10: Site edit successfully
-		-30: Unable to edit the site
-
-		'''
 
 		actions_todo=self.get_actions_todo(info,origId)
 		result_backup=self._make_tmp_site_backup(origId)
@@ -276,11 +271,11 @@ class EasySitesManager(object):
 			
 			if error:
 				self._remove_tmp_site_backup(pixbuf_path,True)
-				return result
+				#Old n4d: return result
 			else:
 				result_write=self.write_conf(info)
 				if result_write['status']:
-					result={"status":True,"msg":"","code":10,"data":""}	
+					result={"status":True,"msg":"","code":EasySitesManager.EDIT_SITE_SUCCESSFUL,"data":""}	
 				else:
 					self._undo_edit_changes(origId,info,rename,icon_changed,link_changed)
 					if visible_changed:
@@ -290,21 +285,17 @@ class EasySitesManager(object):
 							self._hide_show_site(info["id"],True)	
 					result=result_write
 				self._remove_tmp_site_backup(pixbuf_path,True)
-				return result
+				#Old n4d: return result
 		else:
 			self._remove_tmp_site_backup(pixbuf_path,True)
-			result={"status":False,"msg":"","code":30,"data":""}				
-			return result
+			result={"status":False,"msg":"","code":EasySitesManager.EDIT_SITE_ERROR,"data":""}				
+			#Old n4d: return result
+
+		return n4d.responses.build_successful_call_response(result)
 
 	#def edit_site		
 
 	def delete_site(self,siteId):
-
-		'''
-		Result code:
-			-12:Unable to delete site
-			-15:Site delete successfully
-		'''
 
 		try:
 			link_file="easy-"+siteId+".json"
@@ -334,8 +325,9 @@ class EasySitesManager(object):
 			return self._delete_site_conf(siteId)
 
 		except Exception as e:
-			result={"status":False,"msg":str(e),"code":12,"data":""}
-			return result	
+			result={"status":False,"msg":str(e),"code":EasySitesManager.DELETE_SITE_ERROR,"data":""}
+			#Old n4d: return result	
+			return n4d.responses.build_successful_call_response(result)
 
 	#def delete_site	
 
@@ -354,16 +346,13 @@ class EasySitesManager(object):
 					self._hide_show_site(info["id"],True)	
 				result=result_write
 
-		return result
+		#Old n4d:return result
+		return n4d.responses.build_successful_call_response(result)
 
 	#def change_site_visibility		
 
 	def _create_new_site_folder(self,siteId):
 
-		'''		
-		Result code:
-			-13: Unable to sync content
-		'''
 		try:
 			new_site="easy-"+siteId
 			new_site_path=os.path.join(self.net_folder,new_site)
@@ -374,7 +363,7 @@ class EasySitesManager(object):
 			result={"status":True,"msg":"Site folder create successfully","code":"","data":""}
 								
 		except Exception as e:
-			result={"status":False,"msg":str(e),"code":13,"data":""}
+			result={"status":False,"msg":str(e),"code":EasySitesManager.SYNC_CONTENT_ERROR,"data":""}
 
 		return result	
 
@@ -418,11 +407,6 @@ class EasySitesManager(object):
 
 	def _rename_site_folder(self,siteId,origId):
 
-		'''
-		Result code:
-			-14: Unable to rename. Old site not exists
-			-15: Unable to rename. Problems in process
-		'''
 		orig_site=os.path.join(self.net_folder,"easy-"+origId)
 		new_site=os.path.join(self.net_folder,"easy-"+siteId)
 
@@ -431,10 +415,10 @@ class EasySitesManager(object):
 				os.rename(orig_site,new_site)
 				result={"status":True,"msg":"Site rename successfully","code":"","data":""}
 			else:
-				result={"status":False,"msg":"","code":14,"data":""}
+				result={"status":False,"msg":"","code":EasySitesManager.RENAME_SITE_OLD_NOT_EXISTS_ERROR,"data":""}
 	
 		except Exception as e:
-			result={"status":False,"msg":str(e),"code":15,"data":""}
+			result={"status":False,"msg":str(e),"code":EasySitesManager.RENAME_SITE_PROBLEMS_ERROR,"data":""}
 	
 
 		return result	
@@ -443,34 +427,10 @@ class EasySitesManager(object):
 
 	def _create_link_template(self,info,origId=None):
 
-
-		'''
-		Result code:
-			-16:Unable to create link template
-		'''
 		try:
 			new_site=True
 			link_template=os.path.join(self.links_path,"easy-"+info["id"])+".json"
-			'''		
-			site_info={}
-			site_info["ID"]=info["id"]
-			site_info["ICON"]="easy-"+info["id"]+".png"
-			site_info["NAME"]=info["name"]
-			site_info["DESCR"]=info["description"]
-						
-			site_info["visibility"]=visible
-			site_info["EDITABLE"]="false"
-				
-			template= self.tpl_env.get_template("custom.json")
-			string_template = template.render(site_info).encode('UTF-8')
-				
-			if type(string_template) is not str:
-				string_template=string_template.decode()
-
-			file=open(link_template,"w")
-			file.write(string_template)
-			file.close()
-			'''
+		
 			if origId!= None:
 				current_link=os.path.join(self.links_path,"easy-"+origId)+".json"
 				new_site=False
@@ -501,30 +461,19 @@ class EasySitesManager(object):
 				old_link_template=os.path.join(self.links_path,"easy-"+origId)+".json"
 				if os.path.exists(old_link_template):
 					os.remove(old_link_template)
-					'''
-					else:
-						old_hide_link_template=os.path.join(self.hide_folder,"easy-"+origId)+".json"
-						if os.path.exists(old_hide_link_template):
-							os.remove(old_hide_link_template)	
-					'''
+					
 			
 			result={"status":True,"msg":"Link file create successfuly","code":"","data":""}
 		
 		except Exception as e:
 
-			result={"status":False,"msg":str(e),"code":16,"data":""}
+			result={"status":False,"msg":str(e),"code":EasySitesManager.CREATE_LINK_TEMPLATE_ERROR,"data":""}
 
 		return result
 		
 	#def_create_link_template	
 	
 	def _create_site_icon(self,siteId,pixbuf_path,origId=None):
-
-		'''
-		Result code:
-			-17:Unable to create icon site
-		'''
-
 
 		try:
 			new_icon="easy-"+siteId+".png"
@@ -539,7 +488,7 @@ class EasySitesManager(object):
 						os.remove(old_icon_path)
 			result={"status":True,"msg":"icon site create successfully","code":"","data":""}
 		except Exception as e:
-			result={"status":False,"msg":str(e),"code":17,"data":""}
+			result={"status":False,"msg":str(e),"code":EasySitesManager.CREATE_SITE_ICON_ERROR,"data":""}
 	
 		return result
 
@@ -547,11 +496,6 @@ class EasySitesManager(object):
 
 	def _create_symlink_folder(self,siteId,origId=None):
 
-
-		'''
-		Result code:
-			-18:Unable to create symbolic link
-		'''
 		try:
 			if siteId==origId:
 				pass
@@ -568,7 +512,7 @@ class EasySitesManager(object):
 			result={"status":True,"msg":"link to /net create successfully","code":"","data":""}
 
 		except Exception as e:
-			result={"status":False,"msg":str(e),"code":18,"data":""}
+			result={"status":False,"msg":str(e),"code":EasySitesManager.CREATE_SYMLINK_FOLDER_ERROR,"data":""}
 
 		return result
 		
@@ -576,29 +520,18 @@ class EasySitesManager(object):
 
 	def _hide_show_site(self,siteId,visible):
 
-		'''
-		Result code:
-			-19:Unable to execute action
-		'''
 		show_site=visible
 		link_site="easy-"+siteId+".json"
-		#hide_site_path=os.path.join(self.hide_folder,link_site)
 		link_site_path=os.path.join(self.links_path,link_site)
 
 		try:
 			
 			if show_site:
 				action="show"
-				'''
-				if os.path.exists(hide_site_path):
-					shutil.move(hide_site_path,link_site_path)
-				'''
+				
 			else:
 				action="hide"
-				'''
-				if os.path.exists(link_site_path):
-					shutil.move(link_site_path,hide_site_path)	
-				'''
+			
 			
 			f=open(link_site_path)
 			content=json.load(f)
@@ -615,7 +548,7 @@ class EasySitesManager(object):
 			result={"status":True,"msg":"Action execute successfully: "+action,"code":"","data":""}		
 
 		except Exception as e:
-			result={"status":False,"msg":str(e),"code":19,"data":""}
+			result={"status":False,"msg":str(e),"code":EasySitesManager.HIDE_SHOW_SITE_ERROR,"data":""}
 
 		return result
 
