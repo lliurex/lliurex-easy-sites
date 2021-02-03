@@ -308,13 +308,13 @@ class SiteManager(object):
 		dest_site_path=os.path.join(self.net_folder,dest_site)
 		try:
 			sync_content=self.local_client.ScpManager.send_dir("","ScpManager",self.validation[0],self.validation[1],"server",sync_from,dest_site_path,True)
-			result['status']=True
 			return sync_content
 		except:
 			result={}
 			result['status']=sync_content['status']
 			result['msg']=sync_content['msg']
 			result['code']=SiteManager.SCP_CONTENT_TOSERVER_ERROR
+			return result
 		
 	#def sync_content
 
