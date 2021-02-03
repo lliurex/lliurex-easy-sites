@@ -25,6 +25,10 @@ import datetime
 
 
 class EditBox(Gtk.VBox):
+
+	VALIDATION_DATA_WAITING_CODE=24
+	SAVIG_CHANGES_WAITING_CODE=29
+	APPLYNG_CHANGES_TOIMAGE_WAITING_CODE=28
 	
 	def __init__(self):
 		
@@ -326,7 +330,7 @@ class EditBox(Gtk.VBox):
 			
 		self.data_tocheck["image"]["path"]=self.image_path
 
-		self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(24))			
+		self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(EditBox.VALIDATION_DATA_WAITING_CODE))			
 		self.core.mainWindow.waiting_label.set_name("WAITING_LABEL")
 		self.core.mainWindow.waiting_window.show_all()
 		self.manage_form_control(False)
@@ -367,11 +371,6 @@ class EditBox(Gtk.VBox):
 		
 	def save_values(self):		
 		
-		'''
-		Result code:
-			-15: edited successfully
-			-18: created successfully
-		'''
 		now = datetime.datetime.now()
 		site_info={}
 		copy_image=""
@@ -423,7 +422,7 @@ class EditBox(Gtk.VBox):
 		pixbuf=Gdk.pixbuf_get_from_window(window,0,0,110,110)
 		self.args=[action,site_info,pixbuf,self.require_sync,copy_image,self.origId]
 
-		self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(29))			
+		self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(EditBox.SAVIG_CHANGES_WAITING_CODE))			
 		self.core.mainWindow.waiting_label.set_name("WAITING_LABEL")
 		self.init_threads()
 		self.saving_data_t.start()
@@ -583,7 +582,7 @@ class EditBox(Gtk.VBox):
 		if not self.waiting_draw:
 			self.apply_btn.set_sensitive(False)
 			self.cancel_btn.set_sensitive(False)
-			self.edit_msg_label.set_text(self.core.mainWindow.get_msg(28))
+			self.edit_msg_label.set_text(self.core.mainWindow.get_msg(EditBox.APPLYNG_CHANGES_TOIMAGE_WAITING_CODE))
 			self.edit_msg_label.set_name("WAITING_LABEL")
 			self.waiting_draw=True
 			GLib.timeout_add_seconds(1,self.pulsate_waiting_draw)

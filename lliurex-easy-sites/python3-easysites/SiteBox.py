@@ -18,7 +18,12 @@ _ = gettext.gettext
 
 
 class SiteBox(Gtk.VBox):
-	
+
+	SYNC_CONTENT_WAITING_CODE=22
+	DELETING_SITE_WAITING_CODE=25
+	ACTIONS_SHOW_SITE_WAITING_CODE=26
+	ACTIONS_HIDE_SITE_WATIING_CODE=27
+
 	def __init__(self):
 		
 		Gtk.VBox.__init__(self)
@@ -335,11 +340,11 @@ class SiteBox(Gtk.VBox):
 
 		if switch.get_active():
 			turn_on=True
-			msg_switch=self.core.mainWindow.get_msg(26)
+			msg_switch=self.core.mainWindow.get_msg(SiteBox.ACTIONS_SHOW_SITE_WAITING_CODE)
 			visible=True
 			
 		else:
-			msg_switch=self.core.mainWindow.get_msg(27)
+			msg_switch=self.core.mainWindow.get_msg(SiteBox.ACTIONS_HIDE_SITE_WATIING_CODE)
 			visible=False
 
 		self.args_visibility=["visibility",self.sites_list[siteId],visible]
@@ -405,7 +410,7 @@ class SiteBox(Gtk.VBox):
 			updated_by=self.core.sitesmanager.validation[0]
 			last_updated=now.strftime("%Y-%m-%d %H:%M")
 			self.args_sync=["sync",self.sites_list[siteId],folder_to_sync,updated_by,last_updated]
-			self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(22))			
+			self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(SiteBox.SYNC_CONTENT_WAITING_CODE))			
 			self.core.mainWindow.waiting_window.show_all()
 			self.init_threads()
 			self.sync_folder_t.start()
@@ -508,7 +513,7 @@ class SiteBox(Gtk.VBox):
 		if response==Gtk.ResponseType.YES:
 			site_to_remove=hbox.get_children()[0].id
 			self.args_delete=["delete",site_to_remove]
-			self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(25))			
+			self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(SiteBox.DELETING_SITE_WAITING_CODE))			
 			self.core.mainWindow.waiting_window.show_all()
 			self.init_threads()
 			self.delete_folder_t.start()

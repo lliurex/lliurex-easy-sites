@@ -163,31 +163,20 @@ class MainWindow:
 		password=self.password_entry.get_text()
 		server=self.server_ip_entry.get_text()
 	
-		'''	
-		# HACK
-		
-		user="lliurex"
-		password="lliurex"
-		server="172.20.9.246"
-		'''
-
-		if server!="":
-			self.core.sitesmanager.set_server(server)
-		else:
-			self.core.sitesmanager.set_server("server")
-		
+		if server=="":
+			server='server'
 		
 		self.login_msg_label.set_text(_("Validating user..."))
 		
 		self.login_button.set_sensitive(False)
-		self.validate_user(user,password)	
+		self.validate_user(server,user,password)	
 
 	#def login_clicked
 
-	def validate_user(self,user,password):
+	def validate_user(self,server,user,password):
 		
 		
-		t=threading.Thread(target=self.core.sitesmanager.validate_user,args=(user,password,))
+		t=threading.Thread(target=self.core.sitesmanager.validate_user,args=(server,user,password,))
 		t.daemon=True
 		t.start()
 		GLib.timeout_add(500,self.validate_user_listener,t)
@@ -317,15 +306,15 @@ class MainWindow:
 
 	def get_msg(self,code):
 
-		if 	code==1:
+		if 	code==-1:
 			msg_text=_("You must indicate a name for the site")
-		elif code==2:
+		elif code==-2:
 			msg_text=_("The name site is duplicate")
-		elif code==3:
+		elif code==-3:
 			msg_text=_("Image file is not correct")
-		elif code==4:
+		elif code==-4:
 			msg_text=_("You must indicate a image file")
-		elif code==5:
+		elif code==-5:
 			msg_text=_("You must indicate a folder to sync content")
 		elif code==6:
 			msg_text=_("Site is now visible again")
@@ -339,29 +328,29 @@ class MainWindow:
 			msg_text=_("Site has been successfully edited")
 		elif code==11:
 			msg_text=_("Site has been successfully created")
-		elif code==12:
+		elif code==-12:
 			msg_text=_("Unable to delete the site")	
-		elif code==13:
+		elif code==-13:
 			msg_text=_("Unable to sync the content")	
-		elif code==14:
+		elif code==-14:
 			msg_text=_("Unable to rename the site. Old site not exists")	
-		elif code==15:
+		elif code==-15:
 			msg_text=_("Unable to rename the site due to problems in process")
-		elif code==16:
+		elif code==-16:
 			msg_text=_("Unable to create the link template for the site")
-		elif code==17:
+		elif code==-17:
 			msg_text=_("Unable to create the icon for the site")
-		elif code==18:
+		elif code==-18:
 			msg_text=_("Unable to create the symbolic link for the site")		
-		elif code==19:
+		elif code==-19:
 			msg_text=_("Unabled to change the visibility of the site")	
 		elif code==20:
 			msg_text=_("Unabled to copy the image for the site")
-		elif code==21:
+		elif code==-21:
 			msg_text=_("Error reading configuration files of the sites")
 		elif code==22:
 			msg_text=_("Sync the content. Wait a moment...")
-		elif code==23:
+		elif code==-23:
 			msg_text=_("Error writing changes in the site configuration file")
 		elif code==24:
 			msg_text=_("Validating the data entered...")
@@ -375,7 +364,7 @@ class MainWindow:
 			msg_text=_("Applying changes in the image. Wait a moment...")	
 		elif code==29:
 			msg_text=_("Saving changes. Wait a moment...")	
-		elif code==30:
+		elif code==-30:
 			msg_text=_("Unabled to edit the site")	
 			
 		return msg_text

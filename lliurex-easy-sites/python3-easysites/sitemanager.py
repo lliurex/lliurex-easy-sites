@@ -8,8 +8,6 @@ import json
 import codecs
 import datetime
 from mimetypes import MimeTypes
-import xmlrpc.client as n4dclient
-import ssl
 import shutil
 import glob
 import unicodedata
@@ -25,6 +23,16 @@ from jinja2 import Template
 
 class SiteManager(object):
 
+	SITE_NAME_MISSING_ERROR=-1
+	SITE_NAME_DUPLICATE_ERROR=-2
+	IMAGE_FORMART_ERROR=-3
+	IMAGE_FILE_MISSING_ERROR=-4
+	FOLDER_TOSYNC_MISSING_ERROR=-5
+	SCP_CONTENT_TOSERVER_ERROR=-13
+	SCP_FILE_TOSERVER_ERROR=-17
+
+	ALL_CORRECT_CODE=0
+
 	def __init__(self,server=None):
 
 		super(SiteManager, self).__init__()
@@ -37,24 +45,25 @@ class SiteManager(object):
 		self.image_dir=os.path.expanduser("~/.cache/")+"easy-sites"
 		self.url_site="http://server/easy-sites/easy-"
 
-
+		'''
 		if server!=None:
 			self.set_server(server)
 
 		context=ssl._create_unverified_context()
 		self.n4d_local = n4dclient.ServerProxy("https://localhost:9779",context=context,allow_none=True)	
+		'''
 		self.detect_flavour()	
 	
 	#def __init__	
 	
-
+	'''
 	def set_server(self,server):	
 		
 		context=ssl._create_unverified_context()	
 		self.n4d=n4dclient.ServerProxy("https://"+server+":9779",context=context,allow_none=True)
 	
 	#def set_server
-		
+	'''	
 	def detect_flavour(self):
 		
 		cmd='lliurex-version -v'
@@ -67,16 +76,34 @@ class SiteManager(object):
 
 	#def detect_flavour
 
-	def validate_user(self,user,password):
+	def validate_user(self,server,user,password):
 		
-		ret=self.n4d.validate_user(user,password)
-		self.user_validated,self.user_groups=ret
+		try:
+			self.server_ip=server
+			self.client=n4d.client.Client("https://%s:9779"%server,user,password)
 			
-		
-		if self.user_validated:
-			self.validation=(user,password)
-					
-		#return self.user_validated
+			ret=self.client.validate_user()
+			self.user_validated=ret[0]
+			self.user_groups=ret[1]
+			self.credentials=[user,password]
+
+			if self.user_validated:
+				self.ticket=self.client.get_ticket()
+				if self.ticket.valid():
+					self.client=n4d.client.Client(ticket=self.ticket)
+					self.local_client=n4d.client.Client("https://localhost:9779",user,password)
+					local_t=self.local_client.get_ticket()
+					if local_t.valid():
+						self.local_client=n4d.client.Client(ticket=local_t)
+					else:
+						self.user_validated=False	
+				else:
+					self.user_validated=False
+
+		except Exception as e:
+			self._debug("Validate user",str(e))
+			self.user_validated=False
+	
 		
 	#def validate_user
 
@@ -89,7 +116,7 @@ class SiteManager(object):
 
 	def read_conf(self):
 		
-		result=self.n4d.read_conf(self.validation,'EasySitesManager')
+		result=self.client.EasySitesManager.read_conf()
 		self._debug("Read configuration file: ",result)
 		self.sites_config=result["data"]
 		return result
@@ -115,7 +142,7 @@ class SiteManager(object):
 			
 			if not error:
 				if action=="add":			
-					result=self.n4d.create_new_site(self.validation,'EasySitesManager',info,pixbuf_path)
+					result=self.client.EasySitesManager.create_new_site(info,pixbuf_path)
 					if result['status']:
 						result=self.sync_content(info["id"],info["sync_folder"])
 						if result['status']:
@@ -123,7 +150,7 @@ class SiteManager(object):
 								self.copy_image_file(info["id"],copy_image)
 							#self.n4d.write_conf(self.validation,'EasySitesManager',info)
 						else:
-							self.n4d.delete_site(self.validation,'EasySitesManager',info["id"])	
+							self.client.EasySitesManager.delete_site(info["id"])	
 
 					self.remove_tmp_files(pixbuf_path)		
 					
@@ -133,7 +160,7 @@ class SiteManager(object):
 					confirm_edit=True
 					origId=args[5]
 					require_sync=args[3]			
-					result=self.n4d.edit_site(self.validation,'EasySitesManager',info,pixbuf_path,origId)
+					result=self.client.EasySitesManager.edit_site(info,pixbuf_path,origId)
 					if result['status']:
 						if require_sync:
 							result=self.sync_content(info["id"],info["sync_folder"])
@@ -151,13 +178,13 @@ class SiteManager(object):
 	
 		elif action=="delete":
 			siteId=args[1]
-			result=self.n4d.delete_site(self.validation,'EasySitesManager',siteId)
+			result=self.client.EasySitesManager.delete_site(siteId)
 			self._debug("Delete site: ",result)
 
 		elif action=="visibility":
 			info=args[1]
 			visible=args[2]
-			result=self.n4d.change_site_visibility(self.validation,'EasySitesManager',info,visible)
+			result=self.client.EasySitesManager.change_site_visibility(info,visible)
 			'''
 			if result['status']:
 				info["visible"]=visible
@@ -174,7 +201,7 @@ class SiteManager(object):
 				info["sync_folder"]=sync_from
 				info["updated_by"]=args[3]
 				info["last_updated"]=args[4]
-				result_write=self.n4d.write_conf(self.validation,'EasySitesManager',info)
+				result_write=self.client.EasySitesManager.write_conf(info)
 				if not result_write['status']:
 					result=result_write
 			self._debug("Sync new content: ",result)
@@ -185,20 +212,11 @@ class SiteManager(object):
 
 	def check_data(self,data,edit,orig_id=None):
 
-		'''
-		Result code:
-			-1: Missing site name
-			-2: Site name duplicate
-			-3: Image format no valid
-			-4: Missing image file
-			-5: Missing folder to sync
-
-		'''	
 		check_image=None
 		sites_keys=self.sites_config.keys()
 		
 		if data["name"]=="":
-			return {"result":False,"code":1,"data":""}
+			return {"result":False,"code":SiteManager.SITE_NAME_MISSING_ERROR,"data":""}
 
 		else:
 			check_duplicates=True
@@ -208,22 +226,22 @@ class SiteManager(object):
 
 			if check_duplicates:		
 				if data["id"] in sites_keys:
-					return {"result":False,"code":2,"data":""}
+					return {"result":False,"code":SiteManager.SITE_NAME_DUPLICATE_ERROR,"data":""}
 			 			
 							
 		if not edit:
 			if data["sync_folder"]==None:
-				return {"result":False,"code":5,"data":""}
+				return {"result":False,"code":SiteManager.FOLDER_TOSYNC_MISSING_ERROR,"data":""}
 
 		if data["image"]["option"]=="custom":						
 			if data["image"]["path"]!=None:
 				check_image=self.check_mimetypes(data["image"]["path"])
 				
 			else:
-				return {"result":False,"code":4,"data":""}
+				return {"result":False,"code":SiteManager.IMAGE_FILE_MISSING_ERROR,"data":""}
 		
 		if check_image==None:
-			return {"result":True,"code":0,"data":""}
+			return {"result":True,"code":SiteManager.ALL_CORRECT_CODE,"data":""}
 						
 		else:
 			return check_image			
@@ -234,12 +252,6 @@ class SiteManager(object):
 	
 	def check_mimetypes(self,file):
 
-		'''
-		Result code:
-			-4: Invalid image file
-		
-		'''	
-	
 		mime = MimeTypes()
 		file_mime_type= mime.guess_type(file)
 		error=False
@@ -250,7 +262,7 @@ class SiteManager(object):
 			error=True
 
 		if error:
-			return {"result":False,"code":3,"data":""}				
+			return {"result":False,"code":SiteManager.IMAGE_FORMART_ERROR,"data":""}				
 		
 	#def check_mimetypes			
 				
@@ -269,19 +281,13 @@ class SiteManager(object):
 
 	def copy_pixbuf_file(self,pixbuf_path):
 
-		'''
-		Result code:
-			-17: Unable to send file to server
-		
-		'''	
-
-		copy_pixbuf=self.n4d_local.send_file("","ScpManager",self.validation[0],self.validation[1],"server",pixbuf_path,"/tmp/")
+		copy_pixbuf=self.local_client.ScpManager.send_file(self.validation[0],self.validation[1],self.server_ip,pixbuf_path,"/tmp/")
 		
 		if not copy_pixbuf['status']:
 			result={}
 			result['status']=copy_pixbuf['status']
 			result['msg']=copy_pixbuf['msg']
-			result['code']=17
+			result['code']=SiteManager.SCP_FILE_TOSERVER_ERROR
 			return result
 		else:
 			return copy_pixbuf		
@@ -297,26 +303,19 @@ class SiteManager(object):
 	#def remove_tmp_files		
 
 	def sync_content(self,siteId,sync_from):
-
-		'''
-		Result code:
-			-13: Unable to sync content
-		
-		'''	
 		
 		dest_site="easy-"+siteId
 		dest_site_path=os.path.join(self.net_folder,dest_site)
-		sync_content=self.n4d_local.send_dir("","ScpManager",self.validation[0],self.validation[1],"server",sync_from,dest_site_path,True)
-		
-		if not sync_content['status']:
+		try:
+			sync_content=self.local_client.ScpManager.send_dir("","ScpManager",self.validation[0],self.validation[1],"server",sync_from,dest_site_path,True)
+			result['status']=True
+			return sync_content
+		except:
 			result={}
 			result['status']=sync_content['status']
 			result['msg']=sync_content['msg']
-			result['code']=13
-			return result
-		else:
-			return sync_content		
-
+			result['code']=SiteManager.SCP_CONTENT_TOSERVER_ERROR
+		
 	#def sync_content
 
 	def copy_image_file(self,siteId,copy_image):
@@ -328,7 +327,7 @@ class SiteManager(object):
 		dest_site="easy-"+siteId
 		dest_site_path=os.path.join(self.net_folder,dest_site)
 		dest_path=os.path.join(dest_site_path,tmp_image)
-		self.n4d_local.send_file("","ScpManager",self.validation[0],self.validation[1],"server",copy_image,dest_path)
+		self.local_client.ScpManager.send_file(self.credentials[0],self.credentials[1],self.server_ip,copy_image,dest_path)
 
 
 	#def copy_image_file	
