@@ -144,7 +144,7 @@ class EasySitesManager:
 		new_path=os.path.join(self.config_dir,new_file)	
 		try:
 			
-			with codecs.open(new_path,'w',encoding="utf-8") as f:
+			with codecs.open(new_path,'w') as f:
 				json.dump(info,f,ensure_ascii=False)
 				f.close()
 				status=True
@@ -450,7 +450,7 @@ class EasySitesManager:
 				content["order"]=666
 
 			f.close()
-			with codecs.open(link_template,'w',encoding="utf-8") as f:
+			with codecs.open(link_template,'w') as f:
 				json.dump(content,f,ensure_ascii=False)
 				f.close()
 
@@ -538,7 +538,7 @@ class EasySitesManager:
 			content["visibility"]=visible
 			f.close()
 
-			with codecs.open(link_site_path,'w',encoding="utf-8") as f:
+			with codecs.open(link_site_path,'w') as f:
 				json.dump(content,f,ensure_ascii=False)
 				f.close()
 			
