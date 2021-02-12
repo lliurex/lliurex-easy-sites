@@ -1,0 +1,277 @@
+lliurex-easy-sites (15.06.4) bionic; urgency=medium
+
+  * Updated link to the wiki
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 22 Dec 2020 18:01:34 +0100
+
+lliurex-easy-sites (15.06.3) bionic; urgency=medium
+
+  * Created easy-sites folder in /var/www/ if not exists
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 21 Jul 2020 11:15:34 +0200
+
+lliurex-easy-sites (15.06.2) bionic; urgency=medium
+
+  * Fixed paths for site icons and symlink
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 16 Jul 2020 11:01:29 +0200
+
+lliurex-easy-sites (15.06.1) bionic; urgency=medium
+
+  * Fixed setup.py
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 15 Jul 2020 13:19:57 +0200
+
+lliurex-easy-sites (15.06) bionic; urgency=medium
+
+  * Added changes to work with the new server home page
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 15 Jul 2020 13:05:38 +0200
+
+lliurex-easy-sites (15.05.38) bionic; urgency=medium
+
+  * Fixed desktop for right mouse button action
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 30 Jul 2019 10:05:17 +0200
+
+lliurex-easy-sites (15.05.37) bionic; urgency=medium
+
+  * adding ca@valencia
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Fri, 26 Jul 2019 11:22:42 +0200
+
+lliurex-easy-sites (15.05.36) bionic; urgency=medium
+
+  * Added link to help
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 23 Jul 2019 08:06:49 +0200
+
+lliurex-easy-sites (15.05.35) bionic; urgency=medium
+
+  * Fixed login window
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 04 Jul 2019 11:41:54 +0200
+
+lliurex-easy-sites (15.05.34) bionic; urgency=medium
+
+  * Fixed valencian translations
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 17 Jun 2019 13:34:34 +0200
+
+lliurex-easy-sites (15.05.33) bionic; urgency=medium
+
+  * Changed icon
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 13 Jun 2019 09:16:47 +0200
+
+lliurex-easy-sites (15.05.32) bionic; urgency=medium
+
+  * Added sudo group in login function
+
+ -- juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 14 May 2019 08:58:17 +0200
+
+lliurex-easy-sites (15.05.31) bionic; urgency=medium
+
+  * Improved function to remove tmp files
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 30 Apr 2019 09:24:32 +0200
+
+lliurex-easy-sites (15.05.30) bionic; urgency=medium
+
+  * Improved general performance
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Fri, 26 Apr 2019 14:07:15 +0200
+
+lliurex-easy-sites (15.05.29) bionic; urgency=medium
+
+  * Changed function to normalized siteId
+  * Included configuration of acls for /net/easy-sites in n4d-easysites deb
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 25 Apr 2019 13:41:58 +0200
+
+lliurex-easy-sites (15.05.28) bionic; urgency=medium
+
+  * Improved error management
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 10 Apr 2019 17:03:33 +0200
+
+lliurex-easy-sites (15.05.27) bionic; urgency=medium
+
+  * Added valencian translations
+  * Fixed site template json 
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 01 Apr 2019 14:43:38 +0200
+
+lliurex-easy-sites (15.05.26) bionic; urgency=medium
+
+  * Added spanish translations
+  * Improved general performance
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 26 Mar 2019 16:58:51 +0100
+
+lliurex-easy-sites (15.05.25) bionic; urgency=medium
+
+  * New design
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 26 Mar 2019 12:10:12 +0100
+
+lliurex-easy-sites (15.05.24) bionic; urgency=medium
+
+  * Initial release for bionic
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 04 Oct 2018 09:55:51 +0200
+
+lliurex-easy-sites (15.05.14) xenial; urgency=high
+
+  * Updated banner
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Wed, 08 Aug 2018 09:52:17 +0200
+
+lliurex-easy-sites (15.05.13) xenial; urgency=medium
+
+  * Updated categorization in zero-center
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Mon, 30 Apr 2018 09:57:26 +0200
+
+lliurex-easy-sites (15.05.12-lliurex2) xenial; urgency=medium
+
+  * Removed deprecated locale
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Thu, 22 Jun 2017 09:22:57 +0200
+
+lliurex-easy-sites (15.05.12-lliurex1) xenial; urgency=medium
+
+  * updated metainfo
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Thu, 25 May 2017 13:57:46 +0200
+
+lliurex-easy-sites (15.05.12) xenial; urgency=medium
+
+  * Added metainfo
+
+ -- Juanma Navarro Mañez <juanma1980@gmail.com>  Thu, 11 May 2017 12:45:55 +0200
+
+lliurex-easy-sites (15.05.11) xenial; urgency=medium
+
+  * Add desktop file
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 08 Feb 2017 17:54:48 +0100
+
+lliurex-easy-sites (15.05.10) xenial; urgency=medium
+
+  * First release to xenial
+  * Fixed depends (llxcfg-runtime)
+  * Fixed require version of Gtk (lliurex-easy-sites)
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 10 Feb 2016 11:35:18 +0100
+
+lliurex-easy-sites (15.05.07) trusty; urgency=high
+
+  * Replace names by uid on acls permission
+
+ -- Raul Rodrigo Segura <raurodse@gmail.com>  Wed, 25 Nov 2015 13:59:03 +0100
+
+lliurex-easy-sites (15.05.06) trusty; urgency=high
+
+  * Updated dependences 
+
+ -- Angel Berlanas Vicente <angel.berlanas@gmail.com>  Mon, 21 Sep 2015 13:17:05 +0200
+
+lliurex-easy-sites (15.05.05) trusty; urgency=high
+
+  * Fixed logic 
+
+ -- Angel Berlanas Vicente <angel.berlanas@gmail.com>  Mon, 27 Apr 2015 16:13:41 +0200
+
+lliurex-easy-sites (15.05.04) trusty; urgency=high
+
+  * Added translation 
+
+ -- Angel Berlanas Vicente <angel.berlanas@gmail.com>  Mon, 27 Apr 2015 15:48:27 +0200
+
+lliurex-easy-sites (15.05.03) trusty; urgency=high
+
+  * fix bug in share folder srv 
+
+ -- Daniel Duran Vecino <daduve@gmail.com>  Mon, 27 Apr 2015 10:17:48 +0200
+
+lliurex-easy-sites (15.05.02) trusty; urgency=high
+
+  * Updated and fixed 
+  * Added os.system
+
+ -- Angel Berlanas Vicente <angel.berlanas@gmail.com>  Wed, 18 Feb 2015 12:44:59 +0100
+
+lliurex-easy-sites (15.05.01) trusty; urgency=high
+
+  * First trusty release
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Wed, 25 Jun 2014 17:45:57 +0200
+
+lliurex-easy-sites (14.06.01) precise; urgency=high
+
+  * Updated with banner
+
+ -- Angel Berlanas Vicente <angel.berlanas@gmail.com>  Wed, 18 Jun 2014 13:53:29 +0200
+
+lliurex-easy-sites (13.06.10) precise; urgency=high
+
+  * Updated cli with progress bar 
+
+ -- Angel Berlanas Vicente <angel.berlanas@gmail.com>  Wed, 11 Dec 2013 08:13:56 +0100
+
+lliurex-easy-sites (13.06.9) precise; urgency=high
+
+  * Updated sites 
+
+ -- Angel Berlanas Vicente <angel.berlanas@gmail.com>  Tue, 10 Dec 2013 14:43:21 +0100
+
+lliurex-easy-sites (13.06.8) precise; urgency=low
+
+  * Updated build-dependence add zomands to 
+    zero-center
+
+ -- Angel Berlanas Vicente <angel.berlanas@gmail.com>  Tue, 17 Sep 2013 09:18:28 +0200
+
+lliurex-easy-sites (13.06.7) precise; urgency=low
+
+  * Added zero-center desktop
+
+ -- Angel Berlanas Vicente <angel.berlanas@gmail.com>  Tue, 23 Jul 2013 10:44:18 +0200
+
+lliurex-easy-sites (13.06.6) precise; urgency=low
+
+  * Removed service apache2 reload
+
+ -- Angel Berlanas Vicente <angel.berlanas@gmail.com>  Mon, 22 Jul 2013 12:30:11 +0200
+
+lliurex-easy-sites (13.06.5) precise; urgency=low
+
+  * Added service apache2 reload
+
+ -- Angel Berlanas Vicente <angel.berlanas@gmail.com>  Mon, 22 Jul 2013 12:28:39 +0200
+
+lliurex-easy-sites (13.06.4) precise; urgency=low
+
+  * Added a simple button to remove easy sites
+
+ -- Angel Berlanas Vicente <angel.berlanas@gmail.com>  Mon, 22 Jul 2013 11:01:24 +0200
+
+lliurex-easy-sites (13.06.3) precise; urgency=high
+
+  * Minimal zen gui is ready!
+
+ -- Angel Berlanas Vicente <angel.berlanas@gmail.com>  Fri, 19 Jul 2013 13:23:08 +0200
+
+lliurex-easy-sites (13.06.1) precise; urgency=low
+
+  * Fixed some bugs.
+  * CLI Is now FULLY OPERATIONAL
+
+ -- Angel Berlanas Vicente <angel.berlanas@gmail.com>  Tue, 16 Jul 2013 14:00:03 +0200
+
+lliurex-easy-sites (13.06) precise; urgency=low
+
+  * First Version of lliurex-easy-sites 
+
+ -- Angel Berlanas Vicente <angel.berlanas@gmail.com>  Tue, 09 Nov 2010 13:13:10 +0100
