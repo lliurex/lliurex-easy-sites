@@ -14,6 +14,7 @@ import unicodedata
 import re
 import subprocess
 import urllib.request as urllib2
+import n4d.client
 
 from jinja2 import Environment
 from jinja2.loaders import FileSystemLoader
@@ -40,7 +41,7 @@ class SiteManager(object):
 		self.dbg=0
 		self.user_validated=False
 		self.user_groups=[]
-		self.validation=None
+		self.credentials=None
 		self.net_folder="/net/server-sync/easy-sites"
 		self.image_dir=os.path.expanduser("~/.cache/")+"easy-sites"
 		self.url_site="http://server/easy-sites/easy-"
@@ -148,7 +149,7 @@ class SiteManager(object):
 						if result['status']:
 							if copy_image!="":
 								self.copy_image_file(info["id"],copy_image)
-							#self.n4d.write_conf(self.validation,'EasySitesManager',info)
+							#self.n4d.write_conf(self.credentials,'EasySitesManager',info)
 						else:
 							self.client.EasySitesManager.delete_site(info["id"])	
 
@@ -170,7 +171,7 @@ class SiteManager(object):
 							if copy_image!="":
 								self.copy_image_file(info["id"],copy_image)
 
-							#self.n4d.write_conf(self.validation,'EasySitesManager',info)		
+							#self.n4d.write_conf(self.credentials,'EasySitesManager',info)		
 					
 					self.remove_tmp_files(pixbuf_path)
 					self._debug("Edit new site: ",result)
@@ -188,7 +189,7 @@ class SiteManager(object):
 			'''
 			if result['status']:
 				info["visible"]=visible
-				self.n4d.write_conf(self.validation,'EasySitesManager',info)
+				self.n4d.write_conf(self.credentials,'EasySitesManager',info)
 			'''
 			self._debug("Change visibility: ",result)
 
@@ -281,7 +282,7 @@ class SiteManager(object):
 
 	def copy_pixbuf_file(self,pixbuf_path):
 
-		copy_pixbuf=self.local_client.ScpManager.send_file(self.validation[0],self.validation[1],self.server_ip,pixbuf_path,"/tmp/")
+		copy_pixbuf=self.local_client.ScpManager.send_file(self.credentials[0],self.credentials[1],self.server_ip,pixbuf_path,"/tmp/")
 		
 		if not copy_pixbuf['status']:
 			result={}
@@ -307,7 +308,7 @@ class SiteManager(object):
 		dest_site="easy-"+siteId
 		dest_site_path=os.path.join(self.net_folder,dest_site)
 		try:
-			sync_content=self.local_client.ScpManager.send_dir("","ScpManager",self.validation[0],self.validation[1],"server",sync_from,dest_site_path,True)
+			sync_content=self.local_client.ScpManager.send_dir("","ScpManager",self.credentials[0],self.credentials[1],"server",sync_from,dest_site_path,True)
 			return sync_content
 		except:
 			result={}
