@@ -8,7 +8,7 @@ Standards-Version: 4.1.2
 
 Package: lliurex-easy-sites
 Architecture: all
-Depends: n4d,n4d-lliurex-base,python3-jinja2
+Depends: n4d,n4d-lliurex-base,python3-jinja2,python3-n4d-client
 Recommends:lliurex-easysites-zerocenter-files(=${binary:Version})
 Description: Contains lliurex-easy-sites
  This package contains the : lliurex-easy-sites gui
