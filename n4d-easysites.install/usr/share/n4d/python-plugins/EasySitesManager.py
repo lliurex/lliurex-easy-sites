@@ -214,7 +214,7 @@ class EasySitesManager:
 		if error:
 			self.delete_site(info["id"])
 		else:
-			result_write=self.write_conf(info)
+			result_write=self.write_conf(info).get('return',None)
 			if not result_write['status']:
 				self.delete_site(info["id"])
 				result=result_write
@@ -273,7 +273,7 @@ class EasySitesManager:
 				self._remove_tmp_site_backup(pixbuf_path,True)
 				#Old n4d: return result
 			else:
-				result_write=self.write_conf(info)
+				result_write=self.write_conf(info).get('return',None)
 				if result_write['status']:
 					result={"status":True,"msg":"","code":EasySitesManager.EDIT_SITE_SUCCESSFUL,"data":""}	
 				else:
@@ -290,7 +290,6 @@ class EasySitesManager:
 			self._remove_tmp_site_backup(pixbuf_path,True)
 			result={"status":False,"msg":"","code":EasySitesManager.EDIT_SITE_ERROR,"data":""}				
 			#Old n4d: return result
-
 		return n4d.responses.build_successful_call_response(result)
 
 	#def edit_site		
@@ -338,7 +337,7 @@ class EasySitesManager:
 		result=self._hide_show_site(info["id"],visible)
 		if result['status']:
 			info['visibility']=visible
-			result_write=self.write_conf(info)
+			result_write=self.write_conf(info).get('return',None)
 			if not result_write['status']:
 				if visible:
 					self._hide_show_site(info["id"],False)
@@ -382,7 +381,7 @@ class EasySitesManager:
 				if result_icon["status"]:
 					result_symlink=self._create_symlink_folder(info["id"],origId)
 					if result_symlink['status']:
-						return self._delete_site_conf(origId)	
+						return self._delete_site_conf(origId).get('return',None)	
 					else:
 						error=True
 						result=result_symlink	
