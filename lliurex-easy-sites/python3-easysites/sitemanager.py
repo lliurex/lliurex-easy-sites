@@ -282,16 +282,15 @@ class SiteManager(object):
 
 	def copy_pixbuf_file(self,pixbuf_path):
 
-		copy_pixbuf=self.local_client.ScpManager.send_file(self.credentials[0],self.credentials[1],self.server_ip,pixbuf_path,"/tmp/")
-		
-		if not copy_pixbuf['status']:
+		try:
+			copy_pixbuf=self.local_client.ScpManager.send_file(self.credentials[0],self.credentials[1],self.server_ip,pixbuf_path,"/tmp/")
+			return copy_pixbuf
+		except n4d.client.CallFailedError as e:
 			result={}
-			result['status']=copy_pixbuf['status']
-			result['msg']=copy_pixbuf['msg']
+			result['status']=False
+			result['msg']=e
 			result['code']=SiteManager.SCP_FILE_TOSERVER_ERROR
 			return result
-		else:
-			return copy_pixbuf		
 
 
 	#def copy_pixbuf_file	
@@ -308,12 +307,12 @@ class SiteManager(object):
 		dest_site="easy-"+siteId
 		dest_site_path=os.path.join(self.net_folder,dest_site)
 		try:
-			sync_content=self.local_client.ScpManager.send_dir("","ScpManager",self.credentials[0],self.credentials[1],"server",sync_from,dest_site_path,True)
+			sync_content=self.local_client.ScpManager.send_dir(self.credentials[0],self.credentials[1],"server",sync_from,dest_site_path,True)
 			return sync_content
-		except:
+		except n4d.client.CallFailedError as e:
 			result={}
-			result['status']=sync_content['status']
-			result['msg']=sync_content['msg']
+			result['status']=False
+			result['msg']=e
 			result['code']=SiteManager.SCP_CONTENT_TOSERVER_ERROR
 			return result
 		

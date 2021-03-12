@@ -406,13 +406,13 @@ class EditBox(Gtk.VBox):
 				site_info["sync_folder"]=self.sync_folder_dc.get_filename()
 			site_info["author"]=self.author
 			site_info["date_creation"]=self.date_creation
-			site_info["updated_by"]=self.core.sitesmanager.validation[0]
+			site_info["updated_by"]=self.core.sitesmanager.credentials[0]
 			site_info["last_update"]=now.strftime("%Y-%m-%d %H:%M")
 
 		else:		
 			action="add"	
 			site_info["sync_folder"]=self.sync_folder_dc.get_filename()	
-			site_info["author"]=self.core.sitesmanager.validation[0]
+			site_info["author"]=self.core.sitesmanager.credentials[0]
 			site_info["updated_by"]=site_info["author"]
 			site_info["date_creation"]=now.strftime("%Y-%m-%d %H:%M")
 			site_info["last_update"]=site_info["date_creation"]
@@ -466,7 +466,7 @@ class EditBox(Gtk.VBox):
 	def saving_data(self):
 
 		self.saving=self.core.sitesmanager.save_conf(self.args)
-	
+		print(self.saving)
 	#def saving_data	
 
 	

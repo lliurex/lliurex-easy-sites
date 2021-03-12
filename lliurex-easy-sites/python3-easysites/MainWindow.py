@@ -275,7 +275,6 @@ class MainWindow:
 		else:
 			for item in self.sites_info:
 				name=self.sites_info[item]["name"].lower()
-				print(name)
 				if search in name:
 					pass
 				else:
