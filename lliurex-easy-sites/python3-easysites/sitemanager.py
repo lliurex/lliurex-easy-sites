@@ -281,12 +281,14 @@ class SiteManager(object):
 
 
 	def copy_pixbuf_file(self,pixbuf_path):
-
+		
+		result={}
+		result['status']=True
+		
 		try:
 			copy_pixbuf=self.local_client.ScpManager.send_file(self.credentials[0],self.credentials[1],self.server_ip,pixbuf_path,"/tmp/")
-			return copy_pixbuf
+			return result
 		except n4d.client.CallFailedError as e:
-			result={}
 			result['status']=False
 			result['msg']=e
 			result['code']=SiteManager.SCP_FILE_TOSERVER_ERROR
@@ -306,11 +308,13 @@ class SiteManager(object):
 		
 		dest_site="easy-"+siteId
 		dest_site_path=os.path.join(self.net_folder,dest_site)
+		result={}
+		result['status']=True
+
 		try:
 			sync_content=self.local_client.ScpManager.send_dir(self.credentials[0],self.credentials[1],"server",sync_from,dest_site_path,True)
-			return sync_content
+			return result
 		except n4d.client.CallFailedError as e:
-			result={}
 			result['status']=False
 			result['msg']=e
 			result['code']=SiteManager.SCP_CONTENT_TOSERVER_ERROR
