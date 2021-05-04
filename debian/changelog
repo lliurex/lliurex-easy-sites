@@ -1,3 +1,9 @@
+lliurex-easy-sites (16.06.05) focal; urgency=medium
+
+  * Fixed n4d enabled plugin command in postinst
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 04 May 2021 11:29:32 +0200
+
 lliurex-easy-sites (16.06.04) focal; urgency=medium
 
   * Initial release for focal
