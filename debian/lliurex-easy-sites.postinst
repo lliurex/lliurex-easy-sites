@@ -2,7 +2,7 @@
 
 case "$1" in
 	configure)
-		NETFOLDERS_CONF="/etc/n4d/conf.d/NetFoldersManager"
+		NETFOLDERS_CONF="/etc/n4d/conf.d/NetFoldersManager.json"
 		n4d-modules enable-plugin ${NETFOLDERS_CONF} || true
 		;;
 	*)
