@@ -1,3 +1,9 @@
+lliurex-easy-sites (16.06.06) focal; urgency=medium
+
+  * Changed style of gui
+
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Wed, 12 May 2021 14:53:43 +0200
+
 lliurex-easy-sites (16.06.05) focal; urgency=medium
 
   * Fixed n4d enabled plugin command in postinst
