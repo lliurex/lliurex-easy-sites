@@ -75,6 +75,8 @@ class EditBox(Gtk.VBox):
 
 		image_info_label=builder.get_object("image_info_label")
 		self.image_popover=builder.get_object("image_popover")
+		self.image_popover_error_box=builder.get_object("image_popover_error_box")
+		self.image_popover_error_img=builder.get_object("image_popover_error_img")
 		self.image_popover_msg=builder.get_object("image_popover_msg")
 		self.image_popover_cancel_bt=builder.get_object("image_popover_cancel_bt")
 		self.image_popover_apply_bt=builder.get_object("image_popover_apply_bt")
@@ -190,6 +192,10 @@ class EditBox(Gtk.VBox):
 
 	def image_toggled_button(self,button,name):
 
+		self.image_popover_error_box.set_name("HIDE_BOX")
+		self.image_popover_msg.set_text("")
+		self.image_popover_error_img.hide()
+		
 		if button.get_active():
 			if name=="stock":
 				self.image_fc.set_sensitive(False)
@@ -199,7 +205,6 @@ class EditBox(Gtk.VBox):
 			else:
 				self.image_fc.set_sensitive(True)	
 				self.image_popover_apply_bt.set_sensitive(False)
-
 				self.image_op="custom"
 
 	#def image_toggled_button			
@@ -454,11 +459,11 @@ class EditBox(Gtk.VBox):
 
 			if self.saving['status']:
 				if self.edit:
-					self.core.mainWindow.manage_message(False,10)
+					self.core.mainWindow.manage_message(False,False,10)
 				else:
-					self.core.mainWindow.manage_message(False,11)	
+					self.core.mainWindow.manage_message(False,False,11)	
 			else:
-					self.core.mainWindow.manage_message(True,self.saving['code'])	
+					self.core.mainWindow.manage_message(False,True,self.saving['code'])	
 		return False
 		
 	#def pulsate_saving_data
@@ -477,11 +482,16 @@ class EditBox(Gtk.VBox):
 		if check !=None:
 			msg=self.core.mainWindow.get_msg(check["code"])
 			self.image_popover_msg.set_text(msg)
-			self.image_popover_msg.set_name("MSG_ERROR_LABEL")
+			self.image_popover_error_box.set_name("ERROR_BOX")
+			self.image_popover_error_img.show()
+			self.image_popover_msg.set_name("FEEDBACK_LABEL")
+			#self.image_popover_msg.set_name("MSG_ERROR_LABEL")
 			self.image_popover_apply_bt.set_sensitive(False)
 		else:
 			self.image_popover_msg.set_text("")
 			self.image_popover_apply_bt.set_sensitive(True)
+			self.image_popover_error_box.set_name("HIDE_BOX")
+			self.image_popover_error_img.hide()
 
 	#def check_mimetype_image		
 
@@ -510,7 +520,9 @@ class EditBox(Gtk.VBox):
 			if self.previous_image_path==None:
 				self.image_popover_apply_bt.set_sensitive(False)
 		
-		self.image_popover.show_all()	
+		self.image_popover.show_all()
+		self.image_popover_error_box.set_name("HIDE_BOX")
+		self.image_popover_error_img.hide()
 
 	#def edit_image_clicked	
 	
@@ -620,6 +632,7 @@ class EditBox(Gtk.VBox):
 		self.core.mainWindow.stack_window.set_transition_type(Gtk.StackTransitionType.SLIDE_RIGHT)
 		self.core.mainWindow.stack_window.set_visible_child_name("optionBox")
 		self.core.mainWindow.stack_opt.set_visible_child_name("siteBox")
+		self.core.mainWindow.manage_message(True,False)
 
 	#def cancel_clicked	
 	

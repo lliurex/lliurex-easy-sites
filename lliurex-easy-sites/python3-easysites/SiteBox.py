@@ -57,7 +57,7 @@ class SiteBox(Gtk.VBox):
 		self.style_provider.load_from_file(f)
 
 		Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),self.style_provider,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-				
+		self.sites_list_box.set_name("WINDOW")			
 	#def set_css_info	
 
 	def init_threads(self):
@@ -371,12 +371,12 @@ class SiteBox(Gtk.VBox):
 				self.core.sitesmanager.read_conf()
 				if turn_on:
 					hbox.get_children()[1].get_children()[0].get_children()[1].set_tooltip_text(_("Click to hide the site in the server main page"))
-					self.core.mainWindow.manage_message(False,6)
+					self.core.mainWindow.manage_message(False,False,6)
 				else:
 					hbox.get_children()[1].get_children()[0].get_children()[1].set_tooltip_text(_("Click to show the site in the server main page"))
-					self.core.mainWindow.manage_message(False,7)
+					self.core.mainWindow.manage_message(False,False,7)
 			else:
-				self.core.mainWindow.manage_message(True,self.result_visibiliy['code'])	
+				self.core.mainWindow.manage_message(False,True,self.result_visibiliy['code'])	
 
 	#def pulsate_manage_visibiliy
 	
@@ -407,7 +407,7 @@ class SiteBox(Gtk.VBox):
 
 		if sync:
 			now = datetime.datetime.now()
-			updated_by=self.core.sitesmanager.validation[0]
+			updated_by=self.core.sitesmanager.credentials[0]
 			last_updated=now.strftime("%Y-%m-%d %H:%M")
 			self.args_sync=["sync",self.sites_list[siteId],folder_to_sync,updated_by,last_updated]
 			self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(SiteBox.SYNC_CONTENT_WAITING_CODE))			
@@ -434,9 +434,9 @@ class SiteBox(Gtk.VBox):
 				self.sites_list[self.args_sync[1]["id"]]["updated_by"]=self.args_sync[3]
 				self.sites_list[self.args_sync[1]["id"]]["last_updated"]=self.args_sync[4]
 				self.core.sitesmanager.read_conf()
-				self.core.mainWindow.manage_message(False,8)
+				self.core.mainWindow.manage_message(False,False,8)
 			else:
-				self.core.mainWindow.manage_message(True,self.result_sync['code'])	
+				self.core.mainWindow.manage_message(False,True,self.result_sync['code'])	
 
 
 	#def pulsate_sync_folder
@@ -533,9 +533,9 @@ class SiteBox(Gtk.VBox):
 				self.sites_list_box.remove(hbox)
 				self.core.mainWindow.sites_info.pop(self.args_delete[1])
 				self.core.sitesmanager.read_conf()
-				self.core.mainWindow.manage_message(False,9)
+				self.core.mainWindow.manage_message(False,False,9)
 			else:
-				self.core.mainWindow.manage_message(True,self.result_delete['code'])	
+				self.core.mainWindow.manage_message(False,True,self.result_delete['code'])	
 
 
 	#def pulsate_delete_site
@@ -557,7 +557,8 @@ class SiteBox(Gtk.VBox):
 	#def manage_sites_buttons
 	
 	def manage_site_options(self,button,hbox,event=None):
-	
+		
+		self.core.mainWindow.manage_message(True,False)	
 		button.popover.show()
 
 	#def manage_site_options	
