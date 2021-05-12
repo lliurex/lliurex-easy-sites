@@ -471,7 +471,6 @@ class EditBox(Gtk.VBox):
 	def saving_data(self):
 
 		self.saving=self.core.sitesmanager.save_conf(self.args)
-		print(self.saving)
 	#def saving_data	
 
 	
