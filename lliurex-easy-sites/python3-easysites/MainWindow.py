@@ -51,13 +51,15 @@ class MainWindow:
 		
 		self.main_window=builder.get_object("main_window")
 		self.main_window.set_title("Easy Sites")
-		self.main_window.resize(870,725)
+		self.main_window.resize(870,755)
 		self.main_box=builder.get_object("main_box")
 		self.login_box=builder.get_object("login_box")
 		self.login_button=builder.get_object("login_button")
 		self.user_entry=builder.get_object("user_entry")
 		self.password_entry=builder.get_object("password_entry")
 		self.server_ip_entry=builder.get_object("server_ip_entry")
+		self.login_msg_box=builder.get_object("login_msg_box")
+		self.login_error_img=builder.get_object("login_error_img")
 		self.login_msg_label=builder.get_object("login_msg_label")
 
 		self.option_box=builder.get_object("options_box")
@@ -67,6 +69,9 @@ class MainWindow:
 		self.add_button=builder.get_object("add_button")
 		self.help_button=builder.get_object("help_button")
 		self.search_entry=builder.get_object("search_entry")
+		self.msg_label_box=builder.get_object("msg_box")
+		self.msg_error_img=builder.get_object("msg_error_img")
+		self.msg_ok_img=builder.get_object("msg_ok_img")
 		self.msg_label=builder.get_object("msg_label")
 		
 		self.waiting_window=builder.get_object("waiting_window")
@@ -100,6 +105,8 @@ class MainWindow:
 		self.option_separator.hide()
 		self.search_entry.hide()
 		self.main_window.show()
+		self.login_error_img.hide()
+		self.manage_message(True,False)		
 		self.login_button.grab_focus()
 		self.stack_window.set_transition_type(Gtk.StackTransitionType.NONE)
 		self.stack_window.set_visible_child_name("optionBox")
@@ -124,11 +131,12 @@ class MainWindow:
 		f=Gio.File.new_for_path(self.css_file)
 		self.style_provider.load_from_file(f)
 		Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),self.style_provider,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-		self.main_window.set_name("WINDOW")
+		#self.main_window.set_name("WINDOW")
 		self.user_entry.set_name("CUSTOM-ENTRY")
 		self.password_entry.set_name("CUSTOM-ENTRY")
 		self.server_ip_entry.set_name("CUSTOM-ENTRY")
 		self.search_entry.set_name("CUSTOM-ENTRY")
+		self.login_msg_label.set_name("FEEDBACK_LABEL")
 
 		#self.waiting_label.set_name("WAITING_LABEL")
 
@@ -159,6 +167,8 @@ class MainWindow:
 	
 	def login_clicked(self,widget):
 		
+		self.login_msg_box.set_name("HIDE_BOX")
+		self.login_error_img.hide()
 		user=self.user_entry.get_text()
 		password=self.password_entry.get_text()
 		server=self.server_ip_entry.get_text()
@@ -167,6 +177,7 @@ class MainWindow:
 			server='server'
 		
 		self.login_msg_label.set_text(_("Validating user..."))
+		self.login_msg_label.set_halign(Gtk.Align.CENTER)
 		
 		self.login_button.set_sensitive(False)
 		self.validate_user(server,user,password)	
@@ -186,12 +197,14 @@ class MainWindow:
 	
 	def validate_user_listener(self,thread):
 			
+		error=False
 		if thread.is_alive():
 			return True
 				
 		self.login_button.set_sensitive(True)
 		if not self.core.sitesmanager.user_validated:
-			self.login_msg_label.set_markup("<span foreground='red'>"+_("Invalid user")+"</span>")
+			error=True
+			#self.login_msg_label.set_markup("<span foreground='red'>"+_("Invalid user")+"</span>")
 		else:
 			group_found=False
 			for g in ["sudo","admins","teachers"]:
@@ -223,8 +236,14 @@ class MainWindow:
 		
 					
 			else:
-				self.login_msg_label.set_markup("<span foreground='red'>"+_("Invalid user")+"</span>")
-				
+				error=True
+				#self.login_msg_label.set_markup("<span foreground='red'>"+_("Invalid user")+"</span>")
+		
+		if error:
+			self.login_msg_box.set_name("ERROR_BOX")
+			self.login_error_img.show()
+			self.login_msg_label.set_halign(Gtk.Align.START)
+			self.login_msg_label.set_text(_("Invalid user"))		
 		return False
 			
 	#def validate_user_listener
@@ -247,7 +266,7 @@ class MainWindow:
 		self.sites_info=self.core.sitesmanager.sites_config.copy()
 		if not self.read_conf['status']:
 			self.add_button.set_sensitive(False)
-			self.manage_message(True,self.read_conf['code'])
+			self.manage_message(False,True,self.read_conf['code'])
 
 	#def load_info	
 
@@ -273,6 +292,7 @@ class MainWindow:
 		if search=="":
 			self.core.siteBox.draw_site(False)
 		else:
+			self.manage_message(True,False)
 			for item in self.sites_info:
 				name=self.sites_info[item]["name"].lower()
 				if search in name:
@@ -287,18 +307,30 @@ class MainWindow:
 	#def search_entry_changed				
 
 		
-	def manage_message(self,error,code,data=None):
+	def manage_message(self,hide,error,code=None,data=None):
 
-		msg=self.get_msg(code)
-		if data!=None:
-			msg=msg+data
-
-		if error:
-			self.msg_label.set_name("MSG_ERROR_LABEL")
+		
+		if hide:
+			self.msg_label_box.set_name("HIDE_BOX")
+			self.msg_error_img.hide()
+			self.msg_ok_img.hide()
+			self.msg_label.set_text(" ")
 		else:
-			self.msg_label.set_name("MSG_CORRECT_LABEL")	
+			msg=self.get_msg(code)
+			if data!=None:
+				msg=msg+data
+			if error:
+				self.msg_label_box.set_name("ERROR_BOX")
+				self.msg_error_img.show()
+				self.msg_ok_img.hide()
+				self.msg_label.set_name("FEEDBACK_LABEL")
+			else:
+				self.msg_label_box.set_name("SUCCESS_BOX")
+				self.msg_error_img.hide()
+				self.msg_ok_img.show()
+				self.msg_label.set_name("FEEDBACK_LABEL")
 
-		self.msg_label.set_text(msg)
+			self.msg_label.set_text(msg)
 
 	#def manage_message		
 
@@ -368,7 +400,8 @@ class MainWindow:
 			
 		return msg_text
 
-	#def get_msg	
+	#def get_msg
+
 
 	def help_clicked(self,widget):
 
