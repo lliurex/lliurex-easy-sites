@@ -74,11 +74,21 @@ class MainWindow:
 		self.msg_ok_img=builder.get_object("msg_ok_img")
 		self.msg_label=builder.get_object("msg_label")
 		
+		self.edit_waiting_box=builder.get_object("edit_waiting_box")
+		self.edit_spinner=builder.get_object("edit_spinner")
+		self.edit_waiting_label=builder.get_object("edit_spinner_label")
+
+		self.main_waiting_box=builder.get_object("main_waiting_box")
+		self.main_spinner=builder.get_object("main_spinner")
+		self.main_waiting_label=builder.get_object("main_spinner_label")
+		
+		'''
 		self.waiting_window=builder.get_object("waiting_window")
 		self.waiting_label=builder.get_object("waiting_plabel")
 		self.waiting_pbar=builder.get_object("waiting_pbar")
 		self.waiting_window.set_transient_for(self.main_window)
-		
+		'''
+		self.stack_window.add_titled(self.edit_waiting_box,"waitingBox","Waiting Box")
 		self.stack_window.add_titled(self.core.editBox, "editBox", "Edit Box")
 		self.stack_window.add_titled(self.option_box,"optionBox", "Option Box")
 		self.stack_window.show_all()
@@ -92,6 +102,7 @@ class MainWindow:
 		
 		self.stack_opt.add_titled(self.core.siteBox,"siteBox", "Site Box")
 		self.stack_opt.add_titled(self.login_box,"loginBox", "Login Box")
+		self.stack_opt.add_titled(self.main_waiting_box,"mainWaitingBox","Main Waiting Box")
 
 		self.stack_opt.show_all()
 
@@ -137,6 +148,8 @@ class MainWindow:
 		self.server_ip_entry.set_name("CUSTOM-ENTRY")
 		self.search_entry.set_name("CUSTOM-ENTRY")
 		self.login_msg_label.set_name("FEEDBACK_LABEL")
+		self.main_waiting_label.set_name("FEEDBACK_LABEL")
+		self.edit_waiting_label.set_name("FEEDBACK_LABEL")
 
 		#self.waiting_label.set_name("WAITING_LABEL")
 
@@ -272,6 +285,7 @@ class MainWindow:
 
 	def add_site(self,widget):
 
+		self.manage_message(True,False)
 		self.msg_label.set_text("")
 		self.core.editBox.init_form()
 		self.core.editBox.render_form()
@@ -402,6 +416,24 @@ class MainWindow:
 
 	#def get_msg
 
+	def manage_waiting_stack(self,show,msg_code=None):
+
+		self.stack_opt.set_transition_duration(700)
+		self.stack_opt.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+
+		if show:
+			self.toolbar.set_sensitive(False)
+			self.search_entry.set_sensitive(False)
+			self.main_waiting_label.set_text(self.get_msg(msg_code))
+			self.main_spinner.start()
+			self.stack_opt.set_visible_child_name("mainWaitingBox")
+		else:
+			self.toolbar.set_sensitive(True)
+			self.search_entry.set_sensitive(True)
+			self.main_spinner.stop()
+			self.stack_opt.set_visible_child_name("siteBox")
+	
+	#def manage_waiting_stack
 
 	def help_clicked(self,widget):
 

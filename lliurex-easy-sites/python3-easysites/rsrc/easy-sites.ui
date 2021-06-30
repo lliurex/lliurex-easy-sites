@@ -2,6 +2,53 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <object class="GtkBox" id="edit_waiting_box">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkBox" id="box100">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="valign">center</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkSpinner" id="edit_spinner">
+            <property name="width_request">50</property>
+            <property name="height_request">50</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="edit_spinner_label">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+            <property name="margin_top">10</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+  </object>
   <object class="GtkBox" id="login_box">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -133,6 +180,53 @@
         <property name="expand">True</property>
         <property name="fill">True</property>
         <property name="position">1</property>
+      </packing>
+    </child>
+  </object>
+  <object class="GtkBox" id="main_waiting_box">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkBox" id="box111">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="valign">center</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkSpinner" id="main_spinner">
+            <property name="width_request">50</property>
+            <property name="height_request">50</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="main_spinner_label">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+            <property name="margin_top">10</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
       </packing>
     </child>
   </object>
@@ -781,16 +875,34 @@
         <property name="valign">end</property>
         <property name="margin_top">10</property>
         <property name="margin_bottom">10</property>
-        <property name="orientation">vertical</property>
         <child>
-          <object class="GtkLabel" id="edit_msg_label">
+          <object class="GtkImage" id="edit_msg_error_img">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="valign">center</property>
+            <property name="margin_left">10</property>
+            <property name="margin_right">10</property>
+            <property name="margin_top">10</property>
+            <property name="margin_bottom">10</property>
+            <property name="pixbuf">dialog-error.png</property>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="edit_msg_label">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="valign">center</property>
+            <property name="justify">fill</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </object>
@@ -1009,52 +1121,6 @@
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">2</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
-  <object class="GtkWindow" id="waiting_window">
-    <property name="can_focus">False</property>
-    <property name="type">popup</property>
-    <property name="window_position">center-on-parent</property>
-    <child type="titlebar">
-      <placeholder/>
-    </child>
-    <child>
-      <object class="GtkBox" id="box6">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkLabel" id="waiting_plabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_left">50</property>
-            <property name="margin_right">50</property>
-            <property name="margin_top">10</property>
-            <property name="margin_bottom">5</property>
-            <property name="justify">center</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkProgressBar" id="waiting_pbar">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_left">30</property>
-            <property name="margin_right">30</property>
-            <property name="margin_top">5</property>
-            <property name="margin_bottom">10</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
           </packing>
         </child>
       </object>
