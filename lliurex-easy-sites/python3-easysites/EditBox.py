@@ -95,18 +95,22 @@ class EditBox(Gtk.VBox):
 		img_font_color_label=builder.get_object("img_font_color_label")
 		self.img_font_color_chosser=builder.get_object("img_font_color_chosser")
 		
+		self.edit_msg_box=builder.get_object("edit_msg_box")
+		self.edit_msg_error_img=builder.get_object("edit_msg_error_img")
 		self.edit_msg_label=builder.get_object("edit_msg_label")
 		self.apply_btn=builder.get_object("apply_btn")
 		self.cancel_btn=builder.get_object("cancel_btn")
-	
+
 		self.label_list=[site_name_label,site_description_label,site_sync_label,site_visible_label,image_info_label,img_font_label,img_font_color_label,self.custom_rb,self.stock_rb]
 		self.edit=False
 		self.header_label.set_text(_("New site"))
 		self.origId=None
 		self.require_sync=False
 		self.waiting_draw=False
+		self.error_mimetype_image=False
 		self.custom_image=self.core.custom_image
 		self.nodisp_image=self.core.nodisp_image
+		self.manage_edit_box(True)
 		self.pack_start(self.main_box,True,True,0)
 		self.set_css_info()
 		self.connect_signals()
@@ -254,47 +258,48 @@ class EditBox(Gtk.VBox):
 
 	def drawing_banner_event(self,widget,ctx):
 		
-		if self.image_op=="stock":
-			path=self.custom_image
-		else:
-			path=self.image_fc.get_filename()
-
-		pixbuf,no_disp=self.format_image_size(path)
-		img = Gdk.cairo_surface_create_from_pixbuf(pixbuf,0)
-		font_size=10
-
-		ctx.set_source_surface(img,0,0)
-		ctx.paint()
-		'''
-		if not no_disp:
-			color=self.get_color_rgba()
-			font=Pango.font_description_from_string(self.img_font_chosser.get_font())
-			font_size=font.get_size()
-			pctx = PangoCairo.create_layout(ctx)
-			pctx.set_font_description(font)
-			pctx.set_alignment(Pango.Alignment.CENTER)
-			pctx.set_justify(True)
-			pctx.set_width(110000)
-			pctx.set_height(1000)
-			if font_size>10:
-				font_size=font_size/1000
+		if not self.error_mimetype_image:
+			if self.image_op=="stock":
+				path=self.custom_image
 			else:
-				font_size=font_size/100
+				path=self.image_fc.get_filename()
 
-			#ctx.select_font_face("Courier New",cairo.FONT_SLANT_ITALIC, cairo.FONT_WEIGHT_BOLD)
-			#ctx.set_font_description(Pango.font_description_from_string('Courier New Italic'))
-			#ctx.set_font_size(24)
-			ctx.set_source_rgba(color[0],color[1],color[2],color[3])
-			text=self.site_name_entry.get_text()
-			width=ctx.text_extents(text).width
-			text_x,text_y=pctx.get_pixel_size()
-			#ctx.move_to(0,65-font_size)
-			ctx.move_to(text_x/2,110/2-text_y/2)
-			pctx.set_text(text,-1)
-			PangoCairo.show_layout(ctx,pctx)
-			#ctx.show_text(text)
-			#ctx.stroke()
-		'''	
+			pixbuf,no_disp=self.format_image_size(path)
+			img = Gdk.cairo_surface_create_from_pixbuf(pixbuf,0)
+			font_size=10
+
+			ctx.set_source_surface(img,0,0)
+			ctx.paint()
+			'''
+			if not no_disp:
+				color=self.get_color_rgba()
+				font=Pango.font_description_from_string(self.img_font_chosser.get_font())
+				font_size=font.get_size()
+				pctx = PangoCairo.create_layout(ctx)
+				pctx.set_font_description(font)
+				pctx.set_alignment(Pango.Alignment.CENTER)
+				pctx.set_justify(True)
+				pctx.set_width(110000)
+				pctx.set_height(1000)
+				if font_size>10:
+					font_size=font_size/1000
+				else:
+					font_size=font_size/100
+
+				#ctx.select_font_face("Courier New",cairo.FONT_SLANT_ITALIC, cairo.FONT_WEIGHT_BOLD)
+				#ctx.set_font_description(Pango.font_description_from_string('Courier New Italic'))
+				#ctx.set_font_size(24)
+				ctx.set_source_rgba(color[0],color[1],color[2],color[3])
+				text=self.site_name_entry.get_text()
+				width=ctx.text_extents(text).width
+				text_x,text_y=pctx.get_pixel_size()
+				#ctx.move_to(0,65-font_size)
+				ctx.move_to(text_x/2,110/2-text_y/2)
+				pctx.set_text(text,-1)
+				PangoCairo.show_layout(ctx,pctx)
+				#ctx.show_text(text)
+				#ctx.stroke()
+			'''	
 		
 	#def drawing_event
 
@@ -315,7 +320,7 @@ class EditBox(Gtk.VBox):
 	
 	def gather_values(self,widget):
 
-		self.edit_msg_label.set_text("")
+		self.manage_edit_box(True)
 		self.data_tocheck={}
 		self.data_tocheck["id"]=self.core.sitesmanager.get_siteId(self.site_name_entry.get_text())
 		self.data_tocheck["name"]=self.site_name_entry.get_text()
@@ -335,9 +340,15 @@ class EditBox(Gtk.VBox):
 			
 		self.data_tocheck["image"]["path"]=self.image_path
 
-		self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(EditBox.VALIDATION_DATA_WAITING_CODE))			
-		self.core.mainWindow.waiting_label.set_name("WAITING_LABEL")
-		self.core.mainWindow.waiting_window.show_all()
+		#self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(EditBox.VALIDATION_DATA_WAITING_CODE))			
+		self.core.mainWindow.edit_waiting_label.set_text(self.core.mainWindow.get_msg(EditBox.VALIDATION_DATA_WAITING_CODE))
+		self.core.mainWindow.edit_spinner.start()
+		#self.core.mainWindow.waiting_label.set_name("WAITING_LABEL")
+		self.core.mainWindow.stack_window.set_transition_duration(700)
+		self.core.mainWindow.stack_window.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+		self.core.mainWindow.stack_window.set_visible_child_name("waitingBox")
+
+		#self.core.mainWindow.waiting_window.show_all()
 		self.manage_form_control(False)
 		self.init_threads()
 		self.checking_data_t.start()
@@ -348,18 +359,23 @@ class EditBox(Gtk.VBox):
 	def pulsate_checking_data(self):
 		
 		if self.checking_data_t.is_alive():
-			self.core.mainWindow.waiting_pbar.pulse()
+			#self.core.mainWindow.waiting_pbar.pulse()
 			return True
 			
 		else:
-			
 			if not self.check["result"]:
-				self.core.mainWindow.waiting_window.hide()
+				self.core.mainWindow.edit_spinner.stop()
+				#self.core.mainWindow.waiting_window.hide()
+				self.core.mainWindow.stack_window.set_transition_duration(550)
+				self.core.mainWindow.stack_window.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+				self.core.mainWindow.stack_window.set_visible_child_name("editBox")
+				
 				self.manage_form_control(True)
 				self.apply_btn.set_sensitive(True)
 				self.cancel_btn.set_sensitive(True)
 				msg_text=self.core.mainWindow.get_msg(self.check["code"])
-				self.edit_msg_label.set_name("MSG_ERROR_LABEL")
+				#self.edit_msg_label.set_name("MSG_ERROR_LABEL")
+				self.manage_edit_box(False)
 				self.edit_msg_label.set_text(msg_text)
 			else:	
 				self.save_values()
@@ -427,8 +443,9 @@ class EditBox(Gtk.VBox):
 		pixbuf=Gdk.pixbuf_get_from_window(window,0,0,110,110)
 		self.args=[action,site_info,pixbuf,self.require_sync,copy_image,self.origId]
 
-		self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(EditBox.SAVIG_CHANGES_WAITING_CODE))			
-		self.core.mainWindow.waiting_label.set_name("WAITING_LABEL")
+		#self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(EditBox.SAVIG_CHANGES_WAITING_CODE))			
+		#self.core.mainWindow.waiting_label.set_name("WAITING_LABEL")
+		self.core.mainWindow.edit_waiting_label.set_text(self.core.mainWindow.get_msg(EditBox.SAVIG_CHANGES_WAITING_CODE))
 		self.init_threads()
 		self.saving_data_t.start()
 		GLib.timeout_add(100,self.pulsate_saving_data)
@@ -438,11 +455,11 @@ class EditBox(Gtk.VBox):
 	def pulsate_saving_data(self):
 
 		if self.saving_data_t.is_alive():
-			self.core.mainWindow.waiting_pbar.pulse()
+			#self.core.mainWindow.waiting_pbar.pulse()
 			return True
 			
 		else:
-			self.core.mainWindow.waiting_window.hide()
+			#self.core.mainWindow.waiting_window.hide()
 			self.manage_form_control(True)
 			if self.saving['status']:
 				self.core.mainWindow.load_info()
@@ -476,9 +493,10 @@ class EditBox(Gtk.VBox):
 	
 	def check_mimetype_image(self,widget):
 	
-
+		self.error_mimetype_image=False
 		check=self.core.sitesmanager.check_mimetypes(self.image_fc.get_filename())
 		if check !=None:
+			self.error_mimetype_image=True
 			msg=self.core.mainWindow.get_msg(check["code"])
 			self.image_popover_msg.set_text(msg)
 			self.image_popover_error_box.set_name("ERROR_BOX")
@@ -487,6 +505,7 @@ class EditBox(Gtk.VBox):
 			#self.image_popover_msg.set_name("MSG_ERROR_LABEL")
 			self.image_popover_apply_bt.set_sensitive(False)
 		else:
+			self.error_mimetype_image=False
 			self.image_popover_msg.set_text("")
 			self.image_popover_apply_bt.set_sensitive(True)
 			self.image_popover_error_box.set_name("HIDE_BOX")
@@ -591,10 +610,11 @@ class EditBox(Gtk.VBox):
 
 		self.waiting=0
 		if not self.waiting_draw:
+			self.manage_edit_box(True)
 			self.apply_btn.set_sensitive(False)
 			self.cancel_btn.set_sensitive(False)
 			self.edit_msg_label.set_text(self.core.mainWindow.get_msg(EditBox.APPLYNG_CHANGES_TOIMAGE_WAITING_CODE))
-			self.edit_msg_label.set_name("WAITING_LABEL")
+			self.edit_msg_label.set_name("FEEDBACK_LABEL")
 			self.waiting_draw=True
 			GLib.timeout_add_seconds(1,self.pulsate_waiting_draw)
 
@@ -610,6 +630,7 @@ class EditBox(Gtk.VBox):
 		 	self.waiting_draw=False
 		 	self.apply_btn.set_sensitive(True)
 		 	self.cancel_btn.set_sensitive(True)
+		 	self.manage_edit_box(True)
 		 	self.edit_msg_label.set_text("")
 		 	self.image_da.queue_draw()
 		 	self.image_da.connect("draw",self.drawing_banner_event)
@@ -658,7 +679,22 @@ class EditBox(Gtk.VBox):
 		else:
 			self.site_visible_checkbt.set_tooltip_text(_("Click to show the site in the server main page"))
 
-	#def change_checkbt_tooltip		
+	#def change_checkbt_tooltip	
+
+	def manage_edit_box(self,hide):
+
+		if hide:
+			self.edit_msg_box.set_name("HIDE_BOX")	
+			self.edit_msg_error_img.hide()
+			self.edit_msg_label.set_text("")
+			self.edit_msg_label.set_halign(Gtk.Align.CENTER)
+		else:
+			self.edit_msg_box.set_name("ERROR_BOX")	
+			self.edit_msg_error_img.show()
+			self.edit_msg_label.set_halign(Gtk.Align.START)
+
+	#def manage_edit_box
+
 
 #class EditBox
 

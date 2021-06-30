@@ -334,22 +334,28 @@ class SiteBox(Gtk.VBox):
 	def on_switch_activaded (self,switch,gparam,hbox):
 
 		self.core.mainWindow.msg_label.set_text("")
+		self.core.mainWindow.manage_message(True,False)
+
 		site_to_edit=hbox		
 		siteId=site_to_edit.get_children()[0].id
 		turn_on=False
 
 		if switch.get_active():
 			turn_on=True
-			msg_switch=self.core.mainWindow.get_msg(SiteBox.ACTIONS_SHOW_SITE_WAITING_CODE)
+			#msg_switch=self.core.mainWindow.get_msg(SiteBox.ACTIONS_SHOW_SITE_WAITING_CODE)
+			msg_switch=SiteBox.ACTIONS_SHOW_SITE_WAITING_CODE
 			visible=True
 			
 		else:
-			msg_switch=self.core.mainWindow.get_msg(SiteBox.ACTIONS_HIDE_SITE_WATIING_CODE)
+			#msg_switch=self.core.mainWindow.get_msg(SiteBox.ACTIONS_HIDE_SITE_WATIING_CODE)
+			msg_switch=SiteBox.ACTIONS_HIDE_SITE_WATIING_CODE
 			visible=False
 
 		self.args_visibility=["visibility",self.sites_list[siteId],visible]
-		self.core.mainWindow.waiting_label.set_text(msg_switch)			
-		self.core.mainWindow.waiting_window.show_all()
+		#self.core.mainWindow.waiting_label.set_text(msg_switch)			
+		#self.core.mainWindow.waiting_window.show_all()
+		#self.core.mainWindow.waiting_window.hide()
+		self.core.mainWindow.manage_waiting_stack(True,msg_switch)
 		self.init_threads()
 		self.manage_visibility_t.start()
 		GLib.timeout_add(100,self.pulsate_manage_visibiliy,turn_on,siteId,hbox)
@@ -360,11 +366,13 @@ class SiteBox(Gtk.VBox):
 	def pulsate_manage_visibiliy(self,turn_on,siteId,hbox):
 
 		if self.manage_visibility_t.is_alive():
-			self.core.mainWindow.waiting_pbar.pulse()
+			#self.core.mainWindow.waiting_pbar.pulse()
 			return True
 
 		else:
-			self.core.mainWindow.waiting_window.hide()
+			#self.core.mainWindow.waiting_window.hide()
+			self.core.mainWindow.manage_waiting_stack(False)
+
 			if self.result_visibiliy['status']:
 				self.core.mainWindow.sites_info[siteId]["visible"]=turn_on
 				self.sites_list[siteId]["visibility"]=turn_on
@@ -410,8 +418,10 @@ class SiteBox(Gtk.VBox):
 			updated_by=self.core.sitesmanager.credentials[0]
 			last_updated=now.strftime("%Y-%m-%d %H:%M")
 			self.args_sync=["sync",self.sites_list[siteId],folder_to_sync,updated_by,last_updated]
-			self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(SiteBox.SYNC_CONTENT_WAITING_CODE))			
-			self.core.mainWindow.waiting_window.show_all()
+			#self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(SiteBox.SYNC_CONTENT_WAITING_CODE))			
+			#self.core.mainWindow.waiting_window.show_all()
+			self.core.mainWindow.manage_waiting_stack(True,SiteBox.SYNC_CONTENT_WAITING_CODE)
+
 			self.init_threads()
 			self.sync_folder_t.start()
 			GLib.timeout_add(100,self.pulsate_sync_folder)
@@ -421,11 +431,12 @@ class SiteBox(Gtk.VBox):
 	def pulsate_sync_folder(self):
 
 		if self.sync_folder_t.is_alive():
-			self.core.mainWindow.waiting_pbar.pulse()
+			#self.core.mainWindow.waiting_pbar.pulse()
 			return True
 
 		else:
-			self.core.mainWindow.waiting_window.hide()
+			#self.core.mainWindow.waiting_window.hide()
+			self.core.mainWindow.manage_waiting_stack(False)
 			if self.result_sync['status']:
 				self.core.mainWindow.sites_info[self.args_sync[1]["id"]]["sync_folder"]=self.args_sync[2]
 				self.core.mainWindow.sites_info[self.args_sync[1]["id"]]["updated_by"]=self.args_sync[3]
@@ -513,8 +524,9 @@ class SiteBox(Gtk.VBox):
 		if response==Gtk.ResponseType.YES:
 			site_to_remove=hbox.get_children()[0].id
 			self.args_delete=["delete",site_to_remove]
-			self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(SiteBox.DELETING_SITE_WAITING_CODE))			
-			self.core.mainWindow.waiting_window.show_all()
+			#self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(SiteBox.DELETING_SITE_WAITING_CODE))			
+			#self.core.mainWindow.waiting_window.show_all()
+			self.core.mainWindow.manage_waiting_stack(True,SiteBox.DELETING_SITE_WAITING_CODE)			
 			self.init_threads()
 			self.delete_folder_t.start()
 			GLib.timeout_add(100,self.pulsate_delete_site,hbox)
@@ -524,11 +536,12 @@ class SiteBox(Gtk.VBox):
 	def pulsate_delete_site(self,hbox):	
 
 		if self.delete_folder_t.is_alive():
-			self.core.mainWindow.waiting_pbar.pulse()
+			#self.core.mainWindow.waiting_pbar.pulse()
 			return True
 
 		else:
-			self.core.mainWindow.waiting_window.hide()
+			#self.core.mainWindow.waiting_window.hide()
+			self.core.mainWindow.manage_waiting_stack(False)			
 			if self.result_delete['status']:
 				self.sites_list_box.remove(hbox)
 				self.core.mainWindow.sites_info.pop(self.args_delete[1])
