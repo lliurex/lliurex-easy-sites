@@ -50,10 +50,9 @@ class Core:
 		self.nodisp_image="/usr/share/lliurex-easy-sites/images/no_disp.png"
 
 		# Main window must be the last one
-		if len(sys.argv)>1:
-			sync_folder=sys.argv[1]
-		else:
-			sync_folder=None		
+		
+		sync_folder=sys.argv[1]
+
 		self.mainWindow=MainWindow.MainWindow(sync_folder)
 
 		self.mainWindow.load_gui()
