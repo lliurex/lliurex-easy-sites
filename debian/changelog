@@ -1,3 +1,9 @@
+lliurex-easy-sites (16.06.10) focal; urgency=medium
+
+  * Integrated with n4d-qt-agent
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Fri, 12 Nov 2021 13:45:45 +0100
+
 lliurex-easy-sites (16.06.09) focal; urgency=medium
 
   * Fixed litle bug when site image is not valid
