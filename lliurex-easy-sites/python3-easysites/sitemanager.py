@@ -40,31 +40,14 @@ class SiteManager(object):
 
 		self.dbg=0
 		self.user_validated=False
-		self.user_groups=[]
-		self.credentials=None
+		self.credentials=[]
 		self.net_folder="/net/server-sync/easy-sites"
 		self.image_dir=os.path.expanduser("~/.cache/")+"easy-sites"
 		self.url_site="http://server/easy-sites/easy-"
-
-		'''
-		if server!=None:
-			self.set_server(server)
-
-		context=ssl._create_unverified_context()
-		self.n4d_local = n4dclient.ServerProxy("https://localhost:9779",context=context,allow_none=True)	
-		'''
 		self.detect_flavour()	
 	
 	#def __init__	
 	
-	'''
-	def set_server(self,server):	
-		
-		context=ssl._create_unverified_context()	
-		self.n4d=n4dclient.ServerProxy("https://"+server+":9779",context=context,allow_none=True)
-	
-	#def set_server
-	'''	
 	def detect_flavour(self):
 		
 		cmd='lliurex-version -v'
@@ -77,36 +60,25 @@ class SiteManager(object):
 
 	#def detect_flavour
 
-	def validate_user(self,server,user,password):
-		
-		try:
-			self.server_ip=server
-			self.client=n4d.client.Client("https://%s:9779"%server,user,password)
-			
-			ret=self.client.validate_user()
-			self.user_validated=ret[0]
-			self.user_groups=ret[1]
-			self.credentials=[user,password]
+	def create_n4dClient(self,ticket,passwd):
 
-			if self.user_validated:
-				self.ticket=self.client.get_ticket()
-				if self.ticket.valid():
-					self.client=n4d.client.Client(ticket=self.ticket)
-					self.local_client=n4d.client.Client("https://localhost:9779",user,password)
-					local_t=self.local_client.get_ticket()
-					if local_t.valid():
-						self.local_client=n4d.client.Client(ticket=local_t)
-					else:
-						self.user_validated=False	
-				else:
-					self.user_validated=False
+		ticket=ticket.replace('##U+0020##',' ')
+		self.server_ip=ticket.split(' ')[1].split(":")[1].split("//")[1]
+		self.credentials.append(ticket.split(' ')[2])
+		self.credentials.append(passwd)
 
-		except Exception as e:
-			self._debug("Validate user",str(e))
+		self.tk=n4d.client.Ticket(ticket)
+		self.client=n4d.client.Client(ticket=self.tk)
+
+		self.local_client=n4d.client.Client("https://localhost:9779",self.credentials[0],self.credentials[1])
+		local_t=self.local_client.get_ticket()
+		if local_t.valid():
+			self.local_client=n4d.client.Client(ticket=local_t)
+			self.user_validated=True
+		else:
 			self.user_validated=False
-	
-		
-	#def validate_user
+
+	#def create_n4dClient
 
 	def _debug(self,function,msg):
 
@@ -331,9 +303,11 @@ class SiteManager(object):
 		dest_site="easy-"+siteId
 		dest_site_path=os.path.join(self.net_folder,dest_site)
 		dest_path=os.path.join(dest_site_path,tmp_image)
-		self.local_client.ScpManager.send_file(self.credentials[0],self.credentials[1],self.server_ip,copy_image,dest_path)
-
-
+		try:
+			ret=self.local_client.ScpManager.send_file(self.credentials[0],self.credentials[1],self.server_ip,copy_image,dest_path)
+		except n4d.client.CallFailedError as e:
+			pass
+	
 	#def copy_image_file	
 
 #class SiteManager

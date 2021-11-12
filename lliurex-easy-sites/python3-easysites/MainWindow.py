@@ -28,7 +28,6 @@ class MainWindow:
 		self.core=Core.Core.get_core()
 		self.config_dir=os.path.expanduser("/etc/easy-sites/")
 		self.right_folder=sync_folder
-		#self.core.sitesmanager.set_server(args_dic["server"])
 
 	#def init
 
@@ -54,10 +53,6 @@ class MainWindow:
 		self.main_window.resize(870,755)
 		self.main_box=builder.get_object("main_box")
 		self.login_box=builder.get_object("login_box")
-		self.login_button=builder.get_object("login_button")
-		self.user_entry=builder.get_object("user_entry")
-		self.password_entry=builder.get_object("password_entry")
-		self.server_ip_entry=builder.get_object("server_ip_entry")
 		self.login_msg_box=builder.get_object("login_msg_box")
 		self.login_error_img=builder.get_object("login_error_img")
 		self.login_msg_label=builder.get_object("login_msg_label")
@@ -81,13 +76,6 @@ class MainWindow:
 		self.main_waiting_box=builder.get_object("main_waiting_box")
 		self.main_spinner=builder.get_object("main_spinner")
 		self.main_waiting_label=builder.get_object("main_spinner_label")
-		
-		'''
-		self.waiting_window=builder.get_object("waiting_window")
-		self.waiting_label=builder.get_object("waiting_plabel")
-		self.waiting_pbar=builder.get_object("waiting_pbar")
-		self.waiting_window.set_transient_for(self.main_window)
-		'''
 		self.stack_window.add_titled(self.edit_waiting_box,"waitingBox","Waiting Box")
 		self.stack_window.add_titled(self.core.editBox, "editBox", "Edit Box")
 		self.stack_window.add_titled(self.option_box,"optionBox", "Option Box")
@@ -118,17 +106,16 @@ class MainWindow:
 		self.main_window.show()
 		self.login_error_img.hide()
 		self.manage_message(True,False)		
-		self.login_button.grab_focus()
+		#self.login_button.grab_focus()
 		self.stack_window.set_transition_type(Gtk.StackTransitionType.NONE)
 		self.stack_window.set_visible_child_name("optionBox")
-
+		self.loading()
 		
 	#def load_gui
 
 
 	def init_threads(self):
 
-		
 		self.open_help_t=threading.Thread(target=self.open_help)
 		self.open_help_t.daemon=True
 
@@ -142,17 +129,10 @@ class MainWindow:
 		f=Gio.File.new_for_path(self.css_file)
 		self.style_provider.load_from_file(f)
 		Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(),self.style_provider,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-		#self.main_window.set_name("WINDOW")
-		self.user_entry.set_name("CUSTOM-ENTRY")
-		self.password_entry.set_name("CUSTOM-ENTRY")
-		self.server_ip_entry.set_name("CUSTOM-ENTRY")
 		self.search_entry.set_name("CUSTOM-ENTRY")
 		self.login_msg_label.set_name("FEEDBACK_LABEL")
 		self.main_waiting_label.set_name("FEEDBACK_LABEL")
 		self.edit_waiting_label.set_name("FEEDBACK_LABEL")
-
-		#self.waiting_label.set_name("WAITING_LABEL")
-
 		self.image_banner.set_name("BANNER-BOX")
 
 	#def set_css_info	
@@ -161,105 +141,61 @@ class MainWindow:
 	def connect_signals(self):
 		
 		self.main_window.connect("destroy",self.quit)
-		self.login_button.connect("clicked",self.login_clicked)
-		self.user_entry.connect("activate",self.entries_press_event)
-		self.password_entry.connect("activate",self.entries_press_event)
-		self.server_ip_entry.connect("activate",self.entries_press_event)
 		self.add_button.connect("clicked",self.add_site)
 		self.search_entry.connect("changed",self.search_entry_changed)
 		self.help_button.connect("clicked",self.help_clicked)
 
 	#def connect_signals
 
-	def entries_press_event(self,widget):
-		
-		self.login_clicked(None)
-		
-	#def entries_press_event
-	
-	
-	def login_clicked(self,widget):
+	def loading(self):
 		
 		self.login_msg_box.set_name("HIDE_BOX")
 		self.login_error_img.hide()
-		user=self.user_entry.get_text()
-		password=self.password_entry.get_text()
-		server=self.server_ip_entry.get_text()
-	
-		if server=="":
-			server='server'
-		
-		self.login_msg_label.set_text(_("Validating user..."))
-		self.login_msg_label.set_halign(Gtk.Align.CENTER)
-		
-		self.login_button.set_sensitive(False)
-		self.validate_user(server,user,password)	
-
-	#def login_clicked
-
-	def validate_user(self,server,user,password):
-		
-		
-		t=threading.Thread(target=self.core.sitesmanager.validate_user,args=(server,user,password,))
+		t=threading.Thread(target=self.core.sitesmanager.create_n4dClient(sys.argv[2],sys.argv[3]))
 		t.daemon=True
 		t.start()
-		GLib.timeout_add(500,self.validate_user_listener,t)
-		
-	#def validate_user
+		GLib.timeout_add(500,self.loading_listener,t)
+
+	#def loading
 	
-	
-	def validate_user_listener(self,thread):
+	def loading_listener(self,thread):
 			
 		error=False
 		if thread.is_alive():
 			return True
 				
-		self.login_button.set_sensitive(True)
 		if not self.core.sitesmanager.user_validated:
 			error=True
-			#self.login_msg_label.set_markup("<span foreground='red'>"+_("Invalid user")+"</span>")
 		else:
-			group_found=False
-			for g in ["sudo","admins","teachers"]:
-				if g in self.core.sitesmanager.user_groups:
-					group_found=True
-					break
-					
-			if group_found:
-				self.login_msg_label.set_text("")
-				
-				self.load_info()
-				#self.core.sitesmanager.cached_images()
-				self.core.siteBox.draw_site(False)
-				if self.read_conf['status']:
-						if self.right_folder !=None:
-							if os.path.isdir(self.right_folder):
-								self.stack_opt.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
-								self.msg_label.set_text("")
-								self.core.editBox.init_form()
-								self.core.editBox.render_form()
-								self.core.editBox.sync_folder_dc.set_filename(self.right_folder)
-								self.stack_window.set_visible_child_name("editBox")
-							else:	
-								self.stack_opt.set_visible_child_name("siteBox")
-						else:
-							self.stack_opt.set_visible_child_name("siteBox")
+			self.login_msg_label.set_text("")
+			
+			self.load_info()
+			self.core.siteBox.draw_site(False)
+			if self.read_conf['status']:
+				if self.right_folder !=None:
+					if os.path.isdir(self.right_folder):
+						self.stack_opt.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+						self.msg_label.set_text("")
+						self.core.editBox.init_form()
+						self.core.editBox.render_form()
+						self.core.editBox.sync_folder_dc.set_filename(self.right_folder)
+						self.stack_window.set_visible_child_name("editBox")
+					else:	
+						self.stack_opt.set_visible_child_name("siteBox")
 				else:
-					self.stack_opt.set_visible_child_name("siteBox")			
-		
-					
+					self.stack_opt.set_visible_child_name("siteBox")
 			else:
-				error=True
-				#self.login_msg_label.set_markup("<span foreground='red'>"+_("Invalid user")+"</span>")
+				self.stack_opt.set_visible_child_name("siteBox")			
 		
 		if error:
 			self.login_msg_box.set_name("ERROR_BOX")
 			self.login_error_img.show()
 			self.login_msg_label.set_halign(Gtk.Align.START)
 			self.login_msg_label.set_text(_("Invalid user"))		
+		
 		return False
 			
-	#def validate_user_listener
+	#def loading_listener
 		
 				
 	def on_key_press_event(self,window,event):
