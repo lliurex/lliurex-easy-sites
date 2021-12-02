@@ -1,3 +1,9 @@
+lliurex-easy-sites (16.06.11) focal; urgency=medium
+
+  * Fixed bug when run in client-lite
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Thu, 02 Dec 2021 09:09:25 +0100
+
 lliurex-easy-sites (16.06.10) focal; urgency=medium
 
   * Integrated with n4d-qt-agent
