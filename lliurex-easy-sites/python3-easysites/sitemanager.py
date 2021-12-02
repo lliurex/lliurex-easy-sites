@@ -108,7 +108,7 @@ class SiteManager(object):
 			pixbuf_path="/tmp/easy-"+info["id"]+".png"
 			pixbuf.savev(pixbuf_path, 'png', [], [])
 
-			if "client" in self.flavours:
+			if self._searchMeta('client'):
 				result=self.copy_pixbuf_file(pixbuf_path)
 				if not result['status']:
 					error=True
@@ -308,6 +308,19 @@ class SiteManager(object):
 		except n4d.client.CallFailedError as e:
 			pass
 	
-	#def copy_image_file	
+	#def copy_image_file
+
+	def _searchMeta(self,meta):
+
+		match=False
+		for item in self.flavours:
+			if meta in item:
+				match=True
+				break
+
+		return match
+
+	#def_ searchMeta
+
 
 #class SiteManager
