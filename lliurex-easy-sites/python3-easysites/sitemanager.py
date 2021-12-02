@@ -108,7 +108,7 @@ class SiteManager(object):
 			pixbuf_path="/tmp/easy-"+info["id"]+".png"
 			pixbuf.savev(pixbuf_path, 'png', [], [])
 
-			if "client" in self.flavours:
+			if self._searchMeta('client'):
 				result=self.copy_pixbuf_file(pixbuf_path)
 				if not result['status']:
 					error=True
@@ -330,7 +330,18 @@ class SiteManager(object):
 		dest_path=os.path.join(dest_site_path,tmp_image)
 		self.n4d_local.send_file("","ScpManager",self.validation[0],self.validation[1],"server",copy_image,dest_path)
 
+	#def copy_image_file
+		
+	def _searchMeta(self,meta):
 
-	#def copy_image_file	
+		match=False
+		for item in self.flavours:
+			if meta in item:
+				match=True
+				break
+
+		return match
+
+	#def_ searchMeta
 
 #class SiteManager
