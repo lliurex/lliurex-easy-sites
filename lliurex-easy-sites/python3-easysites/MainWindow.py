@@ -151,6 +151,13 @@ class MainWindow:
 		
 		self.login_msg_box.set_name("HIDE_BOX")
 		self.login_error_img.hide()
+		self.login_msg_label.set_text("")
+		self.main_waiting_label.set_text(self.get_msg(31))
+		self.main_waiting_label.show()
+		self.main_spinner.start()
+		self.stack_opt.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+		self.stack_opt.set_visible_child_name("mainWaitingBox")
+
 		t=threading.Thread(target=self.core.sitesmanager.create_n4dClient(sys.argv[2],sys.argv[3]))
 		t.daemon=True
 		t.start()
@@ -167,27 +174,12 @@ class MainWindow:
 		if not self.core.sitesmanager.user_validated:
 			error=True
 		else:
-			self.login_msg_label.set_text("")
-			
-			self.load_info()
-			self.core.siteBox.draw_site(False)
-			if self.read_conf['status']:
-				if self.right_folder !=None:
-					if os.path.isdir(self.right_folder):
-						self.stack_opt.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
-						self.msg_label.set_text("")
-						self.core.editBox.init_form()
-						self.core.editBox.render_form()
-						self.core.editBox.sync_folder_dc.set_filename(self.right_folder)
-						self.stack_window.set_visible_child_name("editBox")
-					else:	
-						self.stack_opt.set_visible_child_name("siteBox")
-				else:
-					self.stack_opt.set_visible_child_name("siteBox")
-			else:
-				self.stack_opt.set_visible_child_name("siteBox")			
+			self.loading_info()
 		
 		if error:
+			self.main_spinner.stop()
+			self.stack_opt.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+			self.stack_opt.set_visible_child_name("loginBox")
 			self.login_msg_box.set_name("ERROR_BOX")
 			self.login_error_img.show()
 			self.login_msg_label.set_halign(Gtk.Align.START)
@@ -196,7 +188,6 @@ class MainWindow:
 		return False
 			
 	#def loading_listener
-		
 				
 	def on_key_press_event(self,window,event):
 		
@@ -206,18 +197,55 @@ class MainWindow:
 		
 	#def on_key_press_event
 
-	def load_info(self):
-	
+	def loading_info(self):
+
+		t=threading.Thread(target=self.load_info)
+		t.daemon=True
+		t.start()
+		GLib.timeout_add(500,self.pulsate_loading_info,t)
+
+
+	#def load_info	
+
+	def pulsate_loading_info(self,thread):
+
+		if thread.is_alive():
+			return True
+
 		self.toolbar.show()
 		self.option_separator.show()
 		self.search_entry.show()	
-		self.read_conf=self.core.sitesmanager.read_conf()
-		self.sites_info=self.core.sitesmanager.sites_config.copy()
-		if not self.read_conf['status']:
+
+		if self.read_conf['status']:
+			self.core.siteBox.draw_site(False)
+			if self.right_folder !=None:
+				if os.path.isdir(self.right_folder):
+					self.stack_opt.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+					self.msg_label.set_text("")
+					self.core.editBox.init_form()
+					self.core.editBox.render_form()
+					self.core.editBox.sync_folder_dc.set_filename(self.right_folder)
+					self.stack_window.set_visible_child_name("editBox")
+				else:	
+					self.stack_opt.set_visible_child_name("siteBox")
+			else:
+				self.stack_opt.set_visible_child_name("siteBox")
+		else:
+			self.stack_opt.set_visible_child_name("siteBox")			
 			self.add_button.set_sensitive(False)
 			self.manage_message(False,True,self.read_conf['code'])
 
-	#def load_info	
+		return False
+
+	#def pulsate_load_info
+
+
+	def load_info(self):
+
+		self.read_conf=self.core.sitesmanager.read_conf()
+		self.sites_info=self.core.sitesmanager.sites_config.copy()
+
+	#def load_info
 
 	def add_site(self,widget):
 
@@ -346,7 +374,9 @@ class MainWindow:
 		elif code==29:
 			msg_text=_("Saving changes. Wait a moment...")	
 		elif code==-30:
-			msg_text=_("Unabled to edit the site")	
+			msg_text=_("Unabled to edit the site")
+		elif code==31:
+			msg_text=_("Loading information. Wait a moment...")	
 			
 		return msg_text
 
@@ -360,13 +390,13 @@ class MainWindow:
 		if show:
 			self.toolbar.set_sensitive(False)
 			self.search_entry.set_sensitive(False)
-			self.main_waiting_label.set_text(self.get_msg(msg_code))
-			self.main_spinner.start()
-			self.stack_opt.set_visible_child_name("mainWaitingBox")
+			self.edit_waiting_label.set_text(self.get_msg(msg_code))
+			self.edit_spinner.start()
+			self.stack_opt.set_visible_child_name("waitingBox")
 		else:
 			self.toolbar.set_sensitive(True)
 			self.search_entry.set_sensitive(True)
-			self.main_spinner.stop()
+			self.edit_spinner.stop()
 			self.stack_opt.set_visible_child_name("siteBox")
 	
 	#def manage_waiting_stack
