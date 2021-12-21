@@ -1,3 +1,9 @@
+lliurex-easy-sites (16.06.12) focal; urgency=medium
+
+  * Fixed a bug when load info
+  
+ -- Juan Ramon Pelegrina <juapesai@hotmail.com>  Tue, 21 Dec 2021 09:08:12 +0100
+
 lliurex-easy-sites (16.06.11) focal; urgency=medium
 
   * Fixed bug when run in client-lite
