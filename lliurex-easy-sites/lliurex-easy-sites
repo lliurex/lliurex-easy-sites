@@ -81,7 +81,8 @@ class Tunnel(QObject):
 			sync_folder=None
 
 		tk=ticket.replace(' ','##U+0020##')
-		os.system("/usr/sbin/lliurex-easy-sites-gui %s %s %s &"%(sync_folder,tk,self.passwd))
+		passwd="'"+self.passwd+"'"
+		os.system("/usr/sbin/lliurex-easy-sites-gui %s %s %s &"%(sync_folder,tk,passwd))
 		app.quit()
 	
 	#def on_ticket

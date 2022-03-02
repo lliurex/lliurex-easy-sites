@@ -158,10 +158,22 @@ class MainWindow:
 		self.stack_opt.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
 		self.stack_opt.set_visible_child_name("mainWaitingBox")
 
-		t=threading.Thread(target=self.core.sitesmanager.create_n4dClient(sys.argv[2],sys.argv[3]))
-		t.daemon=True
-		t.start()
-		GLib.timeout_add(500,self.loading_listener,t)
+		try:
+			t=threading.Thread(target=self.core.sitesmanager.create_n4dClient(sys.argv[2],sys.argv[3]))
+			t.daemon=True
+			t.start()
+			GLib.timeout_add(500,self.loading_listener,t)
+		except Exception as e:
+			msg="Error caused by sys.arg. Number of arguments received: %s"%len(sys.argv)
+			self.core.sitesmanager._debug("LOADING",msg)
+			self.main_spinner.stop()
+			self.stack_opt.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+			self.stack_opt.set_visible_child_name("loginBox")
+			self.login_msg_box.set_name("ERROR_BOX")
+			self.login_error_img.show()
+			self.login_msg_label.set_halign(Gtk.Align.START)
+			self.login_msg_label.set_text(_("Unable to load Easy-Sites. The number of parametres received is not correct"))		
+
 
 	#def loading
 	
