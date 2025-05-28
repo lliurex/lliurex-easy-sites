@@ -1,0 +1,4 @@
+lliurex-easy-sites-adi.install/easy-sites/* /usr/share/lliurex-easy-sites/easy-sites
+lliurex-easy-sites-adi.install/templates/*  /usr/share/lliurex-easy-sites/templates
+lliurex-easy-sites-adi.install/n4d-plugin/* /
+

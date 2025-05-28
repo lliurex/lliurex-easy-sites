@@ -24,3 +24,9 @@ Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, zero-center
 Description: Files to zero-center 
  Provides files to zero-center: app, zmd and banner files
+
+Package: lliurex-easy-sites-adi
+Architecture:all
+Depends: ${shlibs:Depends}, ${misc:Depends}, lliurex-easy-sites, apache2
+Description: Contains lliurex-easy-sites-adi
+ Provides all necessary to run lliurex-easy-sites in adi
