@@ -5,7 +5,6 @@ case "$1" in
    configure)
    
 	   n4d-modules enable-plugin /etc/n4d/conf.d/EasySitesManager.json || true
-	   deb-systemd-invoke restart n4d || true
 	
    ;;
 
