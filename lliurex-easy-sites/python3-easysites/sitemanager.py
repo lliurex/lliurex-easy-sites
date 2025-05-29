@@ -44,6 +44,7 @@ class SiteManager(object):
 		self.net_folder="/net/server-sync/easy-sites"
 		self.image_dir=os.path.expanduser("~/.cache/")+"easy-sites"
 		self.url_site="http://server/easy-sites/easy-"
+		self.adi_client="/usr/bin/natfree-client"
 		self.detect_flavour()	
 	
 	#def __init__	
@@ -108,7 +109,14 @@ class SiteManager(object):
 			pixbuf_path="/tmp/easy-"+info["id"]+".png"
 			pixbuf.savev(pixbuf_path, 'png', [], [])
 
+			copy_image_client=False
 			if self._searchMeta('client'):
+				copy_image_client=True
+			elif self._searchMeta('desktop'):
+				if os.path.exists(self.adi_client):
+					copy_image_client=True
+
+			if copy_image_client:
 				result=self.copy_pixbuf_file(pixbuf_path)
 				if not result['status']:
 					error=True
