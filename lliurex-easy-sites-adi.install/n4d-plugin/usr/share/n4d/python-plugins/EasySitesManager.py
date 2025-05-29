@@ -42,6 +42,8 @@ class EasySitesManager:
 
 		if not os.path.isdir(self.var_folder):
 			shutil.copytree(self.site_folder,self.var_folder)
+			cmd="ln -s /var/www/easy-sites /var/www/html/easy-sites"
+			os.system(cmd)
 
 		if not os.path.exists(self.links_path):
 			os.makedirs(self.links_path)
@@ -198,7 +200,7 @@ class EasySitesManager:
 		
 		if result["status"]:
 			ret=self._create_sites_html()
-			self._fix_folder_perm()
+			#self._fix_folder_perm()
 		
 		return n4d.responses.build_successful_call_response(result)
 			
@@ -250,7 +252,6 @@ class EasySitesManager:
 			
 			if error:
 				self._remove_tmp_site_backup(pixbuf_path,True)
-				#Old n4d: return result
 			else:
 				result_write=self.write_conf(info).get('return',None)
 				if result_write['status']:
@@ -502,10 +503,8 @@ class EasySitesManager:
 			
 			if show_site:
 				action="show"
-				
 			else:
 				action="hide"
-			
 			
 			f=open(link_site_path)
 			content=json.load(f)
@@ -676,15 +675,17 @@ class EasySitesManager:
 		try:
 			cmd="chown -R nobody:nogroup %s"%self.net_folder
 			os.system(cmd)
+			
 			cmd="chmod -R 2775 %s"%self.net_folder
 			os.system(cmd)
-			#cmd="setfacl -Rdm g:sudo:rwx %s"%self.net_folder
+			
 			acl_folders=[["-d -m","g:www-data:r-x"],["-d -m","g:sudo:rwx"],["-d -m","g:10003:rwx"],["-d -m","g:10001:rwx"],["-d -m","g:10004:---"],["-d -m","u::rwx"],["-d -m","o::---"],["-d -m","m::rwx"],["-m","g:10003:rwx"],["-m","g:10001:rwx"],["-m","g:10004:---"],["-m","g:www-data:r-x"]]
 			for item in acl_folders:
 				acl1=item[0].replace('-','').replace(' ','')
 				acl2=item[1]
 				cmd="setfacl -R%s %s %s"%(str(acl1),str(acl2),self.net_folder)
 				os.system(cmd)
+		
 		except:
 			pass
 		
