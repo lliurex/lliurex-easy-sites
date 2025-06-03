@@ -217,7 +217,7 @@ class EasySitesManager:
 		rename=actions_todo		
 
 		if result_backup['status']:
-			if rename:
+			if "rename" in actions_todo:
 				result_rename=self._rename_site(info,pixbuf_path,origId)
 				if not result_rename["status"]:
 					error=True
@@ -233,7 +233,7 @@ class EasySitesManager:
 						icon_changed=True
 				if not error:		
 					if "link" in actions_todo:
-						result_link=self._create_link_template(info,origId)	
+						result_link=self._create_link_template(info,origId)
 						if not result_link['status']:
 							self._undo_edit_changes(origId,info,rename,icon_changed,link_changed)
 							error=True
@@ -616,12 +616,13 @@ class EasySitesManager:
 		if info["image"]["img_path"]!=self.sites_config[origId]["image"]["img_path"]:
 			icon=True
 
+		'''
 		if info["image"]["font"]!=self.sites_config[origId]["image"]["font"]:
 			icon=True
 
 		if info["image"]["color"]!=self.sites_config[origId]["image"]["color"]:
 			icon=True
-
+		'''
 		if icon:
 			actions.append("icon")
 

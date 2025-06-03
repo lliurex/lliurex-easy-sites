@@ -118,16 +118,15 @@ Rectangle{
                 Layout.topMargin:15
             }
             TextField{
-                 id:siteDescriptionEntry
-                 text:siteStackBridge.siteDescription
-                 horizontalAlignment:TextInput.AlignLeft
-                 implicitWidth:400
-                 Layout.topMargin:15
-                 onTextChanged:{
-                     siteStackBridge.updateSiteDescriptionValue(siteDescriptionEntry.text)
-                 }
+                id:siteDescriptionEntry
+                text:siteStackBridge.siteDescription
+                horizontalAlignment:TextInput.AlignLeft
+                implicitWidth:400
+                Layout.topMargin:15
+                onTextChanged:{
+                    siteStackBridge.updateSiteDescriptionValue(siteDescriptionEntry.text)
+                }
             }
-
             Text{
                 id:folderLabel
                 text:i18nd("lliurex-easy-sites","Sync content from: ")
@@ -206,7 +205,7 @@ Rectangle{
             enabled:siteStackBridge.changesInSite
             onClicked:{
                 closeTimer.stop()
-                siteStackBridge.applyBellChanges()
+                siteStackBridge.applySiteChanges()
                 
             }
         }
@@ -241,6 +240,7 @@ Rectangle{
             selectedFolder=siteFolderDialog.fileUrl.toString()
             selectedFolder=selectedFolder.replace(/^(file:\/{2})/,"")
             siteStackBridge.updateSiteFolderValue(selectedFolder)
+            siteFolder.text=selectedFolder
             messageLabel.visible=false
         }
       

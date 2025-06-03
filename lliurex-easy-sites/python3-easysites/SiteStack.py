@@ -40,18 +40,20 @@ class CheckData(QThread):
 
 		QThread.__init__(self)
 		self.dataToCheck=args[0]
+		self.edit=args[1]
+		self.siteToLoad=args[2]
 		self.retData={}
-		self.retDuplicate={}
 
 	#def __init__
 
 	def run(self,*args):
 
 		time.sleep(0.5)
-		self.retData=Bridge.siteManager.checkData(self.dataToCheck)
+		self.retData=Bridge.siteManager.checkData(self.dataToCheck,self.edit,self.siteToLoad)
+		'''
 		if self.retData:
 			self.retDuplicate=Bridge.siteManager.checkDuplicateSite(self.dataToCheck)
-		
+		'''		
 	#def run
 
 #class CheckData
@@ -61,7 +63,9 @@ class SaveData(QThread):
 	def __init__(self,*args):
 
 		QThread.__init__(self)
-		self.dataToSave=args[0]
+		self.action=args[0]
+		self.dataToSave=args[1]
+		self.requiredSync=args[2]
 		self.ret=[]
 
 	#def __init__
@@ -69,7 +73,7 @@ class SaveData(QThread):
 	def run(self,*args):
 
 		time.sleep(0.5)
-		self.ret=Bridge.siteManager.saveData(self.dataToSave)
+		self.ret=Bridge.siteManager.saveData(self.action,self.dataToSave,self.requiredSync)
 
 	#def run
 
@@ -126,7 +130,7 @@ class Bridge(QObject):
 
 	def _getSiteDescription(self):
 
-		return self._getSiteDescription
+		return self._siteDescription
 
 	#def _getSiteDescription
 
@@ -144,7 +148,7 @@ class Bridge(QObject):
 
 	#def _getIsSiteVisible
 
-	def _setIsSisteVisible(self,isSiteVisible):
+	def _setIsSiteVisible(self,isSiteVisible):
 
 		if self._isSiteVisible!=isSiteVisible:
 			self._isSiteVisible=isSiteVisible
@@ -237,11 +241,13 @@ class Bridge(QObject):
 	#def _setActionType
 
 	@Slot()
-	def addSiteBell(self,folderPath=None):
+	def addSite(self,folderPath=None):
 
 		self.folderFromMenu=folderPath
+		self.edit=False
+		self.actionType="add"
+		self.siteToLoad=""
 
-		actionType="add"
 		if self.folderFromMenu==None:
 			self.core.mainStack.closePopUp=[False,NEW_SITE_CONFIG]
 			self.core.sitesOptionsStack.showMainMessage=[False,"","Ok"]
@@ -293,6 +299,9 @@ class Bridge(QObject):
 	@Slot(str)
 	def loadSite(self,siteToLoad):
 
+		self.siteToLoad=siteToLoad
+		self.edit=True
+		self.requiredSync=False
 		self.core.mainStack.closePopUp=[False,LOAD_SITE_CONFIG]
 		self.core.sitesOptionsStack.showMainMessage=[False,"","Ok"]
 		self.actionType="edit"
@@ -317,6 +326,7 @@ class Bridge(QObject):
 
 		if value!=self.siteName:
 			self.siteName=value
+			self.currentSiteConfig["id"]=Bridge.siteManager.getSiteId(value)
 			self.currentSiteConfig["name"]=self.siteName
 
 		if self.currentSiteConfig!=Bridge.siteManager.currentSiteConfig:
@@ -327,11 +337,12 @@ class Bridge(QObject):
 	#def updatesiteNameValue
 
 	@Slot(str,result=bool)
-	def checkMimetypeImage(self,imagePath):
+	def checkMimeTypes(self,imagePath):
 
-		return Bridge.siteManager.checkMimetypes(imagePath,"image")["result"]
+		ret=Bridge.siteManager.checkMimeTypes(imagePath)
+		return ret["result"]
 
-	#def checkMimetypeImage
+	#def checkMimeTypes
 
 	@Slot('QVariantList')
 	def updateImageValues(self,values):
@@ -339,11 +350,12 @@ class Bridge(QObject):
 		tmpImage=[]
 		tmpImage.append(values[0])
 		tmpImage.append(values[1])
+		tmpImage.append(False)
 
 		if tmpImage!=self.siteImage:
 			self.siteImage=tmpImage
 			self.currentSiteConfig["image"]["option"]=self.siteImage[0]
-			self.currentSiteConfig["image"]["path"]=self.siteImage[2]
+			self.currentSiteConfig["image"]["img_path"]=self.siteImage[1]
 	
 		if self.currentSiteConfig!=Bridge.siteManager.currentSiteConfig:
 			self.changesInSite=True
@@ -367,18 +379,13 @@ class Bridge(QObject):
 	#def updateSiteDescriptionValue
 
 	@Slot(str)
-	def updateFolderValue(self,value):
+	def updateSiteFolderValue(self,value):
 
-		if value!=self.siteFolder:
-			self.siteFolder=value
-			self.currentSiteConfig["sync_folder"]=self.siteFolder
-
-		if self.currentSiteConfig!=Bridge.siteManager.currentSiteConfig:
-			self.changesInSite=True
-		else:
-			self.changesInSite=False
-
-	#def updateFolderValue
+		self.requiredSync=True
+		self.currentSiteConfig["sync_folder"]=self.siteFolder
+		self.changesInSite=True
+	
+	#def updateSiteFolderValue
 
 	@Slot(bool)
 	def updateIsSiteVisibleValue(self,value):
@@ -419,7 +426,7 @@ class Bridge(QObject):
 
 		self.core.mainStack.closePopUp=[False,CHECK_DATA]
 		self.core.mainStack.closeGui=False
-		self.checkData=CheckData(self.currentSiteConfig)
+		self.checkData=CheckData(self.currentSiteConfig,self.edit,self.siteToLoad)
 		self.checkData.start()
 		self.checkData.finished.connect(self._checkDataRet)
 
@@ -428,11 +435,7 @@ class Bridge(QObject):
 	def _checkDataRet(self):
 
 		if self.checkData.retData["result"]:
-			if self.checkData.retDuplicate["result"]:
-				self.saveDataChanges()
-			else:
-				self.core.mainStack.closePopUp=[True,""]
-				self.showSiteDuplicateDialog=True
+			self.saveDataChanges()
 		else:
 			self.core.mainStack.closePopUp=[True,""]
 			self.showSiteFormMessage=[True,self.checkData.retData["code"],"Error"]
@@ -442,7 +445,7 @@ class Bridge(QObject):
 	def saveDataChanges(self):
 
 		self.core.mainStack.closePopUp=[False,SAVE_DATA]
-		self.saveData=SaveData(self.currentSiteConfig)
+		self.saveData=SaveData(self.actionType,self.currentSiteConfig,self.requiredSync)
 		self.saveData.start()
 		self.saveData.finished.connect(self._saveDataRet)
 
@@ -450,11 +453,12 @@ class Bridge(QObject):
 
 	def _saveDataRet(self):
 
-		if self.saveData.ret[0]:
+		print(self.saveData.ret)
+		if self.saveData.ret["status"]:
 			self.core.sitesOptionsStack._updateSitesModel()
-			self.core.sitesOptionsStack.showMainMessage=[True,self.saveData.ret[1],"Ok"]
+			self.core.sitesOptionsStack.showMainMessage=[True,self.saveData.ret["code"],"Ok"]
 		else:
-			self.core.sitesOptionsStack.showMainMessage=[True,self.saveData.ret[1],"Error"]	
+			self.core.sitesOptionsStack.showMainMessage=[True,self.saveData.ret["code"],"Error"]	
 
 		self.core.sitesOptionsStack.enableGlobalOptions=Bridge.siteManager.checkGlobalOptionStatus()
 		self.core.sitesOptionsStack.enableChangeStatusOptions=Bridge.siteManager.checkChangeStatusSitesOption()
@@ -496,7 +500,7 @@ class Bridge(QObject):
 	siteFolder=Property(str,_getSiteFolder,_setSiteFolder,notify=on_siteFolder)
 
 	on_isSiteVisible=Signal()
-	isSiteVisible=Property(bool,_getIsSiteVisible,_setIsSisteVisible,notify=on_isSiteVisible)
+	isSiteVisible=Property(bool,_getIsSiteVisible,_setIsSiteVisible,notify=on_isSiteVisible)
 
 	on_showSiteFormMessage=Signal()
 	showSiteFormMessage=Property('QVariantList',_getShowSiteFormMessage,_setShowSiteFormMessage, notify=on_showSiteFormMessage)

@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-import gi
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GObject, GLib
 import os
 import json
 import codecs
@@ -15,6 +12,9 @@ import re
 import subprocess
 import urllib.request as urllib2
 import n4d.client
+import cairosvg
+from PIL import Image
+import time
 
 from jinja2 import Environment
 from jinja2.loaders import FileSystemLoader
@@ -31,6 +31,7 @@ class SiteManager(object):
 	FOLDER_TOSYNC_MISSING_ERROR=-5
 	SCP_CONTENT_TOSERVER_ERROR=-13
 	SCP_FILE_TOSERVER_ERROR=-17
+	SITE_ICON_ERROR=-18
 
 	ALL_CORRECT_CODE=0
 
@@ -47,6 +48,7 @@ class SiteManager(object):
 		self.urlSite="http://server/easy-sites/easy-"
 		self.adiClient="/usr/bin/natfree-client"
 		self.stockImagesFolder="/usr/share/lliurex-easy-sites/images"
+		self.tmpIconPath="/tmp/easy-"
 		self.loadError=False
 		self.detectFlavour()
 		self._getSystemLocale()
@@ -68,8 +70,6 @@ class SiteManager(object):
 
 	def createN4dClient(self,ticket,passwd):
 
-		print(ticket)
-		print(passwd)
 		ticket=ticket.replace('##U+0020##',' ')
 		self.serverIP=ticket.split(' ')[1].split(":")[1].split("//")[1]
 		self.credentials.append(ticket.split(' ')[2])
@@ -109,14 +109,20 @@ class SiteManager(object):
 		self.isSiteVisible=True
 		
 		self.currentSiteConfig={}
+		self.currentSiteConfig["id"]=self.siteToLoad
 		self.currentSiteConfig["name"]=self.siteName
 		self.currentSiteConfig["description"]=self.siteDescription
 		self.currentSiteConfig["image"]={}
 		self.currentSiteConfig["image"]["option"]=self.siteImage[0]
-		self.currentSiteConfig["image"]["path"]=self.siteImage[1]
-		self.currentSiteConfig["folder"]=self.siteFolder
+		self.currentSiteConfig["image"]["img_path"]=self.siteImage[1]
+		self.currentSiteConfig["sync_folder"]=self.siteFolder
+		self.currentSiteConfig["site_folder"]=""
 		self.currentSiteConfig["url"]=self.siteUrl
-		self.currentSiteConfig["isVisible"]=self.isSiteVisible
+		self.currentSiteConfig["visibility"]=self.isSiteVisible
+		self.currentSiteConfig["author"]=""
+		self.currentSiteConfig["updated_by"]=""
+		self.currentSiteConfig["date_creation"]=""
+		self.currentSiteConfig["last_update"]=""
 	
 	#def initValues		
 
@@ -151,7 +157,6 @@ class SiteManager(object):
 
 			self.sitesConfigData.append(tmp)
 
-		print(self.sitesConfigData)
 		
 	#def _getSitesConfig
 
@@ -159,92 +164,102 @@ class SiteManager(object):
 
 		self.siteToLoad=siteToLoad
 		self.currentSiteConfig=self.sitesConfig[siteToLoad]
-		
+
 		self.siteName=self.currentSiteConfig["name"]
 		if self.currentSiteConfig["image"]["option"]=="stock":
+			error=False
 			imgPath=self.currentSiteConfig["image"]["img_path"]
 		else:
 			imgName=self.currentSiteConfig["image"]["img_path"].split("/.")[1]
 			if os.path.exists(os.path.join(self.imageDir,imgName)):
+				error=False
 				imgPath=os.path.join(self.imageDir,imgName)
 			else:
+				error=True
 				imgPath=os.path.join(self.stockImagesFolder,"no_disp.png")
 		
-		self.siteImage=[self.currentSiteConfig["image"]["option"],imgPath]
+			self.currentSiteConfig["image"]["img_path"]=imgPath
 
+		self.siteImage=[self.currentSiteConfig["image"]["option"],imgPath,error]
+		self.siteDescription=self.currentSiteConfig["description"]
 		self.siteFolder=self.currentSiteConfig["sync_folder"]
 		self.isSiteVisible=self.currentSiteConfig["visibility"]
 		
 	#def loadSiteConfig
 
-	def save_conf(self,args):
+	def saveData(self,action,data,requiredSync):
 
-		action=args[0]
+		action=action
 		error=False
+		info=data
+		result={}
+
+		newImage=info["image"]["img_path"]
+		info.update(self._formatData(data,action))
 
 		if action=="add" or action=="edit":
-			info=args[1]
-			pixbuf=args[2]
-			copy_image=args[4]
-			pixbuf_path="/tmp/easy-"+info["id"]+".png"
-			pixbuf.savev(pixbuf_path, 'png', [], [])
 
-			copy_image_client=False
-			if self._searchMeta('client'):
-				copy_image_client=True
-			elif self._searchMeta('desktop'):
-				if os.path.exists(self.adiClient):
-					copy_image_client=True
-
-			if copy_image_client:
-				result=self.copyPixBufFile(pixbuf_path)
-				if not result['status']:
-					error=True
+			generateSiteIcon=False
 			
-			if not error:
+			if action=="add":
+				generateSiteIcon=True
+			else:
+				if info["id"]!=self.currentSiteConfig["id"]:
+					generateSiteIcon=True
+				else:
+					currentImg=os.path.basename(self.currentSiteConfig["image"]["img_path"])
+					if os.path.basename(newImage)!=currentImg:
+						generateSiteIcon=True
+	
+			siteIconPath="%s%s.png"%(self.tmpIconPath,info["id"])
+
+			if generateSiteIcon:
+				result=self._generateSiteIcon(siteIconPath,newImage)
+			else:
+				result["status"]=True
+			
+			if result["status"]:
 				if action=="add":			
-					result=self.client.EasySitesManager.create_new_site(info,pixbuf_path)
+					result=self.client.EasySitesManager.create_new_site(info,siteIconPath)
 					if result['status']:
 						result=self.syncContent(info["id"],info["sync_folder"])
 						if result['status']:
-							if copy_image!="":
-								self.copyImageFile(info["id"],copy_image)
-							#self.n4d.write_conf(self.credentials,'EasySitesManager',info)
+							if info["image"]["option"]=="custom":
+								self.copyImageFile(info["id"],newImage)
 						else:
 							self.client.EasySitesManager.delete_site(info["id"])	
 
-					self.removeTmpFiles(pixbuf_path)		
+					self.removeTmpFiles(siteIconPath)		
 					
 					self._debug("Create new site: ",result)
 
 				elif action=="edit":	
-					confirm_edit=True
-					origId=args[5]
-					require_sync=args[3]			
-					result=self.client.EasySitesManager.edit_site(info,pixbuf_path,origId)
+					confirmEdit=True
+					origId=self.currentSiteConfig["id"]
+					result=self.client.EasySitesManager.edit_site(info,siteIconPath,origId)
 					if result['status']:
-						if require_sync:
+						if requiredSync:
+							print("SINCRONIZAR")
 							result=self.syncContent(info["id"],info["sync_folder"])
 							if not result['status']:
-								confirm_edit=False
-						if confirm_edit:
-							if copy_image!="":
-								self.copyImageFile(info["id"],copy_image)
+								confirmEdit=False
+						if confirmEdit:
+							if info["image"]["option"]=="custom":
+								if newImage!=os.path.basename(self.currentSiteConfig["image"]["img_path"]):
+									self.copyImageFile(info["id"],newImage)
 
-							#self.n4d.write_conf(self.credentials,'EasySitesManager',info)		
-					
-					self.removeTmpFiles(pixbuf_path)
+					self.removeTmpFiles(siteIconPath)
 					self._debug("Edit new site: ",result)
 
 	
 		elif action=="delete":
-			siteId=args[1]
+			siteId=data["id"]
 			result=self.client.EasySitesManager.delete_site(siteId)
 			self._debug("Delete site: ",result)
 
 		elif action=="visibility":
-			info=args[1]
-			visible=args[2]
+			info=data
+			visible=data["visibility"]
 			result=self.client.EasySitesManager.change_site_visibility(info,visible)
 			'''
 			if result['status']:
@@ -254,14 +269,12 @@ class SiteManager(object):
 			self._debug("Change visibility: ",result)
 
 		elif action=="sync":
-			info=args[1]
+			info=data
 			siteId=info["id"]
-			sync_from=args[2]
+			sync_from=info["sync_folder"]
 			result=self.syncContent(siteId,sync_from)
+
 			if result['status']:
-				info["sync_folder"]=sync_from
-				info["updated_by"]=args[3]
-				info["last_updated"]=args[4]
 				result_write=self.client.EasySitesManager.write_conf(info)
 				if not result_write['status']:
 					result=result_write
@@ -271,7 +284,7 @@ class SiteManager(object):
 	
 	#def save_conf		
 
-	def checkData(self,data,edit,orig_id=None):
+	def checkData(self,data,edit,origId=None):
 
 		checkImage=None
 		sitesKeys=self.sitesConfig.keys()
@@ -282,7 +295,7 @@ class SiteManager(object):
 		else:
 			checkDuplicates=True
 			if edit:
-				if data["id"]==orig_id:
+				if data["id"]==origId:
 					checkDuplicates=False
 
 			if checkDuplicates:		
@@ -295,8 +308,8 @@ class SiteManager(object):
 				return {"result":False,"code":SiteManager.FOLDER_TOSYNC_MISSING_ERROR,"data":""}
 
 		if data["image"]["option"]=="custom":						
-			if data["image"]["path"]!=None:
-				checkImage=self.checkMimeTypes(data["image"]["path"])
+			if data["image"]["img_path"]!=None:
+				checkImage=self.checkMimeTypes(data["image"]["img_path"])
 				
 			else:
 				return {"result":False,"code":SiteManager.IMAGE_FILE_MISSING_ERROR,"data":""}
@@ -322,7 +335,9 @@ class SiteManager(object):
 
 		if error:
 			return {"result":False,"code":SiteManager.IMAGE_FORMART_ERROR,"data":""}				
-		
+		else:
+			return {"result":True,"code":"","data":""}
+
 	#def checkMimeTypes			
 				
 	def getSiteId(self,name):
@@ -336,13 +351,13 @@ class SiteManager(object):
 
 	#def getSiteId
 
-	def copyPixBufFile(self,pixbuf_path):
+	def copySiteIconFile(self,siteIconPath):
 		
 		result={}
 		result['status']=True
 		
 		try:
-			copyPixBuf=self.localClient.ScpManager.send_file(self.credentials[0],self.credentials[1],self.serverIP,pixbuf_path,"/tmp/")
+			copyPixBuf=self.localClient.ScpManager.send_file(self.credentials[0],self.credentials[1],self.serverIP,siteIconPath,"/tmp/")
 			return result
 		except n4d.client.CallFailedError as e:
 			result['status']=False
@@ -350,12 +365,12 @@ class SiteManager(object):
 			result['code']=SiteManager.SCP_FILE_TOSERVER_ERROR
 			return result
 
-	#def copyPixBufFile	
+	#def copySiteIconFile	
 
-	def removeTmpFiles(self,pixbuf_path):
+	def removeTmpFiles(self,siteIconPath):
 	
-		if os.path.exists(pixbuf_path):
-			os.remove(pixbuf_path)
+		if os.path.exists(siteIconPath):
+			os.remove(siteIconPath)
 	
 	#def removeTmpFiles		
 
@@ -392,6 +407,70 @@ class SiteManager(object):
 			pass
 	
 	#def copyImageFile
+
+	def _formatData(self,data,action):
+
+		tmp={}
+		tmp["url"]="%s%s"%(self.urlSite,data["id"])
+		tmp["site_folder"]="%s/%s"%(self.netFolder,data["id"])
+		tmp["updated_by"]=self.credentials[0]
+		tmp["last_updated"]=datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+
+		if data["image"]["option"]=="custom":
+			imgBasename=os.path.basename(data["image"]["img_path"])
+			tmp["image"]={}
+			tmp["image"]["option"]=data["image"]["option"]
+			tmp["image"]["img_path"]="%s/.%s"%(tmp["url"],imgBasename)
+
+		if action=="add":
+			tmp["createdBy"]=self.credentials[0]
+			tmp["date_creation"]=datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+
+		return tmp
+
+	#def _formatData
+
+	def _generateSiteIcon(self,siteIconPath,imgPath):
+
+		result={}
+		result["status"]=True
+		imgBasename=os.path.basename(imgPath)
+
+		if 'svg' in imgBasename:
+			try:
+				cairosvg.svg2png(url=imgPath,write_to=siteIconPath)
+				imgPath=siteIconPath
+			except Exception as e:
+				result["status"]=False
+				result ["msg"]=e
+				result["code"]=SiteManager.SITE_ICON_ERROR
+				return result
+		try:
+			tmpImg=Image.open(imgPath)
+			tmpImg=tmpImg.resize((110,110))
+			tmpImg.save(siteIconPath)
+			tmpImg.close()
+
+			copyImageClient=False
+
+			if self._searchMeta('client'):
+				copyImageClient=True
+			elif self._searchMeta('desktop'):
+				if os.path.exists(self.adiClient):
+					copyImageClient=True
+
+			if copyImageClient:
+				result=self.copySiteIconFile(siteIconPath)
+		
+			return result
+		
+		except Exception as e:
+			result["status"]=False
+			result ["msg"]=e
+			result["code"]=SiteManager.SITE_ICON_ERROR
+			return result
+
+	#def _generateSiteIcon
 
 	def _searchMeta(self,meta):
 
@@ -433,8 +512,7 @@ class SiteManager(object):
 				f.close()
 				return localImgPath
 			except Exception as e:
-				print(str(e))
-				return os.path.join(self.stockImagesFolder,"custom.png")
+				return os.path.join(self.stockImagesFolder,"no_disp.png")
 
 
 	#def _getImageFromSite	
@@ -478,7 +556,6 @@ class SiteManager(object):
 
 		return result
 
-	#def checkChangeStatusBellsOption
-
+	#def checkChangeStatusSitesOption
 
 #class SiteManager

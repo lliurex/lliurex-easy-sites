@@ -104,7 +104,7 @@ Popup {
                                     messageLabel.visible=true
                                     applyBtn.enabled=false
                                 }else{
-                                    if ((customImagePath.text=="")||(siteStackBridge.siteImage[3])){
+                                    if ((customImagePath.text=="")||(siteStackBridge.siteImage[2])){
                                         applyBtn.enabled=false
                                     }else{
                                         applyBtn.enabled=true
@@ -118,8 +118,8 @@ Popup {
                         id:customImagePath
                         text:{
                             if (siteStackBridge.siteImage[0]=="custom"){
-                                if (!siteStackBridge.siteImage[3]){
-                                    siteStackBridge.siteImage[1].substring(siteStackBridge.siteImage[2].lastIndexOf('/')+1)
+                                if (!siteStackBridge.siteImage[2]){
+                                    siteStackBridge.siteImage[1].substring(siteStackBridge.siteImage[1].lastIndexOf('/')+1)
                                 }else{
                                     ""
                                 }
@@ -162,7 +162,7 @@ Popup {
                 icon.name:"dialog-ok.svg"
                 text:i18nd("lliurex-easy-sites","Apply")
                 Layout.preferredHeight:40
-                enabled:!siteStackBridge.siteImage[3]
+                enabled:!siteStackBridge.siteImage[2]
                 onClicked:{
                     var option=""
                     var tmpPath=""
@@ -174,9 +174,9 @@ Popup {
                     if (selectedImageFile!=""){
                         tmpPath=selectedImageFile
                     }else{
-                        tmpPath=siteStackBridge.siteImage[2]
+                        tmpPath=siteStackBridge.siteImage[1]
                     }
-                    siteStackBridge.updateImageValues([option,imageList.currentImgIndex,tmpPath])
+                    siteStackBridge.updateImageValues([option,tmpPath])
                     restoreInitValues()
                     imageSelector.close()
                 }
@@ -217,7 +217,7 @@ Popup {
             tmpFile=tmpFile.replace(/^(file:\/{2})/,"")
             customImagePath.text=tmpFile.substring(tmpFile.lastIndexOf('/')+1)
             selectedImageFile=tmpFile
-            if (!siteStackBridge.checkMimetypeImage(selectedImageFile)){
+            if (!siteStackBridge.checkMimeTypes(selectedImageFile)){
                 messageLabel.visible=true
                 applyBtn.enabled=false
                 imageFileError=true
@@ -232,19 +232,18 @@ Popup {
 
     function restoreInitValues(){
 
-        imageList.currentImgIndex=siteStackBridge.siteImage[1]
         imageFileError=false
         selectedImageFile=""
         messageLabel.visible=""
-        applyBtn.enabled=!siteStackBridge.siteImage[3]
+        applyBtn.enabled=!siteStackBridge.siteImage[2]
         
         if (siteStackBridge.siteImage[0]=="stock"){
             stockOption.checked=true
             customImagePath.text=""
         }else{
             customOption.checked=true
-            if (!siteStackBridge.siteImage[3]){
-                customImagePath.text=siteStackBridge.siteImage[2].substring(siteStackBridge.siteImage[2].lastIndexOf('/')+1)
+            if (!siteStackBridge.siteImage[2]){
+                customImagePath.text=siteStackBridge.siteImage[1].substring(siteStackBridge.siteImage[1].lastIndexOf('/')+1)
             }else{
                 customImagePath.text=""
             }
