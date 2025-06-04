@@ -41,7 +41,7 @@ Rectangle {
                         icon.name:"view-visible.svg"
                         text:i18nd("lliurex-easy-sites","Show visible sites ")
                         enabled:{
-                            if (sitesOptionsStackBridge.filterStatusValue!="active"){
+                            if (sitesOptionsStackBridge.filterStatusValue!="visible"){
                                 true
                             }else{
                                 false
@@ -54,7 +54,7 @@ Rectangle {
                         icon.name:"view-hidden.svg"
                         text:i18nd("lliurex-easy-sites","Show hidden sites")
                         enabled:{
-                            if (sitesOptionsStackBridge.filterStatusValue!="visible"){
+                            if (sitesOptionsStackBridge.filterStatusValue!="hidden"){
                                 true
                             }else{
                                 false

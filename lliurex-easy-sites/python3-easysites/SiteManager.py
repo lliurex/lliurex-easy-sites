@@ -157,13 +157,13 @@ class SiteManager(object):
 
 			self.sitesConfigData.append(tmp)
 
-		
 	#def _getSitesConfig
 
 	def loadSiteConfig(self,siteToLoad):
 
 		self.siteToLoad=siteToLoad
 		self.currentSiteConfig=self.sitesConfig[siteToLoad]
+		self.origImagePath=self.currentSiteConfig["image"]["img_path"]
 
 		self.siteName=self.currentSiteConfig["name"]
 		if self.currentSiteConfig["image"]["option"]=="stock":
@@ -187,18 +187,25 @@ class SiteManager(object):
 		
 	#def loadSiteConfig
 
-	def saveData(self,action,data,requiredSync):
+	def saveData(self,action,data,completeData=True):
 
 		action=action
 		error=False
-		info=data
+
 		result={}
+		
+		if action in ["add","edit"]:
+			info=data[0]
+		elif action in ["sync","visibility"]:
+			info=self.sitesConfig[data[0]]
 
-		newImage=info["image"]["img_path"]
-		info.update(self._formatData(data,action))
-
+		if completeData:
+			newImage=info["image"]["img_path"]
+			info.update(self._formatData(info,action))
+		
 		if action=="add" or action=="edit":
 
+			requiredSync=data[1]
 			generateSiteIcon=False
 			
 			if action=="add":
@@ -239,7 +246,6 @@ class SiteManager(object):
 					result=self.client.EasySitesManager.edit_site(info,siteIconPath,origId)
 					if result['status']:
 						if requiredSync:
-							print("SINCRONIZAR")
 							result=self.syncContent(info["id"],info["sync_folder"])
 							if not result['status']:
 								confirmEdit=False
@@ -249,36 +255,36 @@ class SiteManager(object):
 									self.copyImageFile(info["id"],newImage)
 
 					self.removeTmpFiles(siteIconPath)
+
 					self._debug("Edit new site: ",result)
 
-	
 		elif action=="delete":
-			siteId=data["id"]
+			siteId=data
 			result=self.client.EasySitesManager.delete_site(siteId)
 			self._debug("Delete site: ",result)
 
 		elif action=="visibility":
-			info=data
-			visible=data["visibility"]
+			info["visibility"]=data[1]
+			visible=data[1]
 			result=self.client.EasySitesManager.change_site_visibility(info,visible)
-			'''
-			if result['status']:
-				info["visible"]=visible
-				self.n4d.write_conf(self.credentials,'EasySitesManager',info)
-			'''
 			self._debug("Change visibility: ",result)
 
 		elif action=="sync":
-			info=data
-			siteId=info["id"]
-			sync_from=info["sync_folder"]
-			result=self.syncContent(siteId,sync_from)
+			siteId=data[0]
+			syncFrom=data[1]
+			info["sync_folder"]=data[1]
+			result=self.syncContent(siteId,syncFrom)
 
 			if result['status']:
-				result_write=self.client.EasySitesManager.write_conf(info)
-				if not result_write['status']:
-					result=result_write
+				resultWrite=self.client.EasySitesManager.write_conf(info)
+				if not resultWrite['status']:
+					result=resultWrite
 			self._debug("Sync new content: ",result)
+		
+		if result["status"]:
+			retRead=self.readConf()
+			if not retRead["status"]:
+				result=retRead
 		
 		return result	
 	
@@ -380,6 +386,7 @@ class SiteManager(object):
 		destSitePath=os.path.join(self.netFolder,destSite)
 		result={}
 		result['status']=True
+		result['code']=SiteManager.ALL_CORRECT_CODE
 
 		try:
 			syncContent=self.localClient.ScpManager.send_dir(self.credentials[0],self.credentials[1],"server",sync_from,destSitePath,True)
@@ -412,7 +419,7 @@ class SiteManager(object):
 
 		tmp={}
 		tmp["url"]="%s%s"%(self.urlSite,data["id"])
-		tmp["site_folder"]="%s/%s"%(self.netFolder,data["id"])
+		tmp["site_folder"]="%s/easy-%s"%(self.netFolder,data["id"])
 		tmp["updated_by"]=self.credentials[0]
 		tmp["last_updated"]=datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
@@ -420,7 +427,10 @@ class SiteManager(object):
 			imgBasename=os.path.basename(data["image"]["img_path"])
 			tmp["image"]={}
 			tmp["image"]["option"]=data["image"]["option"]
-			tmp["image"]["img_path"]="%s/.%s"%(tmp["url"],imgBasename)
+			if "no_disp" in imgBasename:
+				tmp["image"]["img_path"]=self.origImagePath
+			else:
+				tmp["image"]["img_path"]="%s/.%s"%(tmp["url"],imgBasename)
 
 		if action=="add":
 			tmp["createdBy"]=self.credentials[0]

@@ -65,7 +65,7 @@ class SaveData(QThread):
 		QThread.__init__(self)
 		self.action=args[0]
 		self.dataToSave=args[1]
-		self.requiredSync=args[2]
+		self.completeData=args[2]
 		self.ret=[]
 
 	#def __init__
@@ -73,7 +73,7 @@ class SaveData(QThread):
 	def run(self,*args):
 
 		time.sleep(0.5)
-		self.ret=Bridge.siteManager.saveData(self.action,self.dataToSave,self.requiredSync)
+		self.ret=Bridge.siteManager.saveData(self.action,self.dataToSave,self.completeData)
 
 	#def run
 
@@ -97,6 +97,8 @@ class Bridge(QObject):
 		self._showChangesInSiteDialog=False
 		self._changesInSite=False
 		self._actionType="add"
+		self.onlySync=True
+		self.requiredMoveToStack=True
 
 	#def _init__
 
@@ -241,12 +243,13 @@ class Bridge(QObject):
 	#def _setActionType
 
 	@Slot()
-	def addSite(self,folderPath=None):
+	def addNewSite(self,folderPath=None):
 
 		self.folderFromMenu=folderPath
 		self.edit=False
 		self.actionType="add"
 		self.siteToLoad=""
+		self.onlySync=False
 
 		if self.folderFromMenu==None:
 			self.core.mainStack.closePopUp=[False,NEW_SITE_CONFIG]
@@ -255,7 +258,7 @@ class Bridge(QObject):
 		self.newSite.start()
 		self.newSite.finished.connect(self._addNewSiteRet)
 
-	#def addNewBell
+	#def addNewSite
 
 	def _addNewSiteRet(self):
 
@@ -321,6 +324,67 @@ class Bridge(QObject):
 
 	#def _loadSiteRet
 
+	@Slot('QVariantList')
+	def changeSiteStatus(self,data):
+
+		action="visibility"
+		completeData=False
+		self.requiredMoveToStack=False
+		self.saveDataChanges(action,data,completeData)
+
+	#def changeSiteStatus
+	
+	@Slot(str)
+	def viewSiteInBrowser(self,siteUrl):
+
+		self.viewSiteCmd="xdg-open %s"%siteUrl
+		self.viewSiteT=threading.Thread(target=self._viewSite)
+		self.viewSiteT.daemon=True
+		self.viewSiteT.start()
+
+	#def viewSiteInBrowser
+
+	def _viewSite(self):
+
+		os.system(self.viewSiteCmd)
+
+	#def _viewSite
+
+	@Slot(str)
+	def openSiteFolder(self,siteFolder):
+
+		self.openSiteCmd="xdg-open %s"%siteFolder
+		self.openSiteT=threading.Thread(target=self._openSite)
+		self.openSiteT.daemon=True
+		self.openSiteT.start()
+
+	#def openSiteFolderr
+
+	def _openSite(self):
+
+		os.system(self.openSiteCmd)
+
+	#def _openSite
+
+	@Slot('QVariantList')
+	def syncSiteContent(self,data):
+
+		action="sync"
+		completeData=False
+		self.requiredMoveToStack=False
+		self.saveDataChanges(action,data,completeData)
+
+	#def syncSiteContent
+
+	def removeSite(self,siteId):
+
+		action="delete"
+		completeData=False
+		self.requiredMoveToStack=False
+		self.saveDataChanges(action,siteId,completeData)
+
+	#def removeSite
+
 	@Slot(str)
 	def updateSiteNameValue(self,value):
 
@@ -331,8 +395,10 @@ class Bridge(QObject):
 
 		if self.currentSiteConfig!=Bridge.siteManager.currentSiteConfig:
 			self.changesInSite=True
+			self.onlySync=False
 		else:
 			self.changesInSite=False
+			self.onlySync=True
 
 	#def updatesiteNameValue
 
@@ -359,8 +425,10 @@ class Bridge(QObject):
 	
 		if self.currentSiteConfig!=Bridge.siteManager.currentSiteConfig:
 			self.changesInSite=True
+			self.onlySync=False
 		else:
 			self.changesInSite=False
+			self.onlySync=True
 
 	#def updateImageValues
 
@@ -373,8 +441,10 @@ class Bridge(QObject):
 
 		if self.currentSiteConfig!=Bridge.siteManager.currentSiteConfig:
 			self.changesInSite=True
+			self.onlySync=False
 		else:
 			self.changesInSite=False
+			self.onlySync=True
 
 	#def updateSiteDescriptionValue
 
@@ -382,7 +452,7 @@ class Bridge(QObject):
 	def updateSiteFolderValue(self,value):
 
 		self.requiredSync=True
-		self.currentSiteConfig["sync_folder"]=self.siteFolder
+		self.currentSiteConfig["sync_folder"]=value
 		self.changesInSite=True
 	
 	#def updateSiteFolderValue
@@ -396,8 +466,10 @@ class Bridge(QObject):
 
 		if self.currentSiteConfig!=Bridge.siteManager.currentSiteConfig:
 			self.changesInSite=True
+			self.onlySync=False
 		else:
 			self.changesInSite=False
+			self.onlySync=True
 
 	#def updateIsSiteVisibleValue
 
@@ -435,17 +507,26 @@ class Bridge(QObject):
 	def _checkDataRet(self):
 
 		if self.checkData.retData["result"]:
-			self.saveDataChanges()
+			if self.onlySync:
+				action="sync"
+				data=[self.siteToLoad]
+			else:
+				completeData=True
+				action=self.actionType
+				data=[self.currentSiteConfig,self.requiredSync]
+
+			self.saveDataChanges(action,data,completeData)
 		else:
 			self.core.mainStack.closePopUp=[True,""]
 			self.showSiteFormMessage=[True,self.checkData.retData["code"],"Error"]
 
 	#def _checkDataRet
 
-	def saveDataChanges(self):
+	def saveDataChanges(self,action,data,completeData):
 
 		self.core.mainStack.closePopUp=[False,SAVE_DATA]
-		self.saveData=SaveData(self.actionType,self.currentSiteConfig,self.requiredSync)
+		
+		self.saveData=SaveData(action,data,completeData)
 		self.saveData.start()
 		self.saveData.finished.connect(self._saveDataRet)
 
@@ -453,7 +534,6 @@ class Bridge(QObject):
 
 	def _saveDataRet(self):
 
-		print(self.saveData.ret)
 		if self.saveData.ret["status"]:
 			self.core.sitesOptionsStack._updateSitesModel()
 			self.core.sitesOptionsStack.showMainMessage=[True,self.saveData.ret["code"],"Ok"]
@@ -464,9 +544,13 @@ class Bridge(QObject):
 		self.core.sitesOptionsStack.enableChangeStatusOptions=Bridge.siteManager.checkChangeStatusSitesOption()
 		self.changesInSite=False
 		self.core.mainStack.closeGui=True
-		self.core.mainStack.moveToStack=1
-		self.core.mainStack.manageGoToStack()
+
+		if self.requiredMoveToStack:
+			self.core.mainStack.moveToStack=1
+			self.core.mainStack.manageGoToStack()
+		
 		self.core.mainStack.closePopUp=[True,""]
+		self.requiredMoveToStack=True
 
 	#def _saveDataRet
 

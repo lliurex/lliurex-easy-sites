@@ -21,6 +21,7 @@ class EasySitesManager:
 
 	ALL_CORRECT_CODE=0
 	EDIT_SITE_SUCCESSFUL=10
+	DELETE_SITE_SUCCESSFUL=11
 
 	def __init__(self):
 
@@ -149,13 +150,15 @@ class EasySitesManager:
 			if os.path.exists(conf_file_path):
 				os.remove(conf_file_path)
 			status=True
-			msg="Conf site delete successfully"	
+			msg="Conf site delete successfully"
+			code=EasySitesManager.DELETE_SITE_SUCCESSFUL	
 
 		except Exception as e:
 			status=False
 			msg="Unabled to delete site config: "+str(e)
+			code=EasySitesManager.DELETE_SITE_ERROR
 
-		result={"status":status,"msg":msg}
+		result={"status":status,"msg":msg,"code":code}
 
 		if result["status"]:
 			ret=self._create_sites_html()

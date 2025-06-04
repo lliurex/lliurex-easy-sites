@@ -2,6 +2,7 @@ import org.kde.plasma.components 2.0 as Components
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQml.Models 2.8
+import QtQuick.Dialogs 1.3
 
 Components.ListItem{
 
@@ -14,6 +15,7 @@ Components.ListItem{
     property bool isVisible
     property string siteUrl
     property string siteFolder
+    property string selectedFolder
 
     enabled:true
 
@@ -119,22 +121,22 @@ Components.ListItem{
                     MenuItem{
                         icon.name:isVisible?"view-hidden.svg":"view-visible.svg"
                         text:isVisible?i18nd("lliurex-easy-sites","Hide site"):i18nd("lliurex-easy-sites","Show site")
-                        onClicked:sitesOptionsStackBridge.changeSiteStatus([false,!siteVisible,siteId])
+                        onClicked:siteStackBridge.changeSiteStatus([siteId,!isVisible])
                     }
                     MenuItem{
                         icon.name:"folder-html.svg"
                         text:i18nd("lliurex-easy-sites","Open site in browser")
-                        onClicked:sitesOptionsStackBridge.launchSite(siteUrl)
+                        onClicked:siteStackBridge.viewSiteInBrowser(siteUrl)
                     }
                     MenuItem{
                         icon.name:"folder-black.svg"
                         text:i18nd("lliurex-easy-sites","Open folder")
-                        onClicked:sitesOptionsStackBridge.openFolder(siteFolder)
+                        onClicked:siteStackBridge.openSiteFolder(siteFolder)
                     }
                     MenuItem{
                         icon.name:"folder-sync.svg"
                         text:i18nd("lliurex-easy-sites","Sync new content")
-                        onClicked:sitesOptionsStackBridge.syncContent(siteId)
+                        onClicked:siteFolderDialog.open()
                     }
                     MenuItem{
                         icon.name:"document-edit.svg"
@@ -150,4 +152,24 @@ Components.ListItem{
             }
         }
     }
+
+    FileDialog{
+        id:siteFolderDialog
+        title: "Select a folder"
+        folder:{
+            if (selectedFolder!=""){
+                shortcuts.selectedFolder
+            }else{
+                shortcuts.home
+            }
+        }
+        selectFolder:true
+        onAccepted:{
+            selectedFolder=""
+            selectedFolder=siteFolderDialog.fileUrl.toString()
+            selectedFolder=selectedFolder.replace(/^(file:\/{2})/,"")
+            siteStackBridge.syncSiteContent([siteId,selectedFolder])
+        }
+      
+    }   
 }

@@ -259,7 +259,10 @@ class Bridge(QObject):
 
 		self.showRemoveSiteDialog=[False,False]
 		if response=="Accept":
-			self._launchRemoveSiteProcess()
+			if not self.removeAllSites:
+				self.core.siteStack.removeSite(self.siteToRemove)
+			else:
+				self._launchRemoveSiteProcess()
 
 	#def manageRemoveSITEDialog
 

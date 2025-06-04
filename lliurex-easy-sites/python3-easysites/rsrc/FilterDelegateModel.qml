@@ -37,11 +37,11 @@ DelegateModel {
 	            let matchStatus=true
 	            if (statusFilter!="all"){
 		            if (statusFilter=="visible"){
-		            	if (item["isVisible"]){
+		            	if (!item["isVisible"]){
 		            		matchStatus=false
 		            	}	
 		            }else{
-		            	if (!item["isVisible"]){
+		            	if (item["isVisible"]){
 		            		matchStatus=false
 		            	}
 		            }
