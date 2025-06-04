@@ -12,6 +12,10 @@ NEW_SITE_CONFIG=1
 LOAD_SITE_CONFIG=2
 CHECK_DATA=3
 SAVE_DATA=4
+HIDE_SITE=5
+SHOW_SITE=6
+SYNC_CONTENT=7
+DELETE_SITE=8
 
 class LoadSite(QThread):
 
@@ -81,7 +85,6 @@ class SaveData(QThread):
 
 class Bridge(QObject):
 
-	
 	def __init__(self):
 
 		QObject.__init__(self)
@@ -250,6 +253,7 @@ class Bridge(QObject):
 		self.actionType="add"
 		self.siteToLoad=""
 		self.onlySync=False
+		self.requiredSync=False
 
 		if self.folderFromMenu==None:
 			self.core.mainStack.closePopUp=[False,NEW_SITE_CONFIG]
@@ -267,7 +271,7 @@ class Bridge(QObject):
 		if self.folderFromMenu==None:
 			self.core.mainStack.closePopUp=[True,""]
 		else:
-			self.updateFolderValue(self.fileFromMenu)
+			self.updateSiteFolderValue(self.folderFromMenu)
 		self.core.mainStack.currentStack=2
 		self.siteCurrentOption=1
 
@@ -330,7 +334,12 @@ class Bridge(QObject):
 		action="visibility"
 		completeData=False
 		self.requiredMoveToStack=False
-		self.saveDataChanges(action,data,completeData)
+		if data[1]:
+			msgCode=SHOW_SITE
+		else:
+			msgCode=HIDE_SITE
+
+		self.saveDataChanges(action,data,completeData,msgCode)
 
 	#def changeSiteStatus
 	
@@ -372,7 +381,7 @@ class Bridge(QObject):
 		action="sync"
 		completeData=False
 		self.requiredMoveToStack=False
-		self.saveDataChanges(action,data,completeData)
+		self.saveDataChanges(action,data,completeData,SYNC_CONTENT)
 
 	#def syncSiteContent
 
@@ -381,7 +390,7 @@ class Bridge(QObject):
 		action="delete"
 		completeData=False
 		self.requiredMoveToStack=False
-		self.saveDataChanges(action,siteId,completeData)
+		self.saveDataChanges(action,siteId,completeData,DELETE_SITE)
 
 	#def removeSite
 
@@ -476,7 +485,7 @@ class Bridge(QObject):
 	@Slot(str)
 	def manageChangesDialog(self,action):
 
-		self.showchangesInSiteDialog=False
+		self.showChangesInSiteDialog=False
 
 		if action=="Accept":
 			self._applySiteChanges()
@@ -515,16 +524,16 @@ class Bridge(QObject):
 				action=self.actionType
 				data=[self.currentSiteConfig,self.requiredSync]
 
-			self.saveDataChanges(action,data,completeData)
+			self.saveDataChanges(action,data,completeData,SAVE_DATA)
 		else:
 			self.core.mainStack.closePopUp=[True,""]
 			self.showSiteFormMessage=[True,self.checkData.retData["code"],"Error"]
 
 	#def _checkDataRet
 
-	def saveDataChanges(self,action,data,completeData):
+	def saveDataChanges(self,action,data,completeData,msgCode):
 
-		self.core.mainStack.closePopUp=[False,SAVE_DATA]
+		self.core.mainStack.closePopUp=[False,msgCode]
 		
 		self.saveData=SaveData(action,data,completeData)
 		self.saveData.start()
@@ -555,11 +564,11 @@ class Bridge(QObject):
 	#def _saveDataRet
 
 	@Slot()
-	def cancelSitesChanges(self):
+	def cancelSiteChanges(self):
 
-		self._cancelSitesChanges()
+		self._cancelSiteChanges()
 
-	#def cancellBellChanges
+	#def cancelSiteChanges
 
 	def _cancelSiteChanges(self):
 

@@ -282,7 +282,7 @@ Rectangle{
             case -1:
                 var msg=i18nd("lliurex-easy-sites","You must indicate a name for the site");
                 break;
-            case -3:
+            case -2:
                 var msg=i18nd("lliurex-easy-sites","The name site is duplicate");
                 break;
             case -5:

@@ -20,8 +20,11 @@ class EasySitesManager:
 	EDIT_SITE_ERROR=-30
 
 	ALL_CORRECT_CODE=0
+	SITE_SHOW_SUCCESSFUL=6
+	SITE_HIDE_SUCCESSFUL=7
 	EDIT_SITE_SUCCESSFUL=10
-	DELETE_SITE_SUCCESSFUL=11
+	SITE_CREATED_SUCCESSFUL=11
+	DELETE_SITE_SUCCESSFUL=9
 
 	def __init__(self):
 
@@ -169,7 +172,7 @@ class EasySitesManager:
 
 	def create_new_site(self,info,pixbuf_path):
 
-		result={'status':True,'msg':"Site created sucessfully"}
+		result={'status':True,'msg':"Site created sucessfully","code":EasySitesManager.SITE_CREATED_SUCCESSFUL}
 		result_create=self._create_new_site_folder(info["id"])
 		error=False
 		if result_create['status']:
@@ -506,8 +509,10 @@ class EasySitesManager:
 			
 			if show_site:
 				action="show"
+				msgCode=EasySitesManager.SITE_SHOW_SUCCESSFUL
 			else:
 				action="hide"
+				msgCode=EasySitesManager.SITE_HIDE_SUCCESSFUL
 			
 			f=open(link_site_path)
 			content=json.load(f)
@@ -521,7 +526,7 @@ class EasySitesManager:
 			cmd="chown www-data:www-data %s"%(link_site_path)
 			os.system(cmd)
 				
-			result={"status":True,"msg":"Action execute successfully: "+action,"code":"","data":""}		
+			result={"status":True,"msg":"Action execute successfully: "+action,"code":msgCode,"data":""}		
 
 		except Exception as e:
 			result={"status":False,"msg":str(e),"code":EasySitesManager.HIDE_SHOW_SITE_ERROR,"data":""}

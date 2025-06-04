@@ -26,14 +26,15 @@ class SiteManager(object):
 
 	SITE_NAME_MISSING_ERROR=-1
 	SITE_NAME_DUPLICATE_ERROR=-2
-	IMAGE_FORMART_ERROR=-3
-	IMAGE_FILE_MISSING_ERROR=-4
-	FOLDER_TOSYNC_MISSING_ERROR=-5
-	SCP_CONTENT_TOSERVER_ERROR=-13
-	SCP_FILE_TOSERVER_ERROR=-17
-	SITE_ICON_ERROR=-18
+	IMAGE_FORMART_ERROR=-5
+	IMAGE_FILE_MISSING_ERROR=-7
+	FOLDER_TOSYNC_MISSING_ERROR=-8
+	SCP_CONTENT_TOSERVER_ERROR=-39
+	SCP_FILE_TOSERVER_ERROR=-40
+	SITE_ICON_ERROR=-41
 
-	ALL_CORRECT_CODE=0
+	ALL_DATA_CORRECT=0
+	SYNC_CONTENT_CORRECT=8
 
 	def __init__(self,server=None):
 
@@ -310,18 +311,18 @@ class SiteManager(object):
 			 			
 							
 		if not edit:
-			if data["sync_folder"]==None:
+			if data["sync_folder"]==None or data["sync_folder"]=="":
 				return {"result":False,"code":SiteManager.FOLDER_TOSYNC_MISSING_ERROR,"data":""}
 
 		if data["image"]["option"]=="custom":						
-			if data["image"]["img_path"]!=None:
+			if data["image"]["img_path"]!=None or data["image"]["img_path"]!="":
 				checkImage=self.checkMimeTypes(data["image"]["img_path"])
 				
 			else:
 				return {"result":False,"code":SiteManager.IMAGE_FILE_MISSING_ERROR,"data":""}
 		
 		if checkImage==None:
-			return {"result":True,"code":SiteManager.ALL_CORRECT_CODE,"data":""}
+			return {"result":True,"code":SiteManager.ALL_DATA_CODE,"data":""}
 						
 		else:
 			return checkImage			
@@ -386,7 +387,7 @@ class SiteManager(object):
 		destSitePath=os.path.join(self.netFolder,destSite)
 		result={}
 		result['status']=True
-		result['code']=SiteManager.ALL_CORRECT_CODE
+		result['code']=SiteManager.SYNC_CONTENT_CORRECT
 
 		try:
 			syncContent=self.localClient.ScpManager.send_dir(self.credentials[0],self.credentials[1],"server",sync_from,destSitePath,True)

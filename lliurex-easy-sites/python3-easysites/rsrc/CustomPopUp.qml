@@ -62,22 +62,16 @@ Popup {
                 var msg=i18nd("lliurex-easy-sites","Saving the data entered. Wait a moment...")
                 break;
             case 5:
-                var msg=i18nd("lliurex-easy-sites","Activating the site. Wait a moment...")
+                var msg=i18nd("lliurex-easy-sites","Hiding the site. Wait a moment...")
                 break;
             case 6:
-                var msg=i18nd("lliurex-easy-sites","Activating all sites. Wait a moment...")
+                var msg=i18nd("lliurex-easy-sites","Showing the site. Wait a moment...")
                 break;
             case 7:
-                var msg=i18nd("lliurex-easy-sites","Deactivating the site. Wait a moment...")
+                var msg=i18nd("lliurex-easy-sites","Syncing new content. Wait a moment...")
                 break;
             case 8:
-                var msg=i18nd("lliurex-easy-sites","Deactivating all sites. Wait a moment...")
-                break;
-            case 9:
-                var msg=i18nd("lliurex-easy-sites","Removing the site. Wait a moment...")
-                break;
-            case 10:
-                var msg=i18nd("lliurex-easy-sites","Removing all sites. Wait a moment...")
+                var msg=i18nd("lliurex-easy-sites","Deleting the site. Wait a moment...")
                 break;
             default:
                 var msg=""

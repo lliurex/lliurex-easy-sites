@@ -40,7 +40,7 @@ class Bridge(QObject):
 		self.moveToStack=""
 		self._closeGui=True
 		self._showLoadErrorMessage=[False,""]
-		Bridge.siteManager.createN4dClient(sys.argv[2],sys.argv[3])
+		Bridge.siteManager.createN4dClient(sys.argv[1],sys.argv[2])
 
 	#def _init__
 
@@ -61,12 +61,10 @@ class Bridge(QObject):
 		if self.gatherInfo.readConf['status']:
 			self.core.sitesOptionsStack.loadConfig()
 			self._systemLocale=Bridge.siteManager.systemLocale
-			if len(sys.argv)<5:
-				if Bridge.siteManager.loadError:
-					self.core.sitesOptionsStack.showMainMessage=[True,Bridge.siteManager.SITES_WITH_ERRORS,"Error"]
+			if len(sys.argv)<4:
 				self.currentStack=1
 			else:
-				tmpFile=sys.argv[1]
+				tmpFile=sys.argv[3]
 				if os.path.exists(tmpFile):
 					self.core.siteStack.addNewSite(tmpFile)
 				else:

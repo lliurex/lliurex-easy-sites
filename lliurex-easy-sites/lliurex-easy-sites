@@ -74,15 +74,15 @@ class Tunnel(QObject):
 		
 	@Slot(str)
 	def on_ticket(self, ticket):
-	
-		if len(sys.argv)>1:
-			sync_folder=sys.argv[1]
-		else:
-			sync_folder=None
-
 		tk=ticket.replace(' ','##U+0020##')
 		passwd="'"+self.passwd+"'"
-		os.system("/usr/sbin/lliurex-easy-sites-gui %s %s %s &"%(sync_folder,tk,passwd))
+
+		if len(sys.argv)==1:
+			os.system("/usr/sbin/lliurex-easy-sites-gui %s %s &"%(tk,passwd))
+		elif len(sys.argv)==2:			
+			sync_folder=sys.argv[1]
+			os.system("/usr/sbin/lliurex-easy-sites-gui %s %s %s &"%(tk,passwd,sync_folder))
+
 		app.quit()
 	
 	#def on_ticket

@@ -133,59 +133,65 @@ Rectangle{
    
     function getTextMessage(msgCode){
         switch (msgCode){
-            case -9:
-                var msg=i18nd("lliurex-easy-sites","Unable to sync the content")
-                break;
             case -12:
-                var msg=i18nd("lliurex-easy-sites","Unable to create the link template for the site")
-                break
-            case -19:
-                var msg=i18nd("lliurex-easy-sites","Unable to create the icon for the site")
-                break;
-            case -20:
-                var msg=i18nd("lliurex-easy-sites","Unable to create the symbolic link for the site")
-                break;
-            case -21:
                 var msg=i18nd("lliurex-easy-sites","Unable to delete the site")
                 break;
-            case -22:
+            case -13:
+                var msg=i18nd("lliurex-easy-sites","Unable to create folder to the site")
+                break;
+            case -14:
+                var msg=i18nd("lliurex-easy-sites","Unable to rename the site. Old site not exists")
+                break;
+            case -15:
+                var msg=i18nd("lliurex-easy-sites","Unable to rename the site due to problems in process")
+                break;
+            case -16:
+                var msg=i18nd("lliurex-easy-sites","Unable to create the link template for the site")
+                break;
+            case -17:
+                var msg=i18nd("lliurex-easy-sites","Unable to create the icon for the site")
+                break;
+            case -18:
+                var msg=i18nd("lliurex-easy-sites","Unable to create the symbolic link for the site")
+                break;                
+            case -19:
                 var msg=i18nd("lliurex-easy-sites","Unabled to change the visibility of the site")
+                break;
+            case -21:
+                var msg=i18nd("lliurex-easy-sites","Error reading configuration files of the sites")
+                break;
+            case -23:
+                var msg=i18nd("lliurex-easy-sites","Error writing changes in the site configuration file")
+                break;
+            case -30:
+                var msg=i18nd("lliurex-easy-sites","Unable to edit the site")
                 break;
             case -37:
                 var msg=i18nd("lliurex-easy-sites","Error reading configuration files of the sites")
                 break;
-            case 14:
-                var msg=i18nd("lliurex-easy-sites","Site has been successfully deleted")
+            case -39:
+                var msg=i18nd("lliurex-easy-sites","Unable to sync the content")
                 break;
-            case 15:
-                var msg=i18nd("lliurex-easy-sites","Site has been successfully edited")
+            case -40:
+                var msg=i18nd("lliurex-easy-sites","Unable to send site icon to server")
                 break;
-            case 16:
+            case -41:
+                var msg=i18nd("lliurex-easy-sites","Unable to generate icon for the site")
+                break;
+            case 6:
                 var msg=i18nd("lliurex-easy-sites","Site is now visible again")
                 break;
-            case 17:
+            case 7:
                 var msg=i18nd("lliurex-easy-sites","Site has been hideen")
                 break;
-            case 18:
-                var msg=i18nd("lliurex-easy-sites","Site has been successfully created")
-                break
-            case 46:
-                var msg=i18nd("lliurex-easy-sites","The sites have been activated successfully")
+            case 8:
+                var msg=i18nd("lliurex-easy-sites","The content has been synchronized successfully")
                 break;
-            case 47:
-                var msg=i18nd("lliurex-easy-sites","The sites have been hidden successfully")
+            case 9:
+                var msg=i18nd("lliurex-easy-sites","Site has been successfully deleted")
                 break;
-            case 51:
-                var msg=i18nd("lliurex-easy-sites","The sites have been removed successfully")
-                break;
-            case 53:
-                var msg=i18nd("lliurex-easy-sites","Sites already visible. Nothing to do")
-                break;
-            case 54:
-                var msg=i18nd("lliurex-easy-sites","Sites already hidden. Nothing to do")
-                break;
-            case 55:
-                var msg=i18nd("lliurex-easy-sites","Sites already removed. Nothing to do")
+            case 10:
+                var msg=i18nd("lliurex-easy-sites","Site has been successfully edited")
                 break;
             default:
                 var msg=""

@@ -57,7 +57,7 @@ Rectangle{
     function getMsgText(msgCode){
 
         switch (msgCode){
-            case -25:
+            case -21:
                 var msg=i18nd("lliurex-easy-sites","Unabled to read sites configuration file")
                 break;
             case -38:
