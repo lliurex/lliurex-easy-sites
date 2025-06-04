@@ -47,7 +47,7 @@ Rectangle{
         anchors.fill:parent.fill
         anchors.bottomMargin:15
         spacing:10
-
+       
         Button {
             id:actionsBtn
             visible:true
@@ -55,12 +55,13 @@ Rectangle{
             icon.name:"run-build.svg"
             text:i18nd("lliurex-easy-sites","Global Options")
             Layout.preferredHeight:40
+            Layout.rightMargin:rectLayout.width-(actionsBtn.width+newBtn.width+20)
             enabled:sitesOptionsStackBridge.enableGlobalOptions
             onClicked:actionsMenu.open()
 
             Menu{
                 id:actionsMenu
-                y: -actionsBtn.height*4
+                y: -actionsBtn.height*2.5
                 x: actionsBtn.width/2
 
                 MenuItem{

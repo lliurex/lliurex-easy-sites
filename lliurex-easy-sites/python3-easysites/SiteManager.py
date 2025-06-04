@@ -433,7 +433,7 @@ class SiteManager(object):
 				tmp["image"]["img_path"]="%s/.%s"%(tmp["url"],imgBasename)
 
 		if action=="add":
-			tmp["createdBy"]=self.credentials[0]
+			tmp["author"]=self.credentials[0]
 			tmp["date_creation"]=datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
 		return tmp
