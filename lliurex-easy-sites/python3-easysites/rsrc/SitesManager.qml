@@ -68,14 +68,14 @@ Rectangle{
                     icon.name:"view-visible.svg"
                     text:i18nd("lliurex-easy-sites","Show all sites")
                     enabled:!sitesOptionsStackBridge.enableChangeStatusOptions[0]
-                    onClicked:sitesOptionsStackBridge.changeSiteStatus([true,true])
+                    onClicked:sitesOptionsStackBridge.changeAllSiteStatus(true)
                 }
 
                 MenuItem{
                     icon.name:"view-hidden.svg"
                     text:i18nd("lliurex-easy-sites","Hide all sites")
                     enabled:!sitesOptionsStackBridge.enableChangeStatusOptions[1]
-                    onClicked:sitesOptionsStackBridge.changeSiteStatus([true,false])
+                    onClicked:sitesOptionsStackBridge.changeAllSiteStatus(false)
                 }
 
                MenuItem{
@@ -166,6 +166,15 @@ Rectangle{
             case -30:
                 var msg=i18nd("lliurex-easy-sites","Unable to edit the site")
                 break;
+            case -31:
+                var msg=i18nd("lliurex-easy-sites","Error removing all sites")
+                break;
+            case -32:
+                var msg=i18nd("lliurex-easy-sites","Error showing all sites")
+                break;
+            case -33:
+                var msg=i18nd("lliurex-easy-sites","Error hiding all sites")
+                break;
             case -37:
                 var msg=i18nd("lliurex-easy-sites","Error reading configuration files of the sites")
                 break;
@@ -192,6 +201,18 @@ Rectangle{
                 break;
             case 10:
                 var msg=i18nd("lliurex-easy-sites","Site has been successfully edited")
+                break;
+            case 11:
+                var msg=i18nd("lliurex-easy-sites","Site has been successfully created")
+                break;
+            case 12:
+                var msg=i18nd("lliurex-easy-sites","All sites have been successfully removed")
+                break;
+            case 13:
+                var msg=i18nd("lliurex-easy-sites","All sites are now visible again")
+                break;
+            case 14:
+                var msg=i18nd("lliurex-easy-sites","All sites have been hidden successfully")
                 break;
             default:
                 var msg=""

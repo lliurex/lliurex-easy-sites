@@ -148,7 +148,14 @@ Rectangle{
                         }
                     }
                     horizontalAlignment:TextInput.AlignLeft
-                    width:400
+                    Layout.fillWidth:{
+                        if (siteFolder.width>optionsGrid.width){
+                            true
+                        }else{
+                            false
+                        }
+                    }
+                    width:200
                     elide:Text.ElideMiddle
                 }
 

@@ -230,13 +230,14 @@ class SiteManager(object):
 				if action=="add":			
 					result=self.client.EasySitesManager.create_new_site(info,siteIconPath)
 					if result['status']:
-						result=self.syncContent(info["id"],info["sync_folder"])
-						if result['status']:
+						resultSync=self.syncContent(info["id"],info["sync_folder"])
+						if resultSync['status']:
 							if info["image"]["option"]=="custom":
 								self.copyImageFile(info["id"],newImage)
 						else:
 							self.client.EasySitesManager.delete_site(info["id"])	
-
+							result=resultSync
+					
 					self.removeTmpFiles(siteIconPath)		
 					
 					self._debug("Create new site: ",result)
@@ -247,9 +248,10 @@ class SiteManager(object):
 					result=self.client.EasySitesManager.edit_site(info,siteIconPath,origId)
 					if result['status']:
 						if requiredSync:
-							result=self.syncContent(info["id"],info["sync_folder"])
-							if not result['status']:
+							resultSync=self.syncContent(info["id"],info["sync_folder"])
+							if not resultSync['status']:
 								confirmEdit=False
+								result=resulSync
 						if confirmEdit:
 							if info["image"]["option"]=="custom":
 								if newImage!=os.path.basename(self.currentSiteConfig["image"]["img_path"]):
@@ -322,7 +324,7 @@ class SiteManager(object):
 				return {"result":False,"code":SiteManager.IMAGE_FILE_MISSING_ERROR,"data":""}
 		
 		if checkImage==None:
-			return {"result":True,"code":SiteManager.ALL_DATA_CODE,"data":""}
+			return {"result":True,"code":SiteManager.ALL_DATA_CORRECT,"data":""}
 						
 		else:
 			return checkImage			
@@ -568,5 +570,32 @@ class SiteManager(object):
 		return result
 
 	#def checkChangeStatusSitesOption
+
+	def removeAllSites(self):
+
+		result=self.client.EasySitesManager.delete_all_sites()
+		self._debug("Remove all sites: ",result)
+		retRead=self.readConf()
+		
+		if not retRead["status"]:
+			result=retRead
+
+		return result
+
+	#def removeAllSites
+
+	def changeAllSiteStatus(self,visible):
+
+		result=self.client.EasySitesManager.change_all_sites_visibility(visible)
+		self._debug("Change visibility all sites: ",result)
+		retRead=self.readConf()
+		
+		if not retRead["status"]:
+			result=retRead
+
+		return result
+
+	#def changeAllSiteStatus
+
 
 #class SiteManager

@@ -12,7 +12,7 @@ Popup {
     property bool imageFileError:false
 
     width:500
-    height:350
+    height:250
     anchors.centerIn: Overlay.overlay
     modal:true
     focus:true

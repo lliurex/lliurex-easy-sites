@@ -271,6 +271,7 @@ class Bridge(QObject):
 		if self.folderFromMenu==None:
 			self.core.mainStack.closePopUp=[True,""]
 		else:
+			self.siteFolder=self.folderFromMenu
 			self.updateSiteFolderValue(self.folderFromMenu)
 		self.core.mainStack.currentStack=2
 		self.siteCurrentOption=1
@@ -391,7 +392,7 @@ class Bridge(QObject):
 		completeData=False
 		self.requiredMoveToStack=False
 		self.saveDataChanges(action,siteId,completeData,DELETE_SITE)
-
+	
 	#def removeSite
 
 	@Slot(str)
@@ -424,6 +425,8 @@ class Bridge(QObject):
 
 		tmpImage=[]
 		tmpImage.append(values[0])
+		if values[0]=="stock":
+			values[1]=os.path.join(Bridge.siteManager.stockImagesFolder,"custom.png")
 		tmpImage.append(values[1])
 		tmpImage.append(False)
 
@@ -551,6 +554,7 @@ class Bridge(QObject):
 
 		self.core.sitesOptionsStack.enableGlobalOptions=Bridge.siteManager.checkGlobalOptionStatus()
 		self.core.sitesOptionsStack.enableChangeStatusOptions=Bridge.siteManager.checkChangeStatusSitesOption()
+		self.core.sitesOptionsStack.filterStatusValue="all"
 		self.changesInSite=False
 		self.core.mainStack.closeGui=True
 

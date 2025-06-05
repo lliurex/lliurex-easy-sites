@@ -10,56 +10,47 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 from . import SitesModel
 
-ACTIVE_SITE=5
-ACTIVE_ALL_SITES=6
-DEACTIVE_SITE=7
-DEACTIVE_ALLS_SITES=8
-REMOVING_SITE=9
-REMOVING_ALL_SITES=10
-EXPORT_SITES_CONFIG=11
-IMPORT_SITES_CONFIG=12
-RECOVERY_SITES_CONFIG=13
+SHOW_ALL_SITES=6
+HIDE_ALL_SITES=8
+REMOVING_ALL_SITES=9
 
-class ChangeSiteStatus(QThread):
+
+class ChangeAllSitesStatus(QThread):
 
 	def __init__(self,*args):
 
 		QThread.__init__(self)
-		self.allSites=args[0]
-		self.active=args[1]
-		self.siteToEdit=args[2]
-		self.ret=[]
+		self.visible=args[0]
+		self.ret={}
 
 	#def __init__
 
 	def run(self,*args):
 
 		time.sleep(0.5)
-		self.ret=Bridge.siteManager.changeSiteStatus(self.allSites,self.active,self.siteToEdit)
+		self.ret=Bridge.siteManager.changeAllSiteStatus(self.visible)
 
 	#def run
 
-#class ChangeSiteStatus
+#class ChangeAllSitesStatus
 
-class RemoveSite(QThread):
+class RemoveAllSites(QThread):
 
 	def __init__(self,*args):
 
 		QThread.__init__(self)
-		self.allSites=args[0]
-		self.siteToRemove=args[1]
-		self.ret=[]
+		self.ret={}
 
 	#def __init__
 
 	def run(self,*args):
 
 		time.sleep(0.5)
-		self.ret=Bridge.siteManager.removeSites(self.allSites,self.siteToRemove)
+		self.ret=Bridge.siteManager.removeAllSites()
 
 	#def run
 
-#class RemoveSite
+#class RemoveAllSites
 
 	
 class Bridge(QObject):
@@ -178,16 +169,6 @@ class Bridge(QObject):
 	
 	#def _updatesitesModel
 
-	def _updatesitesModelInfo(self,param):
-
-		updatedInfo=Bridge.siteManager.sitesConfigData
-		if len(updatedInfo)>0:
-			for i in range(len(updatedInfo)):
-				index=self._sitesModel.index(i)
-				self._sitesModel.setData(index,param,updatedInfo[i][param])
-
-	#def _updatesitesModelInfo
-
 	@Slot(str)
 	def manageStatusFilter(self,value):
 
@@ -195,43 +176,31 @@ class Bridge(QObject):
 
 	#def manageStatusFilter
 
-	@Slot('QVariantList')
-	def changeSiteStatus(self,data):
+	@Slot(bool)
+	def changeAllSiteStatus(self,visible):
 
 		self.core.mainStack.closeGui=False
 		self.showMainMessage=[False,"","Ok"]
-		self.changeAllSites=data[0]
-		active=data[1]
-		if self.changeAllSites:
-			siteToEdit=None
-			if active:
-				self.core.mainStack.closePopUp=[False,ACTIVE_ALL_SITES]
-			else:
-				self.core.mainStack.closePopUp=[False,DEACTIVE_ALLS_SITES]
-		
+	
+		if visible:
+			self.core.mainStack.closePopUp=[False,SHOW_ALL_SITES]
 		else:
-			siteToEdit=data[2]
-			if active:
-				self.core.mainStack.closePopUp=[False,ACTIVE_SITE]
-			else:
-				self.core.mainStack.closePopUp=[False,DEACTIVE_SITE]
+			self.core.mainStack.closePopUp=[False,HIDE_ALL_SITES]
 		
-		self.changeStatus=ChangeSitesStatus(self.changeAllSites,active,siteToEdit)
+		self.changeStatus=ChangeAllSitesStatus(visible)
 		self.changeStatus.start()
 		self.changeStatus.finished.connect(self._changeSiteStatusRet)
 
-	#def changeSITEStatus
+	#def changeAllSiteStatus
 
 	def _changeSiteStatusRet(self):
 
-		if self.changeStatus.ret[0]:
-			if self.changeAllSites:
-				self._updatesitesModel()
-			else:
-				self._updatesitesModelInfo('isVisible')
-			self.showMainMessage=[True,self.changeStatus.ret[1],"Ok"]
+		self._updateSitesModel()
+
+		if self.changeStatus.ret['status']:
+			self.showMainMessage=[True,self.changeStatus.ret["code"],"Ok"]
 		else:
-			self.showMainMessage=[True,self.changeStatus.ret[1],"Error"]
+			self.showMainMessage=[True,self.changeStatus.ret["code"],"Error"]
 
 		self.enableChangeStatusOptions=Bridge.siteManager.checkChangeStatusSitesOption()
 		self.filterStatusValue="all"
@@ -269,24 +238,22 @@ class Bridge(QObject):
 	def _launchRemoveSiteProcess(self):
 
 		self.core.mainStack.closeGui=False
-		if self.removeSitesSITES:
-			self.core.mainStack.closePopUp=[False,REMOVING_ALL_SITES]
-		else:
-			self.core.mainStack.closePopUp=[False,REMOVING_SITE]
-
-		self.removeSiteProcess=RemoveSite(self.removeAllSites,self.siteToRemove)
-		self.removeSiteProcess.start()
-		self.removeSiteProcess.finished.connect(self._removeSiteProcessRet)
+		self.core.mainStack.closePopUp=[False,REMOVING_ALL_SITES]
+	
+		self.removeAllSitesProcess=RemoveAllSites()
+		self.removeAllSitesProcess.start()
+		self.removeAllSitesProcess.finished.connect(self._removeAllSitesProcessRet)
 
 	#def _launchRemoveSiteProcess
 
-	def _removeSiteProcessRet(self):
+	def _removeAllSitesProcessRet(self):
 
-		if self.removeSiteProcess.ret[0]:
-			self._updatesitesModel()
-			self.showMainMessage=[True,self.removeSiteProcess.ret[1],"Ok"]
+		self._updateSitesModel()
+
+		if self.removeAllSitesProcess.ret['status']:
+			self.showMainMessage=[True,self.removeAllSitesProcess.ret["code"],"Ok"]
 		else:
-			self.showMainMessage=[False,self.removeSiteProcess.ret[1],"Error"]
+			self.showMainMessage=[True,self.removeAllSitesProcess.ret["code"],"Error"]
 
 		self._manageOptions()
 		self.filterStatusValue="all"

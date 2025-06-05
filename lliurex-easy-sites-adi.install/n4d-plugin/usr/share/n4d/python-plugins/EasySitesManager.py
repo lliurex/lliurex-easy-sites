@@ -18,6 +18,9 @@ class EasySitesManager:
 	READING_CONFIGURATION_FILE_ERROR=-21
 	SAVING_SITE_ERROR=-23
 	EDIT_SITE_ERROR=-30
+	ALL_SITES_REMOVED_ERROR=-31
+	ALL_SITE_SHOW_ERROR=-32
+	ALL_SITE_HIDE_ERROR=-33
 
 	ALL_CORRECT_CODE=0
 	SITE_SHOW_SUCCESSFUL=6
@@ -25,6 +28,9 @@ class EasySitesManager:
 	EDIT_SITE_SUCCESSFUL=10
 	SITE_CREATED_SUCCESSFUL=11
 	DELETE_SITE_SUCCESSFUL=9
+	ALL_SITES_REMOVED_SUCCESSFUL=12
+	ALL_SITES_SHOW_SUCCESSFUL=13
+	ALL_SITES_HIDE_SUCCESSFUL=14
 
 	def __init__(self):
 
@@ -144,7 +150,7 @@ class EasySitesManager:
 
 	#def _write_conf	
 
-	def _delete_site_conf(self,siteId):
+	def _delete_site_conf(self,siteId,createHtml=True):
 
 		conf_file="easy-"+siteId+".json"		
 		conf_file_path=os.path.join(self.config_dir,conf_file)	
@@ -164,7 +170,8 @@ class EasySitesManager:
 		result={"status":status,"msg":msg,"code":code}
 
 		if result["status"]:
-			ret=self._create_sites_html()
+			if createHtml:
+				ret=self._create_sites_html()
 
 		return n4d.responses.build_successful_call_response(result)	
 	
@@ -282,7 +289,7 @@ class EasySitesManager:
 
 	#def edit_site		
 
-	def delete_site(self,siteId):
+	def delete_site(self,siteId,createHtml=True):
 
 		try:
 			link_file="easy-"+siteId+".json"
@@ -309,7 +316,7 @@ class EasySitesManager:
 			if os.path.exists(site_folder_path):
 				shutil.rmtree(site_folder_path)
 
-			return self._delete_site_conf(siteId)
+			return self._delete_site_conf(siteId,createHtml)
 
 		except Exception as e:
 			result={"status":False,"msg":str(e),"code":EasySitesManager.DELETE_SITE_ERROR,"data":""}
@@ -317,7 +324,7 @@ class EasySitesManager:
 
 	#def delete_site	
 
-	def change_site_visibility(self,info,visible):
+	def change_site_visibility(self,info,visible,createHtml=True):
 
 		result=self._hide_show_site(info["id"],visible)
 		if result['status']:
@@ -331,11 +338,70 @@ class EasySitesManager:
 				result=result_write
 
 		if result['status']:
-			ret=self._create_sites_html()
+			if createHtml:
+				ret=self._create_sites_html()
 
 		return n4d.responses.build_successful_call_response(result)
 
-	#def change_site_visibility		
+	#def change_site_visibility
+
+	def delete_all_sites(self):
+
+		countErrors=0
+
+		for item in self.sites_config:
+			ret=self.delete_site(self.sites_config[item]["id"],False)
+			if not ret["return"]["status"]:
+				countErrors+=1
+
+		if countErrors==0:
+			result={"status":True,"msg":"All sites removed successfully","code":EasySitesManager.ALL_SITES_REMOVED_SUCCESSFUL,"data":""}
+		else:
+			result={"status":False,"msg":"All sites removed with errors","code":EasySitesManager.ALL_SITES_REMOVED_ERROR,"data":""}
+
+		ret=self._create_sites_html()
+
+		return n4d.responses.build_successful_call_response(result)
+
+	#def delete_all_sites
+
+	def change_all_sites_visibility(self,visible):
+
+		countErrors=0
+		
+		for item in self.sites_config:
+			result=self._hide_show_site(self.sites_config[item]["id"],visible)
+			if result['status']:
+				info=self.sites_config[item]
+				info['visibility']=visible
+				result_write=self.write_conf(info).get('return',None)
+				if not result_write['status']:
+					if visible:
+						self._hide_show_site(info["id"],False)
+					else:
+						self._hide_show_site(info["id"],True)	
+					countErrors+=1
+			else:
+				countErrors+=1
+
+		if countErrors==0:
+			if visible:
+				msgCode=EasySitesManager.ALL_SITES_SHOW_SUCCESSFUL
+			else:
+				msgCode=EasySitesManager.ALL_SITES_HIDE_SUCCESSFUL
+			result={"status":True,"msg":"Changed visibilty of all sites","code":msgCode,"data":""}
+		else:
+			if visible:
+				msgCode=EasySitesManager.ALL_SITE_SHOW_ERROR
+			else:
+				msgCode=EasySitesManager.ALL_SITE_HIDE_ERROR
+			result={"status":False,"msg":"All sites removed with errors","code":msgCode,"data":""}
+
+		ret=self._create_sites_html()
+
+		return n4d.responses.build_successful_call_response(result)
+
+	#def change_all_sites_visibility	
 
 	def _create_new_site_folder(self,siteId):
 
@@ -624,13 +690,6 @@ class EasySitesManager:
 		if info["image"]["img_path"]!=self.sites_config[origId]["image"]["img_path"]:
 			icon=True
 
-		'''
-		if info["image"]["font"]!=self.sites_config[origId]["image"]["font"]:
-			icon=True
-
-		if info["image"]["color"]!=self.sites_config[origId]["image"]["color"]:
-			icon=True
-		'''
 		if icon:
 			actions.append("icon")
 

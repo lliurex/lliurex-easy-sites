@@ -73,6 +73,9 @@ Popup {
             case 8:
                 var msg=i18nd("lliurex-easy-sites","Deleting the site. Wait a moment...")
                 break;
+           case 9:
+                var msg=i18nd("lliurex-easy-sites","Deleting all sites. Wait a moment...")
+                break;
             default:
                 var msg=""
                 break;
