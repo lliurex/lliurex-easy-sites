@@ -45,7 +45,7 @@ Rectangle{
             id:optionsGrid
             columns:2
             flow: GridLayout.LeftToRight
-            columnSpacing:15
+            columnSpacing:10
             Layout.topMargin:60
             Layout.alignment:Qt.AlignHCenter
 
@@ -129,7 +129,7 @@ Rectangle{
             }
             Text{
                 id:folderLabel
-                text:i18nd("lliurex-easy-sites","Sync content from: ")
+                text:i18nd("lliurex-easy-sites","Sync content from:")
                 Layout.alignment:Qt.AlignRight
                 Layout.topMargin:15
             }

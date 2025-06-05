@@ -39,7 +39,7 @@ Rectangle {
 
                     MenuItem{
                         icon.name:"view-visible.svg"
-                        text:i18nd("lliurex-easy-sites","Show visible sites ")
+                        text:i18nd("lliurex-easy-sites","Show visible sites")
                         enabled:{
                             if (sitesOptionsStackBridge.filterStatusValue!="visible"){
                                 true
