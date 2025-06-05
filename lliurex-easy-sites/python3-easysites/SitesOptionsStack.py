@@ -10,8 +10,8 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 from . import SitesModel
 
-SHOW_ALL_SITES=6
-HIDE_ALL_SITES=8
+SHOW_ALL_SITES=10
+HIDE_ALL_SITES=11
 REMOVING_ALL_SITES=9
 
 

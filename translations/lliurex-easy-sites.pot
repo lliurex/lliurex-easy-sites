@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-05 12:34+0200\n"
+"POT-Creation-Date: 2025-06-05 14:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,6 +83,7 @@ msgstr ""
 #: lliurex-easy-sites/python3-easysites/rsrc/ImageSelector.qml:190
 #: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:224
 #: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:268
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:119
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:119
 msgid "Cancel"
 msgstr ""
@@ -246,33 +247,41 @@ msgid "No site found"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:11
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:11
 msgid "Configured sites"
 msgstr ""
 
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:56
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:56
 msgid "Global Options"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:69
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:69
 msgid "Show all sites"
 msgstr ""
 
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:76
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:76
 msgid "Hide all sites"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:83
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:83
 msgid "Delete alls sites"
 msgstr ""
 
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:95
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:95
 msgid "New site"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:104
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:104
 msgid "Site List"
 msgstr ""
 
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:107
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:107
 msgid ""
 "All sites will be deleted.\n"
@@ -280,116 +289,153 @@ msgid ""
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:109
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:109
 msgid ""
 "The site will be deleted.\n"
 "Do yo want to continue?"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:116
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:116
 msgid "Accept"
 msgstr ""
 
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:137
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:137
 msgid "Unable to delete the site"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:140
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:140
 msgid "Unable to create folder to the site"
 msgstr ""
 
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:143
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:143
 msgid "Unable to rename the site. Old site not exists"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:146
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:146
 msgid "Unable to rename the site due to problems in process"
 msgstr ""
 
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:149
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:149
 msgid "Unable to create the link template for the site"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:152
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:152
 msgid "Unable to create the icon for the site"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:155
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:155
 msgid "Unable to create the symbolic link for the site"
 msgstr ""
 
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:158
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:158
 msgid "Unabled to change the visibility of the site"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:161
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:179
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:161
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:179
 msgid "Error reading configuration files of the sites"
 msgstr ""
 
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:164
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:164
 msgid "Error writing changes in the site configuration file"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:167
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:167
 msgid "Unable to edit the site"
 msgstr ""
 
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:170
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:170
 msgid "Error removing all sites"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:173
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:173
 msgid "Error showing all sites"
 msgstr ""
 
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:176
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:176
 msgid "Error hiding all sites"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:182
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:182
 msgid "Unable to sync the content"
 msgstr ""
 
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:185
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:185
 msgid "Unable to send site icon to server"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:188
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:188
 msgid "Unable to generate icon for the site"
 msgstr ""
 
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:191
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:191
 msgid "Site is now visible again"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:194
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:194
 msgid "Site has been hideen"
 msgstr ""
 
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:197
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:197
 msgid "The content has been synchronized successfully"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:200
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:200
 msgid "Site has been successfully deleted"
 msgstr ""
 
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:203
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:203
 msgid "Site has been successfully edited"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:206
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:206
 msgid "Site has been successfully created"
 msgstr ""
 
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:209
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:209
 msgid "All sites have been successfully removed"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:212
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:212
 msgid "All sites are now visible again"
 msgstr ""
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:215
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:215
 msgid "All sites have been hidden successfully"
+msgstr ""
+
+#: lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml:80
+msgid "Showing all sites. Wait a moment..."
+msgstr ""
+
+#: lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml:83
+msgid "Hidding all sites. Wait a moment..."
 msgstr ""

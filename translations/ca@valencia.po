@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-05 12:34+0200\n"
-"PO-Revision-Date: 2025-06-05 14:04+0200\n"
+"POT-Creation-Date: 2025-06-05 14:20+0200\n"
+"PO-Revision-Date: 2025-06-05 14:21+0200\n"
 "Last-Translator: lliurex <lliurex@gva.es>\n"
 "Language-Team: Spanish\n"
 "Language: ca_ES\n"
@@ -404,3 +404,11 @@ msgstr "Tots els llocs web tornen a ser visible"
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:215
 msgid "All sites have been hidden successfully"
 msgstr "S'han amagat tots els llocs web amb èxit"
+
+#: lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml:80
+msgid "Showing all sites. Wait a moment..."
+msgstr "S'està mostrant tots els llocs web. Espereu un moment..."
+
+#: lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml:83
+msgid "Hidding all sites. Wait a moment..."
+msgstr "S'està ocultant tots els llocs web. Espereu un moment..."
