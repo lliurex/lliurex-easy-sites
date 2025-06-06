@@ -101,7 +101,7 @@ Rectangle{
     ChangesDialog{
         id:removeSiteDialog
         dialogIcon:"/usr/share/icons/breeze/status/64/dialog-warning.svg"
-        dialogTitle:"lliurex-easy-sites"+" - "+i18nd("lliurex-easy-sites","Site List")
+        dialogTitle:"Easy-Sites"+" - "+i18nd("lliurex-easy-sites","Site List")
         dialogMsg:{
             if (sitesOptionsStackBridge.showRemoveSiteDialog[1]){
                 i18nd("lliurex-easy-sites","All sites will be deleted.\nDo yo want to continue?")
@@ -110,7 +110,7 @@ Rectangle{
             }
         }
         dialogVisible:sitesOptionsStackBridge.showRemoveSiteDialog[0]
-        dialogWidth:300
+        dialogWidth:320
         btnAcceptVisible:false
         btnAcceptText:""
         btnDiscardText:i18nd("lliurex-easy-sites","Accept")

@@ -710,13 +710,13 @@ class EasySitesManager:
 
 		if info["image"]["img_path"]!=self.sites_config[origId]["image"]["img_path"]:
 			icon=True
-
+		'''
 		if info["image"]["font"]!=self.sites_config[origId]["image"]["font"]:
 			icon=True
 
 		if info["image"]["color"]!=self.sites_config[origId]["image"]["color"]:
 			icon=True
-
+		'''
 		if icon:
 			actions.append("icon")
 
