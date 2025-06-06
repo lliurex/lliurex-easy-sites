@@ -47,7 +47,8 @@ class SiteManager(object):
 		self.netFolder="/net/server-sync/easy-sites"
 		self.imageDir=os.path.expanduser("~/.cache/")+"easy-sites"
 		self.urlSite="http://server/easy-sites/easy-"
-		self.adiClient="/usr/bin/natfree-client"
+		self.adiClient="/usr/bin/natfree-tie"
+		self.adiServer="/usr/bin/natfree-adi"
 		self.stockImagesFolder="/usr/share/lliurex-easy-sites/images"
 		self.tmpIconPath="/tmp/easy-"
 		self.loadError=False

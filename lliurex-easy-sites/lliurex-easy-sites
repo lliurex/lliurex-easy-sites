@@ -12,6 +12,8 @@ class Tunnel(QObject):
 	def __init__(self):
 
 		QObject.__init__(self)
+		self.adi_path="/usr/bin/natfree-adi"
+		self.checkAdi()
 		self.clearCache()
 
 	#def __init	
@@ -64,6 +66,22 @@ class Tunnel(QObject):
 		return installed
 
 	#def getPackageVersion
+
+	def checkAdi(self):
+
+		self._isAdi=False
+		if os.path.exists(self.adi_path):
+			self._isAdi=True
+
+	#def checkAdi
+
+	def _getIsAdi(self):
+
+		return self._isAdi
+
+	#def _getIsAdi
+
+	isAdi=Property(bool,_getIsAdi,constant=True)
 
 	@Slot(str)
 	def on_authenticated(self,passwd):
