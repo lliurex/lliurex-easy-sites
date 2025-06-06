@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-05 14:20+0200\n"
-"PO-Revision-Date: 2025-06-05 14:21+0200\n"
+"PO-Revision-Date: 2025-06-06 09:31+0200\n"
 "Last-Translator: lliurex <lliurex@gva.es>\n"
 "Language-Team: Spanish\n"
 "Language: ca_ES\n"
@@ -111,7 +111,7 @@ msgstr "Mostra el lloc web"
 
 #: lliurex-easy-sites/python3-easysites/rsrc/ListDelegateSiteItem.qml:128
 msgid "Open site in browser"
-msgstr "Obri el lloc en al navegador"
+msgstr "Obri el lloc web al navegador"
 
 #: lliurex-easy-sites/python3-easysites/rsrc/ListDelegateSiteItem.qml:133
 msgid "Open folder"
@@ -399,7 +399,7 @@ msgstr "S'han suprimit tots els llocs web amb èxit"
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:212
 msgid "All sites are now visible again"
-msgstr "Tots els llocs web tornen a ser visible"
+msgstr "Tots els llocs web tornen a ser visibles"
 
 #: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:215
 msgid "All sites have been hidden successfully"
