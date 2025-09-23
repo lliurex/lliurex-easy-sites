@@ -16,12 +16,18 @@ Rectangle {
         inGroups:["sudo","admins","teachers"]
         
         /*anchors.centerIn: parent*/
-        
+        /*
         onLogged: {
             tunnel.on_ticket(ticket);
         }
+	*/
+	onLogged: ticket => tunnel.on_ticket(ticket);
+
+	/*
         onAuthenticated: {
             tunnel.on_authenticated(passwd);
         }
+	*/
+	onAuthenticated: passwd => tunnel.on_authenticated(passwd);
     }
 }
