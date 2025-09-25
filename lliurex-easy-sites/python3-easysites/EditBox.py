@@ -439,8 +439,20 @@ class EditBox(Gtk.VBox):
 			site_info["last_update"]=site_info["date_creation"]
 
 
-		window=self.image_da.get_window()
-		pixbuf=Gdk.pixbuf_get_from_window(window,0,0,110,110)
+		# Commented: 
+		# On wayland can't get image from window, always is transparent,
+		# now here image path will be used as rendered on self.drawing_banner_event
+		#
+		# window=self.image_da.get_window()
+		# pixbuf=Gdk.pixbuf_get_from_window(window,0,0,110,110)
+		#
+		# Start replacement
+		if self.image_op=="stock":
+			path=self.custom_image
+		else:
+			path=self.image_fc.get_filename()
+		pixbuf,no_disp=self.format_image_size(path)
+		# End replacement
 		self.args=[action,site_info,pixbuf,self.require_sync,copy_image,self.origId]
 
 		#self.core.mainWindow.waiting_label.set_text(self.core.mainWindow.get_msg(EditBox.SAVIG_CHANGES_WAITING_CODE))			
