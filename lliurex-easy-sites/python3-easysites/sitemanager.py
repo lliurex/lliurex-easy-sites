@@ -244,8 +244,8 @@ class SiteManager(object):
 
 		siteId= ''.join((c for c in unicodedata.normalize('NFD', name) if unicodedata.category(c) != 'Mn'))
 		siteId=siteId.lower().replace(" ","_")
-		siteId=re.sub('[^\w\s-]', '', siteId).strip()
-		siteId=re.sub('[-\s]+', '-', siteId)
+		siteId=re.sub(r'[^\w\s-]', '', siteId).strip()
+		siteId=re.sub(r'[-\s]+', '-', siteId)
 
 		return siteId
 
