@@ -21,6 +21,6 @@ Description: Easy Sites plugin
 
 Package: lliurex-easysites-zerocenter-files
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, zero-center
+Depends: ${shlibs:Depends}, ${misc:Depends}, zero-center, lliurex-easy-sites
 Description: Files to zero-center 
  Provides files to zero-center: app, zmd and banner files
