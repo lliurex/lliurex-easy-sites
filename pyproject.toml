@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools","setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lliurex-easy-sites"
+version = "0.1"
+description = "Aplication to create and manage sites"
+authors = [
+	{ name = "Juan Ramon Pelegrina", email="juapesai@hotmail.com" },
+	{ name = "LliureX Team"}
+]
+license = {text="GPL-3"}
+urls = {repository="https://github.com/lliurex/lliurex-easy-sites"}
+
+[tool.setuptools]
+packages = ["easysites"]
+
+[tool.setuptools.package-dir]
+easysites = "lliurex-easy-sites/python3-easysites"
+
+[tool.setuptools.package-data]
+easysites = ["rsrc/*"]
