@@ -22,21 +22,22 @@ Components.ItemDelegate{
     height:125
 
     Rectangle {
+        id:containerItem
         height:visible?120:0
-        width:parent.width
+        width:parent.width-20
         color:"transparent"
         border.color: "transparent"
 
         Item{
             id: menuItem
             height:visible?120:0
-            width:listSiteItem.width-manageSiteBtn.width
+            width:containerItem.width-25
 
             MouseArea{
                 id:mouseAreaItem
                 anchors.fill:parent
                 hoverEnabled:true
-                propagateComposedEvents:true
+                propagateComposedEvents:false
 
                 onEntered:{
                     if (!optionsMenu.activeFocus){

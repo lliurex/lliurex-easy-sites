@@ -45,7 +45,34 @@
                 "admins",
                 "teachers"
             ]
+        },
+        "delete_all_sites":{
+            "allowed_groups":[
+                "sudo",
+                "admins",
+                "teachers"
+            ]
+        },
+        "change_all_sites_visibility": {
+            "allowed_groups": [
+                "sudo",
+                "admins",
+                "teachers"
+            ]
+        },
+        "sync_site_content":{
+            "allowed_groups":[
+                "sudo",
+                "admins",
+                "teachers"
+            ]
+        },
+        "copy_image_to_site":{
+            "allowed_groups":[
+                "sudo",
+                "admins",
+                "teachers"
+            ]
         }
-       
     }
 }
