@@ -1,4 +1,4 @@
-import QtQuick 2.6
+import QtQuick
 import Edupals.N4D.Agent 1.0 as N4DAgent
 
 
@@ -10,24 +10,18 @@ Rectangle {
 
     N4DAgent.Login
     {
-        showAddress:true
-        address:'server'
+        showAddress:!tunnel.isAdi?true:false
+        address:!tunnel.isAdi?'server':'localhost'
         showCancel: false
         inGroups:["sudo","admins","teachers"]
         
         /*anchors.centerIn: parent*/
-        /*
-        onLogged: {
-            tunnel.on_ticket(ticket);
+        
+        onLogged:(ticket)=> {
+            tunnel.onTicket(ticket);
         }
-	*/
-	onLogged: ticket => tunnel.on_ticket(ticket);
-
-	/*
-        onAuthenticated: {
+        onAuthenticated:(passwd)=> {
             tunnel.on_authenticated(passwd);
         }
-	*/
-	onAuthenticated: passwd => tunnel.on_authenticated(passwd);
     }
 }

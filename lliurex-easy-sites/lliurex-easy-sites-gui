@@ -1,5 +1,36 @@
 #!/usr/bin/env python3
+
+from PySide6.QtWidgets import QApplication
+from PySide6.QtCore import QUrl
+from PySide6.QtGui import QIcon
+from PySide6.QtQml import QQmlApplicationEngine
+
 import sys
 from easysites.Core import Core
 
 c=Core.get_core()
+
+app = QApplication()
+app.setDesktopFileName("lliurex-easy-sites");
+engine = QQmlApplicationEngine()
+engine.clearComponentCache()
+context=engine.rootContext()
+mainStackBridge=c.mainStack
+sitesOptionsStackBridge=c.sitesOptionsStack
+siteStackBridge=c.siteStack
+context.setContextProperty("mainStackBridge", mainStackBridge)
+context.setContextProperty("sitesOptionsStackBridge", sitesOptionsStackBridge)
+context.setContextProperty("siteStackBridge", siteStackBridge)
+
+url = QUrl("/usr/lib/python3.12/dist-packages/easysites/rsrc/easy-sites.qml")
+
+engine.load(url)
+if not engine.rootObjects():
+	sys.exit(-1)
+
+engine.quit.connect(QApplication.quit)
+ret=app.exec()
+del engine
+del app
+sys.exit(ret)
+

@@ -12,6 +12,8 @@ class Tunnel(QObject):
 	def __init__(self):
 
 		QObject.__init__(self)
+		self.adi_path="/usr/bin/natfree-adi"
+		self.checkAdi()
 		self.clearCache()
 
 	#def __init	
@@ -65,6 +67,22 @@ class Tunnel(QObject):
 
 	#def getPackageVersion
 
+	def checkAdi(self):
+
+		self._isAdi=False
+		if os.path.exists(self.adi_path):
+			self._isAdi=True
+
+	#def checkAdi
+
+	def _getIsAdi(self):
+
+		return self._isAdi
+
+	#def _getIsAdi
+
+	isAdi=Property(bool,_getIsAdi,constant=True)
+
 	@Slot(str)
 	def on_authenticated(self,passwd):
 		
@@ -73,28 +91,28 @@ class Tunnel(QObject):
 	#def on_authenticated
 		
 	@Slot(str)
-	def on_ticket(self, ticket):
-	
-		if len(sys.argv)>1:
-			sync_folder=sys.argv[1]
-		else:
-			sync_folder=None
-
+	def onTicket(self, ticket):
 		tk=ticket.replace(' ','##U+0020##')
 		passwd="'"+self.passwd+"'"
-		os.system("/usr/sbin/lliurex-easy-sites-gui %s %s %s &"%(sync_folder,tk,passwd))
+		if len(sys.argv)==1:
+			os.system("/usr/sbin/lliurex-easy-sites-gui %s %s &"%(tk,passwd))
+		elif len(sys.argv)==2:			
+			sync_folder=sys.argv[1]
+			os.system("/usr/sbin/lliurex-easy-sites-gui %s %s %s &"%(tk,passwd,sync_folder))
+
 		app.quit()
 	
-	#def on_ticket
+	#def onTicket
 	
 
 #class Tunnel
 
 app = QApplication([])
+app.setDesktopFileName("lliurex-easy-sites");
 tunnel = Tunnel()
 view = QQuickView()
 view.rootContext().setContextProperty("tunnel", tunnel)
-url = QUrl("/usr/lib/python3/dist-packages/easysites/rsrc/login.qml")
+url = QUrl("/usr/lib/python3.12/dist-packages/easysites/rsrc/login.qml")
 view.setSource(url)
 view.show()
 ret=app.exec()
