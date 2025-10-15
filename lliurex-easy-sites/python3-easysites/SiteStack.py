@@ -334,6 +334,7 @@ class Bridge(QObject):
 
 		action="visibility"
 		completeData=False
+
 		self.requiredMoveToStack=False
 		if data[1]:
 			msgCode=SHOW_SITE
@@ -521,6 +522,8 @@ class Bridge(QObject):
 
 	def _checkDataRet(self):
 
+		completeData=False
+		
 		if self.checkData.retData["result"]:
 			if self.onlySync:
 				action="sync"

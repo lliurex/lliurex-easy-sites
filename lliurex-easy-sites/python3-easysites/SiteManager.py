@@ -393,7 +393,10 @@ class SiteManager(object):
 		result['code']=SiteManager.SYNC_CONTENT_CORRECT
 
 		try:
-			syncContent=self.localClient.ScpManager.send_dir(self.credentials[0],self.credentials[1],"server",sync_from,destSitePath,True)
+			if os.path.exists(self.adiServer):
+				syncContent=self.localClient.ScpManager.send_dir(self.credentials[0],self.credentials[1],self.serverIP,sync_from,destSitePath,True)
+			else:
+				syncContent=self.localClient.ScpManager.send_dir(self.credentials[0],self.credentials[1],"server",sync_from,destSitePath,True)
 			return result
 		except n4d.client.CallFailedError as e:
 			result['status']=False
@@ -470,8 +473,9 @@ class SiteManager(object):
 			if self._searchMeta('client'):
 				copyImageClient=True
 			elif self._searchMeta('desktop'):
-				if os.path.exists(self.adiClient):
-					copyImageClient=True
+				if not os.path.exists(self.adiServer):
+					if os.path.exists(self.adiClient):
+						copyImageClient=True
 
 			if copyImageClient:
 				result=self.copySiteIconFile(siteIconPath)
