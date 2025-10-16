@@ -79,6 +79,7 @@ class SiteManager(object):
 		self.tk=n4d.client.Ticket(ticket)
 		self.client=n4d.client.Client(ticket=self.tk)
 
+		'''
 		self.localClient=n4d.client.Client("https://localhost:9779",self.credentials[0],self.credentials[1])
 		local_t=self.localClient.get_ticket()
 		if local_t.valid():
@@ -86,7 +87,8 @@ class SiteManager(object):
 			self.userValidated=True
 		else:
 			self.userValidated=False
-
+		'''
+		
 	#def createN4dClient
 
 	def _debug(self,function,msg):
@@ -360,6 +362,7 @@ class SiteManager(object):
 
 	#def getSiteId
 
+	'''
 	def copySiteIconFile(self,siteIconPath):
 		
 		result={}
@@ -375,7 +378,7 @@ class SiteManager(object):
 			return result
 
 	#def copySiteIconFile	
-
+	'''
 	def removeTmpFiles(self,siteIconPath):
 	
 		if os.path.exists(siteIconPath):
@@ -392,7 +395,7 @@ class SiteManager(object):
 		result['code']=SiteManager.SYNC_CONTENT_CORRECT
 
 		try:
-			syncContent=self.localClient.ScpManager.send_dir(self.credentials[0],self.credentials[1],self.serverIP,sync_from,destSitePath,True)
+			syncContent=self.client.EasySitesManager.sync_site_content(sync_from,destSitePath)
 			return result
 		except n4d.client.CallFailedError as e:
 			result['status']=False
@@ -412,7 +415,7 @@ class SiteManager(object):
 		destSitePath=os.path.join(self.netFolder,destSite)
 		destPath=os.path.join(destSitePath,tmpImage)
 		try:
-			ret=self.localClient.ScpManager.send_file(self.credentials[0],self.credentials[1],self.serverIP,copy_image,destPath)
+			ret=self.client.EasySitesManager.copy_image_to_site(copy_image,destPath)
 		except n4d.client.CallFailedError as e:
 			pass
 	

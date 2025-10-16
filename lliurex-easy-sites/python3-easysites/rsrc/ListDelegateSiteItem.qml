@@ -19,18 +19,19 @@ Components.ItemDelegate{
     property string selectedFolderToSync
 
     enabled:true
-    height:125
+    height:95
 
     Rectangle {
-        height:visible?120:0
+        id:containerItem
+        height:visible?90:0
         width:parent.width
         color:"transparent"
         border.color: "transparent"
 
         Item{
             id: menuItem
-            height:visible?120:0
-            width:listSiteItem.width-manageSiteBtn.width
+            height:visible?90:0
+            width:containerItem.width-manageSiteBtn.width
 
             MouseArea{
                 id:mouseAreaItem
@@ -48,8 +49,8 @@ Components.ItemDelegate{
             
             Image{
                 id:siteImage
-                width:70
-                height:70
+                width:60
+                height:60
                 fillMode:Image.PreserveAspectFit
                 source:siteImg
                 anchors.verticalCenter:parent.verticalCenter
@@ -64,9 +65,9 @@ Components.ItemDelegate{
                 spacing:10
                 width:{
                     if (listSiteItem.ListView.isCurrentItem){
-                        parent.width-(siteState.width+manageSiteBtn.width+140)
+                        parent.width-(siteState.width+manageSiteBtn.width+150)
                     }else{
-                        parent.width-(siteState.width+120)
+                        parent.width-(siteState.width+130)
                     }
                 }
                
@@ -74,7 +75,7 @@ Components.ItemDelegate{
                     id:nameText
                     text:siteName
                     font.family: "Quattrocento Sans Bold"
-                    font.pointSize: 18
+                    font.pointSize: 12
                     horizontalAlignment:Text.AlignLeft
                     elide:Text.ElideMiddle
                     width:parent.width
@@ -84,7 +85,7 @@ Components.ItemDelegate{
                     id:descriptionTest
                     text:i18nd("lliurex-easy-sites","Created by:")+" "+createdBy+" - "+i18nd("lliurex-easy-sites","Updated by:")+ " "+updatedBy
                     font.family:"Quattrocento Sans Bold"
-                    font.pointSize: 11
+                    font.pointSize: 10
                     horizontalAlignment:Text.AlignLeft
                     elide:Text.ElideMiddle
                     width:parent.width

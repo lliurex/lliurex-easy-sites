@@ -347,9 +347,6 @@ class Bridge(QObject):
 	@Slot(str)
 	def viewSiteInBrowser(self,siteUrl):
 
-		if os.path.exists(Bridge.siteManager.adiServer):
-			siteUrl=siteUrl.replace('http://server','http://localhost')
-		
 		self.viewSiteCmd="xdg-open %s"%siteUrl
 		self.viewSiteT=threading.Thread(target=self._viewSite)
 		self.viewSiteT.daemon=True
