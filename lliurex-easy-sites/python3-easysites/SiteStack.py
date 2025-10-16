@@ -518,7 +518,8 @@ class Bridge(QObject):
 
 	def _checkDataRet(self):
 
-		completeDate=False
+		completeData=False
+		
 		if self.checkData.retData["result"]:
 			if self.onlySync:
 				action="sync"
