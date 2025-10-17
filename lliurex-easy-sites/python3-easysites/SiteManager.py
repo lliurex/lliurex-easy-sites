@@ -178,7 +178,7 @@ class SiteManager(object):
 			if "http:" in self.currentSiteConfig["image"]["img_path"]:
 				imgName=self.currentSiteConfig["image"]["img_path"].split("/.")[1]
 			else:
-				imgName=self.currentSiteConfig["image"]["img_path"].split("/")[1]
+				imgName=self.currentSiteConfig["image"]["img_path"].split("/")[-1]
 
 			if os.path.exists(os.path.join(self.imageDir,imgName)):
 				error=False
