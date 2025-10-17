@@ -336,7 +336,7 @@ class EasySitesManager:
 		countErrors=0
 
 		for item in self.sites_config:
-			ret=self.delete_site(self.sites_config[item]["id"],False)
+			ret=self.delete_site(self.sites_config[item]["id"])
 			if not ret["return"]["status"]:
 				countErrors+=1
 

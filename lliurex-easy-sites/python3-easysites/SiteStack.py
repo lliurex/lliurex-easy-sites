@@ -463,8 +463,10 @@ class Bridge(QObject):
 	@Slot(str)
 	def updateSiteFolderValue(self,value):
 
+		if self.currentSiteConfig["sync_folder"]!=value:
+			self.currentSiteConfig["sync_folder"]=value
+
 		self.requiredSync=True
-		self.currentSiteConfig["sync_folder"]=value
 		self.changesInSite=True
 	
 	#def updateSiteFolderValue
@@ -523,7 +525,7 @@ class Bridge(QObject):
 		if self.checkData.retData["result"]:
 			if self.onlySync:
 				action="sync"
-				data=[self.siteToLoad]
+				data=[self.siteToLoad,self.currentSiteConfig["sync_folder"]]
 			else:
 				completeData=True
 				action=self.actionType
