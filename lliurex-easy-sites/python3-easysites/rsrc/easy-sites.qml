@@ -37,8 +37,8 @@ ApplicationWindow {
         id: mainLayout
         anchors.fill: parent
         anchors.margins: margin
-        Layout.minimumWidth:960
-        Layout.minimumHeight:695
+        Layout.minimumWidth:800
+        Layout.minimumHeight:585
 
         RowLayout {
             id: bannerBox
@@ -67,6 +67,7 @@ ApplicationWindow {
             Layout.leftMargin:0
             Layout.fillWidth:true
             Layout.fillHeight: true
+            Layout.minimumHeight:465
             initialItem:loadView
             onCurrentIndexChanged:{
                 switch (currentIndex){

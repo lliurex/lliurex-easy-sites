@@ -52,6 +52,7 @@ class SiteManager(object):
 		self.stockImagesFolder="/usr/share/lliurex-easy-sites/images"
 		self.tmpIconPath="/tmp/easy-"
 		self.loadError=False
+		self.origImagePath=""
 		self.detectFlavour()
 		self._getSystemLocale()
 		self.initValues()	
@@ -109,6 +110,7 @@ class SiteManager(object):
 		self.siteFolder=""
 		self.siteUrl=""
 		self.isSiteVisible=True
+		self.origImagePath=""
 		
 		self.currentSiteConfig={}
 		self.currentSiteConfig["id"]=self.siteToLoad
@@ -117,8 +119,8 @@ class SiteManager(object):
 		self.currentSiteConfig["image"]={}
 		self.currentSiteConfig["image"]["option"]=self.siteImage[0]
 		self.currentSiteConfig["image"]["img_path"]=self.siteImage[1]
-		self.currentSiteConfig["sync_folder"]=self.siteFolder
-		self.currentSiteConfig["site_folder"]=""
+		self.currentSiteConfig["site_folder"]=self.siteFolder
+		self.currentSiteConfig["sync_folder"]=""
 		self.currentSiteConfig["url"]=self.siteUrl
 		self.currentSiteConfig["visibility"]=self.isSiteVisible
 		self.currentSiteConfig["author"]=""
@@ -159,6 +161,7 @@ class SiteManager(object):
 
 			self.sitesConfigData.append(tmp)
 
+
 	#def _getSitesConfig
 
 	def loadSiteConfig(self,siteToLoad):
@@ -172,14 +175,18 @@ class SiteManager(object):
 			error=False
 			imgPath=self.currentSiteConfig["image"]["img_path"]
 		else:
-			imgName=self.currentSiteConfig["image"]["img_path"].split("/.")[1]
+			if "http:" in self.currentSiteConfig["image"]["img_path"]:
+				imgName=self.currentSiteConfig["image"]["img_path"].split("/.")[1]
+			else:
+				imgName=self.currentSiteConfig["image"]["img_path"].split("/")[1]
+
 			if os.path.exists(os.path.join(self.imageDir,imgName)):
 				error=False
 				imgPath=os.path.join(self.imageDir,imgName)
 			else:
 				error=True
 				imgPath=os.path.join(self.stockImagesFolder,"no_disp.png")
-		
+
 			self.currentSiteConfig["image"]["img_path"]=imgPath
 
 		self.siteImage=[self.currentSiteConfig["image"]["option"],imgPath,error]
@@ -200,7 +207,9 @@ class SiteManager(object):
 			info=data[0]
 		elif action in ["sync","visibility"]:
 			info=self.sitesConfig[data[0]]
-
+			if self.origImagePath!="":
+				info["image"]["img_path"]=self.origImagePath
+		
 		if completeData:
 			newImage=info["image"]["img_path"]
 			info.update(self._formatData(info,action))
@@ -394,7 +403,7 @@ class SiteManager(object):
 
 		try:
 			if os.path.exists(self.adiServer):
-				syncContent=self.localClient.ScpManager.send_dir(self.credentials[0],self.credentials[1],self.serverIP,sync_from,destSitePath,True)
+				syncContent=self.client.EasySitesManager.sync_site_content(sync_from,destSitePath)
 			else:
 				syncContent=self.localClient.ScpManager.send_dir(self.credentials[0],self.credentials[1],"server",sync_from,destSitePath,True)
 			return result
@@ -416,7 +425,10 @@ class SiteManager(object):
 		destSitePath=os.path.join(self.netFolder,destSite)
 		destPath=os.path.join(destSitePath,tmpImage)
 		try:
-			ret=self.localClient.ScpManager.send_file(self.credentials[0],self.credentials[1],self.serverIP,copy_image,destPath)
+			if os.path.exists(self.adiServer):
+				ret=self.client.EasySitesManager.copy_image_to_site(copy_image,destPath)
+			else:
+				ret=self.localClient.ScpManager.send_file(self.credentials[0],self.credentials[1],self.serverIP,copy_image,destPath)
 		except n4d.client.CallFailedError as e:
 			pass
 	
@@ -428,7 +440,7 @@ class SiteManager(object):
 		tmp["url"]="%s%s"%(self.urlSite,data["id"])
 		tmp["site_folder"]="%s/easy-%s"%(self.netFolder,data["id"])
 		tmp["updated_by"]=self.credentials[0]
-		tmp["last_updated"]=datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+		tmp["last_update"]=datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
 		if data["image"]["option"]=="custom":
 			imgBasename=os.path.basename(data["image"]["img_path"])
@@ -523,7 +535,7 @@ class SiteManager(object):
 			return localImgPath
 		else:
 			try:
-				req=urllib2.Request(imagePath)
+				req=urllib2.Request(imgPath)
 				res=urllib2.urlopen(req)
 				f=open(localImgPath,"wb")
 				f.write(res.read())

@@ -21,6 +21,7 @@ class EasySitesManager:
 	ALL_SITES_REMOVED_ERROR=-31
 	ALL_SITE_SHOW_ERROR=-32
 	ALL_SITE_HIDE_ERROR=-33
+	COPY_IMAGE_ERROR=-34
 
 	ALL_CORRECT_CODE=0
 	SITE_SHOW_SUCCESSFUL=6
@@ -759,5 +760,29 @@ class EasySitesManager:
 		
 	#def _fix_folder_perm
 
+	def sync_site_content(self,origPath,destPath):
+
+		try:
+			shutil.copytree(origPath,destPath,dirs_exist_ok=True)
+			result={"status":True,"msg":"Content synchronized successfully","code":"","data":""}	
+		except Exception as e:
+			result={"status":False,"msg":str(e),"code":EasySitesManager.SYNC_CONTENT_ERROR,"data":""}
+
+		return n4d.responses.build_successful_call_response(result)
+
+	#def sync_site_content
+
+	def copy_image_to_site(self,fileToCopy,destPath):
+
+		try:
+			shutil.copy2(fileToCopy,destPath)
+			result={"status":True,"msg":"Image copied successfully","code":"","data":""}	
+		except Exception as e:
+			result={"status":False,"msg":str(e),"code":EasySitesManager.COPY_IMAGE_ERROR,"data":""}
+	
+		return n4d.responses.build_successful_call_response(result)
+
+	#def copy_file_to_site
+	
 #class SiteManager					
 	

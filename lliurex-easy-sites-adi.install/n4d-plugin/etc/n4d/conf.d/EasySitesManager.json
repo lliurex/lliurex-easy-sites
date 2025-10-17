@@ -59,6 +59,20 @@
                 "admins",
                 "teachers"
             ]
+        },
+        "sync_site_content":{
+            "allowed_groups":[
+                "sudo",
+                "admins",
+                "teachers"
+            ]
+        },
+        "copy_image_to_site":{
+            "allowed_groups":[
+                "sudo",
+                "admins",
+                "teachers"
+            ]
         }
     }
 }

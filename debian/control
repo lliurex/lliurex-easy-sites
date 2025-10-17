@@ -15,7 +15,7 @@ Description: Contains lliurex-easy-sites
 
 Package: n4d-easysites
 Architecture: all
-Depends: ${misc:Depends}, ${python3:Depends},n4d, n4d-server-plugins
+Depends: ${misc:Depends}, ${python3:Depends},n4d
 Description: Easy Sites plugin
   Plugins supporting easy sites functionality
 

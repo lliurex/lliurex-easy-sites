@@ -163,6 +163,7 @@ class Bridge(QObject):
 
 		ret=self._sitesModel.clear()
 		sitesEntries=Bridge.siteManager.sitesConfigData
+
 		for item in sitesEntries:
 			if item["id"]!="":
 				self._sitesModel.appendRow(item["id"],item["img"],item["name"],item["createdBy"],item["updatedBy"],item["isVisible"],item["url"],item["folder"])

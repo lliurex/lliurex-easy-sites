@@ -28,7 +28,7 @@ Rectangle{
         rows:2
         flow: GridLayout.TopToBottom
         rowSpacing:10
-        width:parent.width-10
+        width:parent.width-20
         anchors.horizontalCenter:parent.horizontalCenter
   
         Kirigami.InlineMessage {
@@ -36,7 +36,7 @@ Rectangle{
             visible:siteStackBridge.showSiteFormMessage[0]
             text:getMessageText()
             type:Kirigami.MessageType.Error
-            Layout.minimumWidth:650
+            Layout.minimumWidth:580
             Layout.fillWidth:true
             Layout.topMargin: 40
         }
@@ -46,7 +46,7 @@ Rectangle{
             columns:2
             flow: GridLayout.LeftToRight
             columnSpacing:10
-            Layout.topMargin:60
+            Layout.topMargin:40
             Layout.alignment:Qt.AlignHCenter
 
             Text{
@@ -62,7 +62,7 @@ Rectangle{
                     id:siteNameEntry
                     text:siteStackBridge.siteName
                     horizontalAlignment:TextInput.AlignLeft
-                    implicitWidth:400
+                    implicitWidth:330
                     onTextChanged:{
                         siteStackBridge.updateSiteNameValue(siteNameEntry.text)
                     }
@@ -121,7 +121,7 @@ Rectangle{
                 id:siteDescriptionEntry
                 text:siteStackBridge.siteDescription
                 horizontalAlignment:TextInput.AlignLeft
-                implicitWidth:400
+                implicitWidth:330
                 Layout.topMargin:15
                 onTextChanged:{
                     siteStackBridge.updateSiteDescriptionValue(siteDescriptionEntry.text)
@@ -198,7 +198,7 @@ Rectangle{
         id:btnBox
         anchors.bottom: parent.bottom
         anchors.right:parent.right
-        anchors.bottomMargin:15
+        anchors.bottomMargin:25
         anchors.rightMargin:10
         spacing:10
 

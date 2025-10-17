@@ -348,9 +348,6 @@ class Bridge(QObject):
 	@Slot(str)
 	def viewSiteInBrowser(self,siteUrl):
 
-		if os.path.exists(Bridge.siteManager.adiServer):
-			siteUrl=siteUrl.replace('http://server','http://localhost')
-		
 		self.viewSiteCmd="xdg-open %s"%siteUrl
 		self.viewSiteT=threading.Thread(target=self._viewSite)
 		self.viewSiteT.daemon=True
@@ -467,8 +464,10 @@ class Bridge(QObject):
 	@Slot(str)
 	def updateSiteFolderValue(self,value):
 
+		if self.currentSiteConfig["sync_folder"]!=value:
+			self.currentSiteConfig["sync_folder"]=value
+
 		self.requiredSync=True
-		self.currentSiteConfig["sync_folder"]=value
 		self.changesInSite=True
 	
 	#def updateSiteFolderValue
@@ -527,7 +526,7 @@ class Bridge(QObject):
 		if self.checkData.retData["result"]:
 			if self.onlySync:
 				action="sync"
-				data=[self.siteToLoad]
+				data=[self.siteToLoad,self.currentSiteConfig["sync_folder"]]
 			else:
 				completeData=True
 				action=self.actionType
