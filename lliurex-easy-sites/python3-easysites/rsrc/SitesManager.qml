@@ -2,7 +2,6 @@ import org.kde.kirigami as Kirigami
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtQuick.Dialogs
 
 Rectangle{
     id:rectLayout
@@ -101,7 +100,6 @@ Rectangle{
     ChangesDialog{
         id:removeSiteDialog
         dialogIcon:"/usr/share/icons/breeze/status/64/dialog-warning.svg"
-        dialogTitle:"Easy-Sites"+" - "+i18nd("lliurex-easy-sites","Site List")
         dialogMsg:{
             if (sitesOptionsStackBridge.showRemoveSiteDialog[1]){
                 i18nd("lliurex-easy-sites","All sites will be deleted.\nDo yo want to continue?")
