@@ -259,7 +259,6 @@ Rectangle{
     ChangesDialog{
         id:settingsChangesDialog
         dialogIcon:"/usr/share/icons/breeze/status/64/dialog-warning.svg"
-        dialogTitle:"lliurex-easy-sites"+" - "+i18nd("lliurex-easy-sites","Site")
         dialogVisible:siteStackBridge.showChangesInSiteDialog
         dialogMsg:i18nd("lliurex-easy-sites","The are pending changes to save.\nDo you want save the changes or discard them?")
         dialogWidth:400
