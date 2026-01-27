@@ -1,0 +1,127 @@
+#! /usr/bin/python3
+from PySide2.QtWidgets import QApplication
+from PySide2.QtQuick import QQuickView
+from PySide2.QtCore import QUrl, QObject, Slot, Signal,Property
+import os
+import subprocess
+import sys
+import shutil
+
+class Tunnel(QObject):
+	
+	def __init__(self):
+
+		QObject.__init__(self)
+		self.adi_path="/usr/bin/natfree-adi"
+		self.checkAdi()
+		self.clearCache()
+
+	#def __init	
+
+	def clearCache(self):
+
+		clear=False
+		user=os.environ["USER"]
+		versionFile="/home/%s/.config/lliurex-easy-sites.conf"%user
+		cachePath1="/home/%s/.cache/lliurex-easy-sites"%user
+		cachePath2="/home/%s/.cache/lliurex-easy-sites-gui"%user
+		installedVersion=self.getPackageVersion()
+
+		try:
+			if not os.path.exists(versionFile):
+				with open(versionFile,'w') as fd:
+					fd.write(installedVersion)
+					fd.close()
+
+				clear=True
+
+			else:
+				with open(versionFile,'r') as fd:
+					fileVersion=fd.readline()
+					fd.close()
+
+				if fileVersion!=installedVersion:
+					with open(versionFile,'w') as fd:
+						fd.write(installedVersion)
+						fd.close()
+					clear=True
+		except:
+			clear=True
+		
+		if clear:
+			if os.path.exists(cachePath1):
+				shutil.rmtree(cachePath1)
+			if os.path.exists(cachePath2):
+				shutil.rmtree(cachePath2)
+
+	#def clearCache
+
+	def getPackageVersion(self):
+
+		command = "LANG=C LANGUAGE=en apt-cache policy lliurex-easy-sites"
+		p = subprocess.Popen(command,shell=True,stdout=subprocess.PIPE)
+		installed = None
+		for line in iter(p.stdout.readline,b""):
+			if type(line) is bytes:
+				line=line.decode()
+
+			stripedline = line.strip()
+			if stripedline.startswith("Installed"):
+				installed = stripedline.replace("Installed: ","")
+
+		return installed
+
+	#def getPackageVersion
+
+	def checkAdi(self):
+
+		self._isAdi=False
+		if os.path.exists(self.adi_path):
+			self._isAdi=True
+
+	#def checkAdi
+
+	def _getIsAdi(self):
+
+		return self._isAdi
+
+	#def _getIsAdi
+
+	isAdi=Property(bool,_getIsAdi,constant=True)
+
+	@Slot(str)
+	def on_authenticated(self,passwd):
+		
+		self.passwd=passwd
+	
+	#def on_authenticated
+		
+	@Slot(str)
+	def on_ticket(self, ticket):
+		tk=ticket.replace(' ','##U+0020##')
+		passwd="'"+self.passwd+"'"
+
+		if len(sys.argv)==1:
+			os.system("/usr/sbin/lliurex-easy-sites-gui %s %s &"%(tk,passwd))
+		elif len(sys.argv)==2:			
+			sync_folder=sys.argv[1]
+			os.system("/usr/sbin/lliurex-easy-sites-gui %s %s %s &"%(tk,passwd,sync_folder))
+
+		app.quit()
+	
+	#def on_ticket
+	
+
+#class Tunnel
+
+app = QApplication([])
+tunnel = Tunnel()
+view = QQuickView()
+view.rootContext().setContextProperty("tunnel", tunnel)
+url = QUrl("/usr/lib/python3/dist-packages/easysites/rsrc/login.qml")
+view.setSource(url)
+view.show()
+ret=app.exec_()
+del view
+del app
+sys.exit(ret)
