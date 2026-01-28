@@ -1,9 +1,11 @@
  
 import os
+import subprocess
 import json
 import codecs
 import shutil
 import n4d.responses
+import configparser
 
 class EasySitesManager:
 
@@ -44,6 +46,8 @@ class EasySitesManager:
 		self.site_folder="/usr/share/lliurex-easy-sites/easy-sites"
 		self.sites_template="/usr/share/lliurex-easy-sites/templates/sites_template.html"
 		self.sites_path="/var/www/easy-sites/sites.html"
+		self.systemdMountTemplate="/usr/share/lliurex-easy-sites/templates/systemd_mount.template"
+		self.systemdDest="/etc/systemd/system"
 		
 	def _create_dirs(self):
 
@@ -207,6 +211,9 @@ class EasySitesManager:
 		if error:
 			self.delete_site(info["id"])
 		else:
+			if info["mountUnit"]:
+				tmpSystemdUnit=self._get_mount_unit_name(info["site_folder"])
+				info["systemdMount"]=tmpSystemdUnit
 			result_write=self.write_conf(info).get('return',None)
 			if not result_write['status']:
 				self.delete_site(info["id"])
@@ -772,6 +779,33 @@ class EasySitesManager:
 
 	#def sync_site_content
 
+	def mount_site_content(self,origPath,destPath):
+
+		mountUnit=self._get_mount_unit_name(destPath)
+		if mountUnit!=None:
+			tmpFile=os.path.join(self.systemdDest,mountUnit)
+			if not os.path.exists(tmpFile):
+				shutil.copy(self.systemdMountTemplate,tmpFile)
+				configFile=configparser.ConfigParser()
+				configFile.optionxform=str
+				configFile.read(tmpFile)
+				tmpCommand=configFile.get("Mount","What")
+				tmpCommand=tmpCommand.replace("{{ORIG_FOLDER}}",origPath)
+				configFile.set("Mount","What",tmpCommand)
+				tmpCommand=configFile.get("Mount","Where")
+				tmpCommand=tmpCommand.replace("{{DEST_FOLDER}}",destPath)
+				configFile.set("Mount","Where",tmpCommand)
+				with open(tmpFile,'w') as fd:
+					configFile.write(fd)
+
+			result={"status":True,"msg":"Mount unit defined successfully","code":"","data":""}	
+		else:
+			result={"status":False,"msg":"Unable to create mount unit","code":EasySitesManager.SYNC_CONTENT_ERROR,"data":""}
+
+		return n4d.responses.build_successful_call_response(result)
+
+	#def mount_site_content
+
 	def copy_image_to_site(self,fileToCopy,destPath):
 
 		try:
@@ -783,6 +817,16 @@ class EasySitesManager:
 		return n4d.responses.build_successful_call_response(result)
 
 	#def copy_file_to_site
+
+	def _get_mount_unit_name(self,path):
+
+		try:
+			result=subprocess.run(['systemd-escape','-p','--suffix=mount',path],capture_output=True,text=True,check=True)
+			return result.stdout.strip().replace("'","")
+		except subprocess.CalledProcessError as e:
+			return None
+
+	#def _get_mount_unit_name
 	
 #class SiteManager					
 	

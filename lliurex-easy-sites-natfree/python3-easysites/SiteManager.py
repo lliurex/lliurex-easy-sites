@@ -130,6 +130,7 @@ class SiteManager(object):
 		self.currentSiteConfig["date_creation"]=""
 		self.currentSiteConfig["last_update"]=""
 		self.currentSiteConfig["mountUnit"]=self.mountUnit
+		self.currentSiteConfig["systemdMount"]=""
 
 	#def initValues		
 
@@ -172,8 +173,6 @@ class SiteManager(object):
 			
 			self.sitesConfigData.append(tmp)
 
-		print(self.sitesConfigData)
-
 	#def _getSitesConfig
 
 	def loadSiteConfig(self,siteToLoad):
@@ -210,7 +209,7 @@ class SiteManager(object):
 			self.canMount=True
 		else:
 			self.canMount=False
-		
+
 	#def loadSiteConfig
 
 	def saveData(self,action,data,completeData=True):
@@ -394,16 +393,20 @@ class SiteManager(object):
 	
 	#def removeTmpFiles		
 
-	def syncContent(self,siteId,sync_from):
+	def syncContent(self,siteId,sync_from,mountUnit=False):
 		
 		destSite="easy-"+siteId
 		destSitePath=os.path.join(self.netFolder,destSite)
 		result={}
 		result['status']=True
 		result['code']=SiteManager.SYNC_CONTENT_CORRECT
+		result["data"]=""
 
 		try:
-			syncContent=self.client.EasySitesManager.sync_site_content(sync_from,destSitePath)
+			if mountUnit:
+				mountContent=self.client.EasySitesManager.mount_site_content(sync_from,destSitePath)
+			else:
+				syncContent=self.client.EasySitesManager.sync_site_content(sync_from,destSitePath)
 			return result
 		except n4d.client.CallFailedError as e:
 			result['status']=False

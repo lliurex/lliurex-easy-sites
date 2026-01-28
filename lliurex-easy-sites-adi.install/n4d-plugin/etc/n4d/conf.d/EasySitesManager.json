@@ -73,6 +73,13 @@
                 "admins",
                 "teachers"
             ]
+        },
+        "mount_site_content":{
+            "allowed_groups":[
+                "sudo",
+                "admins",
+                "teachers"    
+            ]
         }
     }
 }
