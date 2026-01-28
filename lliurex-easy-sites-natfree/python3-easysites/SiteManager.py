@@ -257,7 +257,7 @@ class SiteManager(object):
 				if action=="add":			
 					result=self.client.EasySitesManager.create_new_site(info,siteIconPath)
 					if result['status']:
-						resultSync=self.syncContent(info["id"],info["sync_folder"])
+						resultSync=self.syncContent(info["id"],info["sync_folder"],info["mountUnit"])
 						if resultSync['status']:
 							if info["image"]["option"]=="custom":
 								self.copyImageFile(info["id"],newImage)
@@ -275,7 +275,7 @@ class SiteManager(object):
 					result=self.client.EasySitesManager.edit_site(info,siteIconPath,origId)
 					if result['status']:
 						if requiredSync:
-							resultSync=self.syncContent(info["id"],info["sync_folder"])
+							resultSync=self.syncContent(info["id"],info["sync_folder"],info["mountUnit"])
 							if not resultSync['status']:
 								confirmEdit=False
 								result=resulSync

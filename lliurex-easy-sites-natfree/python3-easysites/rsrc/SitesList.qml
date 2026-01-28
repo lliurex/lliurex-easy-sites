@@ -146,6 +146,7 @@ Rectangle {
                             siteUrl:model.url
                             siteFolder:model.folder
                             mountUnit:model.mountUnit
+                            canMount:model.canMount
                         }
                     }
                     Kirigami.PlaceholderMessage { 

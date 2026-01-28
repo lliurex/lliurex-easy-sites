@@ -499,6 +499,11 @@ class Bridge(QObject):
 		if self.currentSiteConfig["sync_folder"]!=value:
 			self.currentSiteConfig["sync_folder"]=value
 
+		if os.path.exists(value):
+			self.canMount=True
+		else:
+			self.canMount=False
+			
 		self.requiredSync=True
 		self.changesInSite=True
 	

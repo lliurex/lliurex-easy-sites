@@ -17,6 +17,8 @@ Components.ListItem{
     property string siteFolder
     property string selectedFolder
     property bool mountUnit
+    property bool canMount
+
 
     enabled:true
 
@@ -133,11 +135,13 @@ Components.ListItem{
                     MenuItem{
                         icon.name:"folder-black.svg"
                         text:i18nd("lliurex-easy-sites","Open folder")
+                        visible:canMount
                         onClicked:siteStackBridge.openSiteFolder(siteFolder)
                     }
                     MenuItem{
                         icon.name:"folder-sync.svg"
                         text:i18nd("lliurex-easy-sites","Sync new content")
+                        visible:!mountUnit
                         onClicked:siteFolderDialog.open()
                     }
                     MenuItem{
