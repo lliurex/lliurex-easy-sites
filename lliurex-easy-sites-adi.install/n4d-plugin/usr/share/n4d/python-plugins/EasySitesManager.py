@@ -24,6 +24,7 @@ class EasySitesManager:
 	ALL_SITE_SHOW_ERROR=-32
 	ALL_SITE_HIDE_ERROR=-33
 	COPY_IMAGE_ERROR=-34
+	MOUNT_CONTENT_ERROR=-35
 
 	ALL_CORRECT_CODE=0
 	SITE_SHOW_SUCCESSFUL=6
@@ -34,6 +35,8 @@ class EasySitesManager:
 	ALL_SITES_REMOVED_SUCCESSFUL=12
 	ALL_SITES_SHOW_SUCCESSFUL=13
 	ALL_SITES_HIDE_SUCCESSFUL=14
+	SYNC_CONTENT_CORRECT=15
+	MOUNT_CONTENT_CORRECT=16
 
 	def __init__(self):
 
@@ -184,7 +187,7 @@ class EasySitesManager:
 
 	def create_new_site(self,info,pixbuf_path):
 
-		result={'status':True,'msg':"Site created sucessfully","code":EasySitesManager.SITE_CREATED_SUCCESSFUL}
+		result={'status':True,'msg':"Site created sucessfully","code":EasySitesManager.SITE_CREATED_SUCCESSFUL,"data":""}
 		result_create=self._create_new_site_folder(info["id"])
 		error=False
 		if result_create['status']:
@@ -214,6 +217,8 @@ class EasySitesManager:
 			if info["mountUnit"]:
 				tmpSystemdUnit=self._get_mount_unit_name(info["site_folder"])
 				info["systemdMount"]=tmpSystemdUnit
+			else:
+				info["systemdMount"]=None
 			result_write=self.write_conf(info).get('return',None)
 			if not result_write['status']:
 				self.delete_site(info["id"])
@@ -221,6 +226,7 @@ class EasySitesManager:
 		
 		if result["status"]:
 			ret=self._create_sites_html()
+			result["data"]=info["systemdMount"]
 			#self._fix_folder_perm()
 		
 		return n4d.responses.build_successful_call_response(result)
@@ -771,7 +777,7 @@ class EasySitesManager:
 
 		try:
 			shutil.copytree(origPath,destPath,dirs_exist_ok=True)
-			result={"status":True,"msg":"Content synchronized successfully","code":"","data":""}	
+			result={"status":True,"msg":"Content synchronized successfully","code":EasySitesManager.SYNC_CONTENT_CORRECT,"data":""}	
 		except Exception as e:
 			result={"status":False,"msg":str(e),"code":EasySitesManager.SYNC_CONTENT_ERROR,"data":""}
 
@@ -779,9 +785,10 @@ class EasySitesManager:
 
 	#def sync_site_content
 
-	def mount_site_content(self,origPath,destPath):
+	def mount_site_content(self,origPath,destPath,systemDUnit):
 
-		mountUnit=self._get_mount_unit_name(destPath)
+		mountUnit=systemDUnit
+
 		if mountUnit!=None:
 			tmpFile=os.path.join(self.systemdDest,mountUnit)
 			if not os.path.exists(tmpFile):
@@ -798,7 +805,13 @@ class EasySitesManager:
 				with open(tmpFile,'w') as fd:
 					configFile.write(fd)
 
-			result={"status":True,"msg":"Mount unit defined successfully","code":"","data":""}	
+				systemDUnit="'%s'"%systemDUnit
+
+			ret=self._manage_systemd_unit(systemDUnit,True)
+			if ret:
+				result={"status":True,"msg":"Mount unit defined successfully","code":EasySitesManager.MOUNT_CONTENT_CORRECT,"data":""}	
+			else:
+				result={"status":False,"msg":"Unable to create mount unit","code":EasySitesManager.SYNC_CONTENT_ERROR,"data":""}
 		else:
 			result={"status":False,"msg":"Unable to create mount unit","code":EasySitesManager.SYNC_CONTENT_ERROR,"data":""}
 
@@ -827,6 +840,20 @@ class EasySitesManager:
 			return None
 
 	#def _get_mount_unit_name
-	
+
+	def _manage_systemd_unit(self,systemDUnit,start):
+
+		if start:
+			cmd="systemctl enable %s"%systemDUnit
+			try:
+				p=subprocess.run(cmd,shell=True,check=True)
+				cmd="systemctl start %s"%systemDUnit
+				p=subprocess.run(cmd,shell=True,check=True)
+				return True
+			except subprocess.CalledProcessError as e:
+				return False
+
+	#def _manage_systemd_unit
+
 #class SiteManager					
 	

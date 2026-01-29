@@ -34,7 +34,6 @@ class SiteManager(object):
 	SITE_ICON_ERROR=-41
 
 	ALL_DATA_CORRECT=0
-	SYNC_CONTENT_CORRECT=8
 
 	def __init__(self,server=None):
 
@@ -130,7 +129,7 @@ class SiteManager(object):
 		self.currentSiteConfig["date_creation"]=""
 		self.currentSiteConfig["last_update"]=""
 		self.currentSiteConfig["mountUnit"]=self.mountUnit
-		self.currentSiteConfig["systemdMount"]=""
+		self.currentSiteConfig["systemdMount"]=None
 
 	#def initValues		
 
@@ -256,7 +255,7 @@ class SiteManager(object):
 				if action=="add":			
 					result=self.client.EasySitesManager.create_new_site(info,siteIconPath)
 					if result['status']:
-						resultSync=self.syncContent(info["id"],info["sync_folder"],info["mountUnit"])
+						resultSync=self.syncContent(info["id"],info["sync_folder"],info["mountUnit"],result["data"])
 						if resultSync['status']:
 							if info["image"]["option"]=="custom":
 								self.copyImageFile(info["id"],newImage)
@@ -393,20 +392,18 @@ class SiteManager(object):
 	
 	#def removeTmpFiles		
 
-	def syncContent(self,siteId,sync_from,mountUnit=False):
+	def syncContent(self,siteId,sync_from,mountUnit,systemdMount):
 		
 		destSite="easy-"+siteId
 		destSitePath=os.path.join(self.netFolder,destSite)
 		result={}
-		result['status']=True
-		result['code']=SiteManager.SYNC_CONTENT_CORRECT
-		result["data"]=""
-
+		
 		try:
 			if mountUnit:
-				mountContent=self.client.EasySitesManager.mount_site_content(sync_from,destSitePath)
+				result=self.client.EasySitesManager.mount_site_content(sync_from,destSitePath,systemdMount)
 			else:
-				syncContent=self.client.EasySitesManager.sync_site_content(sync_from,destSitePath)
+				result=self.client.EasySitesManager.sync_site_content(sync_from,destSitePath)
+			
 			return result
 		except n4d.client.CallFailedError as e:
 			result['status']=False
