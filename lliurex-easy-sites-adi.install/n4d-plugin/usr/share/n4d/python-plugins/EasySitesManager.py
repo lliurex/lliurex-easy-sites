@@ -25,6 +25,8 @@ class EasySitesManager:
 	ALL_SITE_HIDE_ERROR=-33
 	COPY_IMAGE_ERROR=-34
 	MOUNT_CONTENT_ERROR=-35
+	UNMOUNT_CONTENT_ERROR=-36
+	STOP_UNIT_ERROR=-37
 
 	ALL_CORRECT_CODE=0
 	SITE_SHOW_SUCCESSFUL=6
@@ -37,6 +39,7 @@ class EasySitesManager:
 	ALL_SITES_HIDE_SUCCESSFUL=14
 	SYNC_CONTENT_CORRECT=15
 	MOUNT_CONTENT_CORRECT=16
+	START_UNIT_CORRECT=17
 
 	def __init__(self):
 
@@ -236,12 +239,13 @@ class EasySitesManager:
 	def edit_site(self,info,pixbuf_path,origId):
 
 		actions_todo=self.get_actions_todo(info,origId)
-		result_backup=self._make_tmp_site_backup(origId)
+		result_backup=self._make_tmp_site_backup(origId,info["systemdMount"])
 		error=False
 		icon_changed=False
 		link_changed=False
 		visible_changed=False
-		rename=actions_todo		
+		rename_changed=False
+		tmpSystemdUnit=info["systemdMount"]		
 
 		if result_backup['status']:
 			if "rename" in actions_todo:
@@ -249,7 +253,8 @@ class EasySitesManager:
 				if not result_rename["status"]:
 					error=True
 					result=result_rename 
-			
+				else:
+					rename_changed=True
 			else:
 				if "icon" in actions_todo:
 					result_icon=self._create_site_icon(info["id"],pixbuf_path,origId)	
@@ -262,7 +267,7 @@ class EasySitesManager:
 					if "link" in actions_todo:
 						result_link=self._create_link_template(info,origId)
 						if not result_link['status']:
-							self._undo_edit_changes(origId,info,rename,icon_changed,link_changed)
+							self._undo_edit_changes(origId,info,rename_changed,icon_changed,link_changed,info["systemdMount"])
 							error=True
 							result=result_link
 						else:
@@ -271,7 +276,7 @@ class EasySitesManager:
 				if "visible" in actions_todo:
 					result_visible=self._hide_show_site(info["id"],info["visibility"])
 					if not result_visible['status']:
-						self._undo_edit_changes(origId,info,rename,icon_changed,link_changed)
+						self._undo_edit_changes(origId,info,rename_changed,icon_changed,link_changed,info["systemdMount"])
 						error=True
 						result=result_visible
 					else:
@@ -280,57 +285,78 @@ class EasySitesManager:
 			if error:
 				self._remove_tmp_site_backup(pixbuf_path,True)
 			else:
-				result_write=self.write_conf(info).get('return',None)
-				if result_write['status']:
-					result={"status":True,"msg":"","code":EasySitesManager.EDIT_SITE_SUCCESSFUL,"data":""}	
-				else:
-					self._undo_edit_changes(origId,info,rename,icon_changed,link_changed)
-					if visible_changed:
-						if info["visibility"]:
-							self._hide_show_site(info["id"],False)
+				abort=False
+				if info["mountUnit"]:
+					result_unmount=self._delete_systemd_unit(info["systemdMount"])
+					if result_unmount["status"]:
+						tmpSystemdUnit=self._get_mount_unit_name(info["site_folder"])
+					else:
+						abort=True
+						result={"status":False,"msg":"Unable to unmount unit","code":EasySitesManager.UNMOUNT_CONTENT_ERROR,"data":""}
+					
+					if not abort:	
+						result_write=self.write_conf(info).get('return',None)
+						if result_write['status']:
+							result={"status":True,"msg":"","code":EasySitesManager.EDIT_SITE_SUCCESSFUL,"data":""}	
 						else:
-							self._hide_show_site(info["id"],True)	
-					result=result_write
-				self._remove_tmp_site_backup(pixbuf_path,True)
+							self._undo_edit_changes(origId,info,rename_changed,icon_changed,link_changed,info["systemdMount"])
+							if visible_changed:
+								if info["visibility"]:
+									self._hide_show_site(info["id"],False)
+								else:
+									self._hide_show_site(info["id"],True)	
+							result=result_write
+					else:
+						self._undo_edit_changes(origId,info,rename_changed,icon_changed,link_changed,info["systemdMount"])
+							
+					self._remove_tmp_site_backup(pixbuf_path,True)
+
 		else:
 			self._remove_tmp_site_backup(pixbuf_path,True)
 			result={"status":False,"msg":"","code":EasySitesManager.EDIT_SITE_ERROR,"data":""}				
 
 		if result["status"]:
 			ret=self._create_sites_html()
+			result["data"]=tmpSystemdUnit
 
 		return n4d.responses.build_successful_call_response(result)
 
 	#def edit_site		
 
-	def delete_site(self,siteId,createHtml=True):
+	def delete_site(self,siteId,systemDUnit,createHtml=True):
 
 		try:
-			link_file="easy-"+siteId+".json"
-			link_file_path=os.path.join(self.links_path,link_file)
-			if os.path.exists(link_file_path):
-				os.remove(link_file_path)
+			ret=True
+			if systemDUnit!=None:
+				ret=self._delete_systemd_unit(systemDUnit)
+			if ret["status"]:
+				link_file="easy-"+siteId+".json"
+				link_file_path=os.path.join(self.links_path,link_file)
+				if os.path.exists(link_file_path):
+					os.remove(link_file_path)
+				else:
+					hide_path=os.path.join(self.hide_folder,link_file)
+					if os.path.exists(hide_path):
+						os.remove(hide_path)	
+				
+				icon_file="easy-"+siteId+".png"
+				icon_file_path=os.path.join(self.icons_path,icon_file)
+				if os.path.exists(icon_file_path):
+					os.remove(icon_file_path)
+
+				symlink="easy-"+siteId
+				symlink_path=os.path.join(self.var_folder,symlink)		
+				if os.path.exists(symlink_path):
+					os.remove(symlink_path)
+
+				site_folder="easy-"+siteId
+				site_folder_path=os.path.join(self.net_folder,site_folder)	
+				if os.path.exists(site_folder_path):
+					shutil.rmtree(site_folder_path)
+
+				return self._delete_site_conf(siteId,createHtml)
 			else:
-				hide_path=os.path.join(self.hide_folder,link_file)
-				if os.path.exists(hide_path):
-					os.remove(hide_path)	
-			
-			icon_file="easy-"+siteId+".png"
-			icon_file_path=os.path.join(self.icons_path,icon_file)
-			if os.path.exists(icon_file_path):
-				os.remove(icon_file_path)
-
-			symlink="easy-"+siteId
-			symlink_path=os.path.join(self.var_folder,symlink)		
-			if os.path.exists(symlink_path):
-				os.remove(symlink_path)
-
-			site_folder="easy-"+siteId
-			site_folder_path=os.path.join(self.net_folder,site_folder)	
-			if os.path.exists(site_folder_path):
-				shutil.rmtree(site_folder_path)
-
-			return self._delete_site_conf(siteId,createHtml)
+				return ret
 
 		except Exception as e:
 			result={"status":False,"msg":str(e),"code":EasySitesManager.DELETE_SITE_ERROR,"data":""}
@@ -438,31 +464,35 @@ class EasySitesManager:
 	def _rename_site(self,info,pixbuf_path,origId):
 
 		error=False
-
-		result_rename_folder=self._rename_site_folder(info["id"],origId)
-		if result_rename_folder["status"]:
-			result_link=self._create_link_template(info,origId)
-			if result_link["status"]:
-				result_icon=self._create_site_icon(info["id"],pixbuf_path,origId)
-				if result_icon["status"]:
-					result_symlink=self._create_symlink_folder(info["id"],origId)
-					if result_symlink['status']:
-						return self._delete_site_conf(origId).get('return',None)	
+		if info["systemdMount"]!=None:
+			result_unmount=self._stop_systemd_unit(info["systemdMount"])
+			if not result_unmount["status"]:
+				return result_unmount
+		if not error:
+			result_rename_folder=self._rename_site_folder(info["id"],origId)
+			if result_rename_folder["status"]:
+				result_link=self._create_link_template(info,origId)
+				if result_link["status"]:
+					result_icon=self._create_site_icon(info["id"],pixbuf_path,origId)
+					if result_icon["status"]:
+						result_symlink=self._create_symlink_folder(info["id"],origId)
+						if result_symlink['status']:
+							return self._delete_site_conf(origId).get('return',None)	
+						else:
+							error=True
+							result=result_symlink	
 					else:
 						error=True
-						result=result_symlink	
+						result=result_icon
 				else:
 					error=True
-					result=result_icon
+					result=result_link
+					
 			else:
-				error=True
-				result=result_link
-				
-		else:
-			return result_rename_folder
+				return result_rename_folder
 
 		if error:
-			self._restore_site_backup(origId,info["id"])
+			self._restore_site_backup(origId,info["id"],info["systemdMount"])
 			self._rename_site_folder(origId,info["id"])
 			return result
 				
@@ -615,7 +645,7 @@ class EasySitesManager:
 
 	#def hide_show_site
 
-	def _make_tmp_site_backup(self,origId):
+	def _make_tmp_site_backup(self,origId,systemDUnit):
 
 		self.backup_path="/tmp/easy-site-"+origId
 		self.backup_path_config="/tmp/easy-site-"+origId+"/config"
@@ -632,6 +662,11 @@ class EasySitesManager:
 			if os.path.exists(os.path.join(self.config_dir,"easy-"+origId+".json")):
 				shutil.copy2(os.path.join(self.config_dir,"easy-"+origId+".json"),os.path.join(self.backup_path_config,"easy-"+origId+".jon"))
 
+			if systemDUnit!=None:
+				tmpFile=os.path.join(self.systemdDest,systemDUnit)
+				if os.path.exists(tmpFile):
+					shutil.copy(tmpFile,os.path.join(self.backup_path,systemDUnit))
+			
 			result={"status":True,"msg":"Backup successfully","code":"","data":""}	
 
 		except Exception as e:
@@ -652,7 +687,7 @@ class EasySitesManager:
 
 	#def _remove_tmp_site_backup					
 
-	def _restore_site_backup(self,origId,siteId):
+	def _restore_site_backup(self,origId,siteId,systemDUnit=None):
 
 		if not os.path.exists(os.path.join(self.links_path,"easy-"+origId+".json")):
 			shutil.copy2(os.path.join(self.backup_path,"easy-"+origId+".json"),os.path.join(self.links_path,"easy-"+origId+".json"))
@@ -665,12 +700,17 @@ class EasySitesManager:
 			if os.path.exists(os.path.join(self.icons_path,"easy-"+siteId+".png")):
 				os.remove(os.path.join(self.icons_path,"easy-"+siteId+".png"))
 
+		if systemDUnit!=None:
+			tmpFile=os.path.join(self.systemdDest,systemDUnit)
+			if not os.path.exists(tmpFile):
+				shutil.copy2(os.path.join(self.backup_path,systemDUnit),self.systemdDest)
+
 	#def _restore_site_backup
 	
-	def _undo_edit_changes(self,origId,info,rename,icon,link):
+	def _undo_edit_changes(self,origId,info,rename,icon,link,systemdMount):
 		
 		if rename:
-			self._restore_site_backup(origId,info["id"])
+			self._restore_site_backup(origId,info["id"],systemdMount)
 			self._rename_site_folder(origId,info["id"])
 			self._create_symlink_folder(origId,info["id"])
 			shutil.copy2(os.path.join(self.backup_path_config,"easy-"+origId+".jon"),os.path.join(self.config_dir,"easy-"+origId+".json"))
@@ -785,13 +825,16 @@ class EasySitesManager:
 
 	#def sync_site_content
 
-	def mount_site_content(self,origPath,destPath,systemDUnit):
+	def mount_site_content(self,origPath,destPath,systemDUnit,startUnit=True):
 
-		mountUnit=systemDUnit
-
-		if mountUnit!=None:
-			tmpFile=os.path.join(self.systemdDest,mountUnit)
-			if not os.path.exists(tmpFile):
+		if systemDUnit !=None:
+			tmpFile=os.path.join(self.systemdDest,systemDUnit)
+			ret=True
+			if os.path.exists(tmpFile):
+				ret_delete=self._stop_systemd_unit(systemDUnit)
+				ret=ret_delete["status"]
+			
+			if ret:
 				shutil.copy(self.systemdMountTemplate,tmpFile)
 				configFile=configparser.ConfigParser()
 				configFile.optionxform=str
@@ -805,16 +848,17 @@ class EasySitesManager:
 				with open(tmpFile,'w') as fd:
 					configFile.write(fd)
 
-				systemDUnit="'%s'"%systemDUnit
-
-			ret=self._manage_systemd_unit(systemDUnit,True)
-			if ret:
-				result={"status":True,"msg":"Mount unit defined successfully","code":EasySitesManager.MOUNT_CONTENT_CORRECT,"data":""}	
+				ret=self._start_systemd_unit(systemDUnit)
+				if ret["status"]:
+					result={"status":True,"msg":"Mount unit defined successfully","code":EasySitesManager.MOUNT_CONTENT_CORRECT,"data":""}	
+				else:
+					ret=self._delete_systemd_unit(systemDUnit)
+					result={"status":False,"msg":"Unable to create mount unit","code":EasySitesManager.SYNC_CONTENT_ERROR,"data":""}
 			else:
-				result={"status":False,"msg":"Unable to create mount unit","code":EasySitesManager.SYNC_CONTENT_ERROR,"data":""}
+				result=ret_delete
 		else:
 			result={"status":False,"msg":"Unable to create mount unit","code":EasySitesManager.SYNC_CONTENT_ERROR,"data":""}
-
+			
 		return n4d.responses.build_successful_call_response(result)
 
 	#def mount_site_content
@@ -841,19 +885,58 @@ class EasySitesManager:
 
 	#def _get_mount_unit_name
 
-	def _manage_systemd_unit(self,systemDUnit,start):
+	def _start_systemd_unit(self,systemDUnit):
 
-		if start:
-			cmd="systemctl enable %s"%systemDUnit
-			try:
+		try:
+			if os.path.exists(os.path.join(self.systemdDest,systemDUnit)):
+				tmpSystemdUnit="'%s'"%systemDUnit
+				cmd="systemctl enable %s"%tmpSystemdUnit
 				p=subprocess.run(cmd,shell=True,check=True)
-				cmd="systemctl start %s"%systemDUnit
+				cmd="systemctl start %s"%tmpSystemdUnit
 				p=subprocess.run(cmd,shell=True,check=True)
-				return True
-			except subprocess.CalledProcessError as e:
-				return False
+				result={"status":True,"msg":"Mount unit successfully","code":"","data":""}
+			else:
+				result={"status":False,"msg":"nmount unit error:%s"%str(e),"code":EasySitesManager.UNMOUNT_CONTENT_ERROR,"data":""}
+		except subprocess.CalledProcessError as e:
+			result={"status":False,"msg":"nmount unit error:%s"%str(e),"code":EasySitesManager.UNMOUNT_CONTENT_ERROR,"data":""}
+		
+		return result
 
-	#def _manage_systemd_unit
+	#def _start_systemd_unit
+
+	def _stop_systemd_unit(self,systemDUnit):
+
+		try:
+			if os.path.exists(os.path.join(self.systemdDest,systemDUnit)):
+				tmpSystemdUnit="'%s'"%systemDUnit
+				cmd="systemctl stop %s"%tmpSystemdUnit
+				p=subprocess.run(cmd,shell=True,check=True)
+				cmd="systemctl disable %s"%tmpSystemdUnit
+				p=subprocess.run(cmd,shell=True,check=True)
+			result={"status":True,"msg":"Unmount unit successfully","code":"","data":""}
+		except subprocess.CalledProcessError as e:
+			result={"status":False,"msg":"Unmount unit error:%s"%str(e),"code":EasySitesManager.UNMOUNT_CONTENT_ERROR,"data":""}
+
+		return result
+
+	#def _stop_systemd_unit
+
+	def _delete_systemd_unit(self,systemDUnit):
+
+		if systemDUnit!=None:
+			tmpFile=os.path.join(self.systemdDest,systemDUnit)
+			if os.path.exists(tmpFile):
+				ret=self._stop_systemd_unit(systemDUnit)
+				if ret["status"]:
+					os.remove(tmpFile)
+				else:
+					return ret
+	
+		result={"status":True,"msg":"Delete unit successfully","code":"","data":""}
+
+		return result
+
+	#def _stop_systemd_unit
 
 #class SiteManager					
 	

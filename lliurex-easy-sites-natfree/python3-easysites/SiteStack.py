@@ -342,6 +342,9 @@ class Bridge(QObject):
 		self.siteToLoad=siteToLoad
 		self.edit=True
 		self.requiredSync=False
+		self.changeInFolder=False
+		self.changeInName=False
+		self.changeInMountOption=False
 		self.core.mainStack.closePopUp=[False,LOAD_SITE_CONFIG]
 		self.core.sitesOptionsStack.showMainMessage=[False,"","Ok"]
 		self.actionType="edit"
@@ -439,9 +442,12 @@ class Bridge(QObject):
 		if self.currentSiteConfig!=Bridge.siteManager.currentSiteConfig:
 			self.changesInSite=True
 			self.onlySync=False
+			if self.currentSiteConfig["mountUnit"]:
+				self.changeInName=True
 		else:
 			self.changesInSite=False
 			self.onlySync=True
+			self.changeInName=False
 
 	#def updatesiteNameValue
 
@@ -504,7 +510,7 @@ class Bridge(QObject):
 		else:
 			self.canMount=False
 			
-		self.requiredSync=True
+		self.changeInFolder=True
 		self.changesInSite=True
 	
 	#def updateSiteFolderValue
@@ -535,7 +541,9 @@ class Bridge(QObject):
 		if self.currentSiteConfig!=Bridge.siteManager.currentSiteConfig:
 			self.changesInSite=True
 			self.onlySync=False
+			self.changeInMountOption=True
 		else:
+			self.changeInMountOption=False
 			self.changesInSite=False
 			self.onlySync=True
 
@@ -583,6 +591,8 @@ class Bridge(QObject):
 			else:
 				completeData=True
 				action=self.actionType
+				if self.changeInFolder or self.changeInName or self.changeInMountOption:
+					self.requiredSync=True
 				data=[self.currentSiteConfig,self.requiredSync]
 
 			self.saveDataChanges(action,data,completeData,SAVE_DATA)

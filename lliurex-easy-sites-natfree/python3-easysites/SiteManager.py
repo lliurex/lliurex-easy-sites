@@ -80,7 +80,7 @@ class SiteManager(object):
 		self.tk=n4d.client.Ticket(ticket)
 		self.client=n4d.client.Client(ticket=self.tk)
 
-		self.localClient=n4d.client.Client("https://localhost:9779",self.credentials[0],self.credentials[1])
+		self.localClient=n4d.client.Client("https://localhost:9779",self.credentials[0],self.credentials[1],timeout=120)
 		local_t=self.localClient.get_ticket()
 		if local_t.valid():
 			self.localClient=n4d.client.Client(ticket=local_t)
@@ -260,7 +260,7 @@ class SiteManager(object):
 							if info["image"]["option"]=="custom":
 								self.copyImageFile(info["id"],newImage)
 						else:
-							self.client.EasySitesManager.delete_site(info["id"])	
+							self.client.EasySitesManager.delete_site(info["id"],result["data"])	
 							result=resultSync
 					
 					self.removeTmpFiles(siteIconPath)		
@@ -273,7 +273,7 @@ class SiteManager(object):
 					result=self.client.EasySitesManager.edit_site(info,siteIconPath,origId)
 					if result['status']:
 						if requiredSync:
-							resultSync=self.syncContent(info["id"],info["sync_folder"],info["mountUnit"])
+							resultSync=self.syncContent(info["id"],info["sync_folder"],info["mountUnit"],result["data"])
 							if not resultSync['status']:
 								confirmEdit=False
 								result=resulSync
@@ -288,7 +288,7 @@ class SiteManager(object):
 
 		elif action=="delete":
 			siteId=data
-			result=self.client.EasySitesManager.delete_site(siteId)
+			result=self.client.EasySitesManager.delete_site(siteId,self.sitesConfig[siteId]["systemdMount"])
 			self._debug("Delete site: ",result)
 
 		elif action=="visibility":
