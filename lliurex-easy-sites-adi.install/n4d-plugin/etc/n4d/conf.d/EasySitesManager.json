@@ -80,6 +80,20 @@
                 "admins",
                 "teachers"    
             ]
+        },
+        "manage_systemd_status":{
+            "allowed_groups":[
+                "sudo",
+                "admins",
+                "teachers"    
+            ]
+        },
+        "manage_auto_mount":{
+           "allowed_groups":[
+                "sudo",
+                "admins",
+                "teachers"    
+            ]
         }
     }
 }

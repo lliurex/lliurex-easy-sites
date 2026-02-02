@@ -97,6 +97,7 @@ class Bridge(QObject):
 		self._siteFolder=Bridge.siteManager.siteFolder
 		self._mountUnit=Bridge.siteManager.mountUnit
 		self._canMount=Bridge.siteManager.canMount
+		self._autoMount=Bridge.siteManager.autoMount
 		self._siteCurrentOption=0
 		self._showSiteFormMessage=[False,"","Ok"]
 		self._showChangesInSiteDialog=False
@@ -190,6 +191,20 @@ class Bridge(QObject):
 			self.on_mountUnit.emit()
 
 	#def _setMountUnit
+
+	def _getAutoMount(self):
+
+		return self._autoMount
+
+	#def _getAutoMount
+
+	def _setAutoMount(self,autoMount):
+
+		if self._autoMount!=autoMount:
+			self._autoMount=autoMount
+			self.on_autoMount.emit()
+
+	#def _setAutoMount
 
 	def _getCanMount(self):
 
@@ -318,6 +333,7 @@ class Bridge(QObject):
 		self.showSiteFormMessage=[False,"","Ok"]
 		self.changesInSite=False
 		self.mountUnit=Bridge.siteManager.mountUnit
+		self.autoMount=Bridge.siteManager.autoMount
 		self.canMount=Bridge.siteManager.canMount
 
 	#def _initializeVars
@@ -342,9 +358,6 @@ class Bridge(QObject):
 		self.siteToLoad=siteToLoad
 		self.edit=True
 		self.requiredSync=False
-		self.changeInFolder=False
-		self.changeInName=False
-		self.changeInMountOption=False
 		self.core.mainStack.closePopUp=[False,LOAD_SITE_CONFIG]
 		self.core.sitesOptionsStack.showMainMessage=[False,"","Ok"]
 		self.actionType="edit"
@@ -422,6 +435,7 @@ class Bridge(QObject):
 
 	#def syncSiteContent
 
+	@Slot(str)
 	def removeSite(self,siteId):
 
 		action="delete"
@@ -442,12 +456,9 @@ class Bridge(QObject):
 		if self.currentSiteConfig!=Bridge.siteManager.currentSiteConfig:
 			self.changesInSite=True
 			self.onlySync=False
-			if self.currentSiteConfig["mountUnit"]:
-				self.changeInName=True
 		else:
 			self.changesInSite=False
 			self.onlySync=True
-			self.changeInName=False
 
 	#def updatesiteNameValue
 
@@ -511,7 +522,7 @@ class Bridge(QObject):
 			self.canMount=False
 			
 		self.changeInFolder=True
-		self.changesInSite=True
+		self.requiredSync=True
 	
 	#def updateSiteFolderValue
 
@@ -541,13 +552,26 @@ class Bridge(QObject):
 		if self.currentSiteConfig!=Bridge.siteManager.currentSiteConfig:
 			self.changesInSite=True
 			self.onlySync=False
-			self.changeInMountOption=True
 		else:
-			self.changeInMountOption=False
-			self.changesInSite=False
 			self.onlySync=True
 
 	#def updateMountValue
+
+	@Slot(bool)
+	def manageAutoMount(self,value):
+
+		if value:
+			self.autoMount="enable"
+		else:
+			self.autoMount="disable"
+
+		self.currentSiteConfig["auto_mount"]=self.autoMount
+		
+		if self.currentSiteConfig!=Bridge.siteManager.currentSiteConfig:
+			self.changesInSite=True
+			self.onlySync=False
+
+	#def manageAutoMount 
 
 	@Slot(str)
 	def manageChangesDialog(self,action):
@@ -591,8 +615,6 @@ class Bridge(QObject):
 			else:
 				completeData=True
 				action=self.actionType
-				if self.changeInFolder or self.changeInName or self.changeInMountOption:
-					self.requiredSync=True
 				data=[self.currentSiteConfig,self.requiredSync]
 
 			self.saveDataChanges(action,data,completeData,SAVE_DATA)
@@ -669,6 +691,9 @@ class Bridge(QObject):
 
 	on_canMount=Signal()
 	canMount=Property(bool,_getCanMount,_setCanMount,notify=on_canMount)
+
+	on_autoMount=Signal()
+	autoMount=Property(str,_getAutoMount,_setAutoMount,notify=on_autoMount)
 
 	on_isSiteVisible=Signal()
 	isSiteVisible=Property(bool,_getIsSiteVisible,_setIsSiteVisible,notify=on_isSiteVisible)

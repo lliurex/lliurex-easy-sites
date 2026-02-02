@@ -112,6 +112,7 @@ class SiteManager(object):
 		self.origImagePath=""
 		self.mountUnit=False
 		self.canMount=False
+		self.autoMount="disable"
 		
 		self.currentSiteConfig={}
 		self.currentSiteConfig["id"]=self.siteToLoad
@@ -123,13 +124,15 @@ class SiteManager(object):
 		self.currentSiteConfig["site_folder"]=self.siteFolder
 		self.currentSiteConfig["sync_folder"]=""
 		self.currentSiteConfig["url"]=self.siteUrl
+		self.currentSiteConfig["icon"]=""
 		self.currentSiteConfig["visibility"]=self.isSiteVisible
 		self.currentSiteConfig["author"]=""
 		self.currentSiteConfig["updated_by"]=""
 		self.currentSiteConfig["date_creation"]=""
 		self.currentSiteConfig["last_update"]=""
 		self.currentSiteConfig["mountUnit"]=self.mountUnit
-		self.currentSiteConfig["systemdMount"]=None
+		self.currentSiteConfig["systemdUnit"]=None
+		self.currentSiteConfig["auto_mount"]=self.autoMount
 
 	#def initValues		
 
@@ -204,6 +207,7 @@ class SiteManager(object):
 		self.siteFolder=self.currentSiteConfig["sync_folder"]
 		self.isSiteVisible=self.currentSiteConfig["visibility"]
 		self.mountUnit=self.currentSiteConfig["mountUnit"]
+		self.autoMount=self.currentSiteConfig["auto_mount"]
 		if os.path.exists(self.currentSiteConfig["sync_folder"]):
 			self.canMount=True
 		else:
@@ -220,6 +224,7 @@ class SiteManager(object):
 		
 		if action in ["add","edit"]:
 			info=data[0]
+	
 		elif action in ["sync","visibility"]:
 			info=self.sitesConfig[data[0]]
 			if self.origImagePath!="":
@@ -228,6 +233,10 @@ class SiteManager(object):
 		if completeData:
 			newImage=info["image"]["img_path"]
 			info.update(self._formatData(info,action))
+			if info["mountUnit"]:
+				info["systemdUnit"]=self._getSystemdUnitName(info["site_folder"])
+			else:
+				info["systemdUnit"]=None
 		
 		if action=="add" or action=="edit":
 
@@ -236,9 +245,11 @@ class SiteManager(object):
 			
 			if action=="add":
 				generateSiteIcon=True
+				info["icon"]="easy-%s.png"%info["id"]
 			else:
 				if info["id"]!=self.currentSiteConfig["id"]:
 					generateSiteIcon=True
+					info["icon"]="easy-%s.png"%info["id"]
 				else:
 					currentImg=os.path.basename(self.currentSiteConfig["image"]["img_path"])
 					if os.path.basename(newImage)!=currentImg:
@@ -255,13 +266,12 @@ class SiteManager(object):
 				if action=="add":			
 					result=self.client.EasySitesManager.create_new_site(info,siteIconPath)
 					if result['status']:
-						resultSync=self.syncContent(info["id"],info["sync_folder"],info["mountUnit"],result["data"])
-						if resultSync['status']:
-							if info["image"]["option"]=="custom":
-								self.copyImageFile(info["id"],newImage)
-						else:
-							self.client.EasySitesManager.delete_site(info["id"],result["data"])	
-							result=resultSync
+						#resultSync=self.syncContent(info["id"],info["sync_folder"],info["mountUnit"],result["data"])
+						#if resultSync['status']:
+						if info["image"]["option"]=="custom":
+							self.copyImageFile(info["id"],newImage)
+					else:
+						self.client.EasySitesManager.delete_site(info["id"],info["systemdUnit"])	
 					
 					self.removeTmpFiles(siteIconPath)		
 					
@@ -288,7 +298,7 @@ class SiteManager(object):
 
 		elif action=="delete":
 			siteId=data
-			result=self.client.EasySitesManager.delete_site(siteId,self.sitesConfig[siteId]["systemdMount"])
+			result=self.client.EasySitesManager.delete_site(siteId,self.sitesConfig[siteId]["systemdUnit"])
 			self._debug("Delete site: ",result)
 
 		elif action=="visibility":
@@ -392,7 +402,7 @@ class SiteManager(object):
 	
 	#def removeTmpFiles		
 
-	def syncContent(self,siteId,sync_from,mountUnit,systemdMount):
+	def syncContent(self,siteId,sync_from,mountUnit,systemdUnit):
 		
 		destSite="easy-"+siteId
 		destSitePath=os.path.join(self.netFolder,destSite)
@@ -400,7 +410,7 @@ class SiteManager(object):
 		
 		try:
 			if mountUnit:
-				result=self.client.EasySitesManager.mount_site_content(sync_from,destSitePath,systemdMount)
+				result=self.client.EasySitesManager.mount_site_content(sync_from,destSitePath,systemdUnit)
 			else:
 				result=self.client.EasySitesManager.sync_site_content(sync_from,destSitePath)
 			
@@ -596,6 +606,18 @@ class SiteManager(object):
 		return result
 
 	#def changeAllSiteStatus
+
+	def _getSystemdUnitName(self,siteFolder):
+
+		try:
+			print("SITE_FOLDER: %s"%siteFolder)
+			result=subprocess.run(['systemd-escape','-p','--suffix=mount',siteFolder],capture_output=True,text=True,check=True)
+			print(result)
+			return result.stdout.strip().replace("'","")
+		except subprocess.CalledProcessError as e:
+			return None
+
+	#def _getSystemdUnitName
 
 
 #class SiteManager

@@ -211,6 +211,37 @@ Rectangle{
             }
 
             Text{
+                id:autoMount
+                text:i18nd("lliurex-easy-sites","Unit mount")
+                Layout.alignment:Qt.AlignRight
+                Layout.topMargin:15
+                visible:mountOption.checked
+                enabled:siteStackBridge.canMount
+            }
+
+            CheckBox {
+                id:autoMountCb
+                text:i18nd("lliurex-easy-sites","Automatic mounting at system startup")
+                checked:{
+                    if (siteStackBridge.autoMount=="enable"){
+                        true
+                    }else{
+                        false
+                    }
+                }
+                font.pointSize: 10
+                focusPolicy: Qt.NoFocus
+                visible:mountOption.checked
+                enabled:siteStackBridge.canMount
+                onToggled:{
+                   siteStackBridge.manageAutoMount(checked)
+                }
+
+                Layout.alignment:Qt.AlignLeft
+                Layout.topMargin:15
+            }
+
+            Text{
                 id:siteState
                 text:i18nd("lliurex-easy-sites","State:")
                 Layout.alignment:Qt.AlignRight
