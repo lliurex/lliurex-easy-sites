@@ -18,6 +18,7 @@ Components.ListItem{
     property string selectedFolder
     property bool mountUnit
     property bool canMount
+    property bool isActive
 
 
     enabled:true
@@ -36,7 +37,7 @@ Components.ListItem{
 
     Rectangle {
         height:visible?85:0
-        width:parent.width
+        width:parent.width-20
         color:"transparent"
         border.color: "transparent"
         Item{
@@ -62,9 +63,9 @@ Components.ListItem{
                 spacing:10
                 width:{
                     if (listSiteItem.ListView.isCurrentItem){
-                        parent.width-(siteState.width+manageSiteBtn.width+150)
+                        parent.width-(siteState.width+siteActive.width+manageSiteBtn.width+150)
                     }else{
-                        parent.width-(siteState.width+130)
+                        parent.width-(siteState.width+siteActive.width+130)
                     }
                 }
                
@@ -91,15 +92,26 @@ Components.ListItem{
             }
 
             Image{
-                id:siteState
-                source:isVisible?"/usr/share/icons/breeze/actions/24/view-visible.svg":"/usr/share/icons/breeze/actions/24/view-hidden.svg"
+                id:siteActive
+                source:isActive?"/usr/share/icons/breeze/actions/24/media-eject.svg":"/usr/share/icons/breeze/actions/24/media-mount.svg"
                 sourceSize.width:32
                 sourceSize.height:32
                 anchors.left:siteDescription.right
                 anchors.verticalCenter:parent.verticalCenter
                 anchors.leftMargin:30
+                visible:mountUnit?true:false
             }
-            
+
+            Image{
+                id:siteState
+                source:isVisible?"/usr/share/icons/breeze/actions/24/view-visible.svg":"/usr/share/icons/breeze/actions/24/view-hidden.svg"
+                sourceSize.width:32
+                sourceSize.height:32
+                anchors.left:siteActive.right
+                anchors.verticalCenter:parent.verticalCenter
+                anchors.leftMargin:15
+            }
+
             Button{
                 id:manageSiteBtn
                 display:AbstractButton.IconOnly
@@ -141,8 +153,38 @@ Components.ListItem{
                     MenuItem{
                         icon.name:"folder-sync.svg"
                         text:i18nd("lliurex-easy-sites","Sync new content")
-                        visible:!mountUnit
+                        visible:{
+                            if (!mountUnit){
+                                true
+                            }else{
+                                if (canMount){
+                                    true
+                                }else{
+                                    false
+                                }
+                            }
+                        }
                         onClicked:siteFolderDialog.open()
+                    }
+                    MenuItem{
+                        icon.name:isActive?"media-eject.svg":"media-mount.svg"
+                        text:isActive?i18nd("lliurex-easy-sites","Unmount site content"):i18nd("lliurex-easy-sites","Mount site content")
+                        visible:{
+                            if (mountUnit){
+                                if (isActive){
+                                    true
+                                }else{
+                                    if (canMount){
+                                        true
+                                    }else{
+                                        false
+                                    }
+                                }
+                            }else{
+                                false
+                            }
+                        }
+                        onClicked:siteStackBridge.manageMountStatus([siteId,!isActive])
                     }
                     MenuItem{
                         icon.name:"document-edit.svg"

@@ -132,13 +132,12 @@ class EasySitesManager:
 			self.delete_site(info["id"],info["systemdUnit"])
 		else:
 			if info["mountUnit"]:
-				result=self.mount_site_content(info["sync_folder"],info["site_folder"],info["systemdUnit"],info["auto_mount"]).get('return',None)
+				result=self._mount_site_content(info["sync_folder"],info["site_folder"],info["systemdUnit"],info["auto_mount"])
 			else:
-				result=self.sync_site_content(info["sync_folder"],info["site_folder"]).get('return',None)
+				result=self._sync_site_content(info["sync_folder"],info["site_folder"])
 
 			if result["status"]:
 				result=self.write_conf(info).get('return',None)
-				print("Write: %s"%str(result))
 				if not result['status']:
 					self.delete_site(info["id"],info["systemdUnit"])
 		
@@ -150,9 +149,9 @@ class EasySitesManager:
 			
 	#def create_new_site
 	
-	def edit_site(self,info,pixbuf_path,origId):
+	def edit_site(self,info,pixbuf_path,origId,requiredSync=False):
 
-		actions_todo=self._get_actions_todo(info,origId)
+		actions_todo=self._get_actions_todo(info,origId,requiredSync)
 		result_backup=self._make_tmp_site_backup(origId)
 		error=False
 		icon_changed=False
@@ -162,18 +161,27 @@ class EasySitesManager:
 
 		if result_backup['status']:
 			if "rename" in actions_todo:
-				result_rename=self._rename_site(info,pixbuf_path,origId)
+				result_rename=self._rename_site(info,pixbuf_path,origId,requiredSync)
 				if not result_rename["status"]:
 					error=True
 					result=result_rename 
 				else:
 					rename_changed=True
 			else:
-				if 'manage_auto_mount' in actions_todo:
-					result_auto_mount=self.manage_auto_mount(info["systemdUnit"],info["auto_mount"]).get('return',None)
-					if not result_auto_mount["status"]:
+				if 'sync_content' in actions_todo:
+					if info["mountUnit"]:
+						result_sync=self._mount_site_content(info["sync_folder"],info["site_folder"],info["systemdUnit"],info["auto_mount"])
+					else:
+						result_sync=self._sync_site_content(info["sync_folder"],info["site_folder"])	
+					if not result_sync["status"]:
 						error=True
-						result=result_auto_mount
+						result=result_sync
+				else:
+					if 'manage_auto_mount' in actions_todo:
+						result_auto_mount=self.manage_auto_mount(info["systemdUnit"],info["auto_mount"]).get('return',None)
+						if not result_auto_mount["status"]:
+							error=True
+							result=result_auto_mount
 				if not error:
 					if "site_config" in actions_todo:
 						error=False
@@ -305,18 +313,6 @@ class EasySitesManager:
 
 	#def change_all_sites_visibility
 
-	def sync_site_content(self,origPath,destPath):
-
-		try:
-			shutil.copytree(origPath,destPath,dirs_exist_ok=True)
-			result={"status":True,"msg":"Content synchronized successfully","code":EasySitesManager.SYNC_CONTENT_CORRECT,"data":""}	
-		except Exception as e:
-			result={"status":False,"msg":str(e),"code":EasySitesManager.SYNC_CONTENT_ERROR,"data":""}
-
-		return n4d.responses.build_successful_call_response(result)
-
-	#def sync_site_content
-
 	def copy_image_to_site(self,fileToCopy,destPath):
 
 		try:
@@ -329,23 +325,26 @@ class EasySitesManager:
 
 	#def copy_file_to_site
 
-	def mount_site_content(self,origPath,destPath,systemdUnit,auto_mount):
+	def sync_content(self,siteId,syncFrom):
 
-		ret=self._create_systemd_unit(origPath,destPath,systemdUnit)
-		if ret["status"]:
-			ret=self.manage_auto_mount(systemdUnit,auto_mount).get('return',None)
-			if ret["status"]:
-				ret=self.manage_systemd_status(systemdUnit,"start").get('return',None)
-
-		if ret["status"]:
-			result={"status":True,"msg":"Mount unit successfully","code":EasySitesManager.MOUNT_CONTENT_CORRECT,"data":""}
+		if self.sites_config[siteId]["mountUnit"]:
+			result=self._mount_site_content(syncFrom,self.sites_config[siteId]["site_folder"],self.sites_config[siteId]["systemdUnit"],self.sites_config[siteId]["auto_mount"])
 		else:
-			result={"status":False,"msg":ret["msg"],"code":EasySitesManager.MOUNT_CONTENT_ERROR,"data":""}
+			result=self._sync_site_content(syncFrom,self.sites_config[siteId]["site_folder"])
+
+		if syncFrom!=self.sites_config[siteId]["sync_folder"]:
+			if result["status"]:
+				info=self.sites_config[siteId]
+				info["sync_folder"]=syncFrom
+				result_write=self.write_conf(info).get("return",None)
+				if not result_write["status"]:
+					result=result_write
 
 		return n4d.responses.build_successful_call_response(result)
 
-	#def mount_site_content
-	
+
+	#def sync_content
+
 	def manage_systemd_status(self,systemdUnit,action):
 
 		if os.path.exists(os.path.join(self.systemdDest,systemdUnit)):
@@ -450,7 +449,7 @@ class EasySitesManager:
 
 	#_create_new_site_folder		
 
-	def _rename_site(self,info,pixbuf_path,origId):
+	def _rename_site(self,info,pixbuf_path,origId,requiredSync):
 
 		error=False
 		if self.sites_config[origId]["systemdUnit"]!=None:
@@ -467,11 +466,16 @@ class EasySitesManager:
 					result_symlink=self._create_symlink_folder(info["id"],origId)
 					if result_symlink['status']:
 						if info["mountUnit"]:
-							result_mount=self.mount_site_content(info["sync_folder"],info["site_folder"],info["systemdUnit"],info["auto_mount"]).get('return',None)
+							result_mount=self._mount_site_content(info["sync_folder"],info["site_folder"],info["systemdUnit"],info["auto_mount"])
 							if not result_mount["status"]:
 								error=True
 								result=result_mount
-
+						else:
+							if requiredSync:
+								result_sync=self._sync_site_content(info["sync_folder"],info["site_folder"])
+								if not result_sync["status"]:
+									error=True
+									result=result_sync
 						if not error:
 							return self._delete_site_conf(origId).get('return',None)	
 					else:
@@ -605,7 +609,7 @@ class EasySitesManager:
 			shutil.copy2(os.path.join(self.backup_path_config,"easy-"+origId+".jon"),os.path.join(self.config_dir,"easy-"+origId+".json"))
 			if self.sites_config[origId]["systemdUnit"]!=None:
 				self._delete_systemd_unit(systemdUnit)
-				self.mount_site_content(self.sites_config[origId]["sync_folder"],self.sites_config[origId]["site_folder"],self.sites_config[origId]["systemdUnit"],self.sites_config[origId]["auto_mount"]).get('return',None)
+				self._mount_site_content(self.sites_config[origId]["sync_folder"],self.sites_config[origId]["site_folder"],self.sites_config[origId]["systemdUnit"],self.sites_config[origId]["auto_mount"])
 
 		if icon:
 			shutil.copy2(os.path.join(self.backup_path,"easy-"+origId+".png"),os.path.join(self.icons_path,"easy-"+origId+".png"))
@@ -614,7 +618,7 @@ class EasySitesManager:
 			
 	#def _undo_edit_changes
 				
-	def _get_actions_todo(self,info,origId):
+	def _get_actions_todo(self,info,origId,requiredSync):
 
 		actions=[]
 		
@@ -633,11 +637,14 @@ class EasySitesManager:
 			if info["mountUnit"]!=self.sites_config[origId]["mountUnit"]:
 				actions.append("mount_config")
 			else:
-				if info["systemdUnit"]!=self.sites_config[origId]["systemdUnit"]:
-					actions.append("mount_config")
+				if info["sync_folder"]!=self.sites_config[origId]["sync_folder"]:
+					actions.append("sync_content")
 				else:
-					if info["auto_mount"]!=self.sites_config[origId]["auto_mount"]:
-						actions.append("manage_auto_mount")
+					if not info["mountUnit"] and requiredSync:
+						actions.append("sync_content")
+					else:
+						if info["auto_mount"]!=self.sites_config[origId]["auto_mount"]:
+							actions.append("manage_auto_mount")
 		
 		return actions	
 
@@ -702,7 +709,36 @@ class EasySitesManager:
 		
 	#def _fix_folder_perm
 
-	def _create_systemd_unit(self,origPath,destPath,systemdUnit):
+	def _sync_site_content(self,syncFrom,destPath):
+
+		try:
+			shutil.copytree(syncFrom,destPath,dirs_exist_ok=True)
+			result={"status":True,"msg":"Content synchronized successfully","code":EasySitesManager.SYNC_CONTENT_CORRECT,"data":""}	
+		except Exception as e:
+			result={"status":False,"msg":str(e),"code":EasySitesManager.SYNC_CONTENT_ERROR,"data":""}
+
+		return result
+
+	#def _sync_site_content
+
+	def _mount_site_content(self,syncFrom,destPath,systemdUnit,auto_mount):
+
+		ret=self._create_systemd_unit(syncFrom,destPath,systemdUnit)
+		if ret["status"]:
+			ret=self.manage_auto_mount(systemdUnit,auto_mount).get('return',None)
+			if ret["status"]:
+				ret=self.manage_systemd_status(systemdUnit,"start").get('return',None)
+
+		if ret["status"]:
+			result={"status":True,"msg":"Mount unit successfully","code":EasySitesManager.MOUNT_CONTENT_CORRECT,"data":""}
+		else:
+			result={"status":False,"msg":ret["msg"],"code":EasySitesManager.MOUNT_CONTENT_ERROR,"data":""}
+
+		return result
+
+	#def mount_site_content
+
+	def _create_systemd_unit(self,syncFrom,destPath,systemdUnit):
 
 		if systemdUnit !=None:
 			tmpFile=os.path.join(self.systemdDest,systemdUnit)
@@ -717,7 +753,7 @@ class EasySitesManager:
 				configFile.optionxform=str
 				configFile.read(tmpFile)
 				tmpCommand=configFile.get("Mount","What")
-				tmpCommand=tmpCommand.replace("{{ORIG_FOLDER}}",origPath)
+				tmpCommand=tmpCommand.replace("{{ORIG_FOLDER}}",syncFrom)
 				configFile.set("Mount","What",tmpCommand)
 				tmpCommand=configFile.get("Mount","Where")
 				tmpCommand=tmpCommand.replace("{{DEST_FOLDER}}",destPath)

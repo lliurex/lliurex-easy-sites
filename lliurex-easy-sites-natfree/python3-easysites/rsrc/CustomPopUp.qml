@@ -82,6 +82,12 @@ Popup {
             case 11:
                 var msg=i18nd("lliurex-easy-sites","Hidding all sites. Wait a moment...")
                 break;
+            case 12:
+                var msg=i18nd("lliurex-easy-sites","Mounting site content. Wait a moment...")
+                break;
+            case 13:
+                var msg=i18nd("lliurex-easy-sites","Unmounting site content. Wait a moment...")
+                break;
             default:
                 var msg=""
                 break;

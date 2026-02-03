@@ -189,7 +189,13 @@ Rectangle{
                     id:copyOption
                     checked:!siteStackBridge.mountUnit
                     text:i18nd("lliurex-easy-sites","Copy selected content to site folder")
-                    enabled:siteStackBridge.canMount
+                    enabled:{
+                        if (siteStackBridge.actionType=="edit"){
+                            false
+                        }else{
+                            siteStackBridge.canMount
+                        }
+                    }
                     onToggled:{
                         if (checked){
                             siteStackBridge.updateMountValue(false)
@@ -201,7 +207,13 @@ Rectangle{
                     id:mountOption
                     checked:siteStackBridge.mountUnit
                     text:i18nd("lliurex-easy-sites","Mount selected content in site folder")
-                    enabled:siteStackBridge.canMount
+                    enabled:{
+                        if (siteStackBridge.actionType=="edit"){
+                            false
+                        }else{
+                            siteStackBridge.canMount
+                        }
+                    }
                     onToggled:{
                         if (checked){
                             siteStackBridge.updateMountValue(true)

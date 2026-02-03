@@ -13,8 +13,9 @@ class SitesModel(QtCore.QAbstractListModel):
 	IsVisibleRole = QtCore.Qt.UserRole+1005
 	UrlRole = QtCore.Qt.UserRole+1006
 	FolderRole = QtCore.Qt.UserRole+1007
-	MountUnitRole= QtCore.Qt.UserRole+1008
-	CanMountRole=QtCore.Qt.UserRole+1009 
+	MountUnitRole = QtCore.Qt.UserRole+1008
+	CanMountRole = QtCore.Qt.UserRole+1009
+	IsActiveRole = QtCore.Qt.UserRole+1010
 	
 	def __init__(self,parent=None):
 		
@@ -54,7 +55,9 @@ class SitesModel(QtCore.QAbstractListModel):
 			elif role == SitesModel.MountUnitRole:
 				return item["mountUnit"]
 			elif role == SitesModel.CanMountRole:
-				return item["canMount"]			
+				return item["canMount"]
+			elif role == SitesModel.IsActiveRole:
+				return item["isActive"]			
 
 	#def data
 
@@ -71,13 +74,14 @@ class SitesModel(QtCore.QAbstractListModel):
 		roles[SitesModel.FolderRole]=b"folder"
 		roles[SitesModel.MountUnitRole]=b"mountUnit"
 		roles[SitesModel.CanMountRole]=b"canMount"
+		roles[SitesModel.IsActiveRole]=b"isActive"
 
 
 		return roles
 
 	#def roleNames
 
-	def appendRow(self,i,im,na,cb,ub,vi,u,f,mu,cm):
+	def appendRow(self,i,im,na,cb,ub,vi,u,f,mu,cm,ia):
 		
 		tmpId=[]
 		for item in self._entries:
@@ -85,7 +89,7 @@ class SitesModel(QtCore.QAbstractListModel):
 		tmpN=na.strip()
 		if i not in tmpId and na !="" and len(tmpN)>0:
 			self.beginInsertRows(QtCore.QModelIndex(), self.rowCount(),self.rowCount())
-			self._entries.append(dict(id=i,img=im,name=na,createdBy=cb,updatedBy=ub,isVisible=vi,url=u,folder=f,mountUnit=mu,canMount=cm))
+			self._entries.append(dict(id=i,img=im,name=na,createdBy=cb,updatedBy=ub,isVisible=vi,url=u,folder=f,mountUnit=mu,canMount=cm,isActive=ia))
 			self.endInsertRows()
 
 	#def appendRow
@@ -101,7 +105,7 @@ class SitesModel(QtCore.QAbstractListModel):
 		
 		if role == QtCore.Qt.EditRole:
 			row = index.row()
-			if param in ["isVisible"]:
+			if param in ["isVisible","isActive"]:
 				if self._entries[row][param]!=value:
 					self._entries[row][param]=value
 					self.dataChanged.emit(index,index)

@@ -166,7 +166,7 @@ class Bridge(QObject):
 
 		for item in sitesEntries:
 			if item["id"]!="":
-				self._sitesModel.appendRow(item["id"],item["img"],item["name"],item["createdBy"],item["updatedBy"],item["isVisible"],item["url"],item["folder"],item["mountUnit"],item["canMount"])
+				self._sitesModel.appendRow(item["id"],item["img"],item["name"],item["createdBy"],item["updatedBy"],item["isVisible"],item["url"],item["folder"],item["mountUnit"],item["canMount"],item["isActive"])
 
 	#def _updatesitesModel
 

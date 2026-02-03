@@ -16,6 +16,8 @@ HIDE_SITE=5
 SHOW_SITE=6
 SYNC_CONTENT=7
 DELETE_SITE=8
+MOUNT_CONTENT=12
+UNMOUNT_CONTENT=13
 
 class LoadSite(QThread):
 
@@ -435,6 +437,24 @@ class Bridge(QObject):
 
 	#def syncSiteContent
 
+	@Slot('QVariantList')
+	def manageMountStatus(self,data):
+
+		action="mount"
+		completeData=False
+
+		self.requiredMoveToStack=False
+		if data[1]:
+			data[1]="start"
+			msgCode=MOUNT_CONTENT
+		else:
+			data[1]="stop"
+			msgCode=UNMOUNT_CONTENT
+
+		self.saveDataChanges(action,data,completeData,msgCode)
+
+	#def manageMountStatus
+
 	@Slot(str)
 	def removeSite(self,siteId):
 
@@ -515,14 +535,18 @@ class Bridge(QObject):
 
 		if self.currentSiteConfig["sync_folder"]!=value:
 			self.currentSiteConfig["sync_folder"]=value
+			self.changesInSite=True
+			self.requiredSync=True
+		else:
+			if not self.currentSiteConfig["mountUnit"]:
+				self.changesInSite=True
+				self.requiredSync=True
 
 		if os.path.exists(value):
 			self.canMount=True
 		else:
 			self.canMount=False
 			
-		self.changeInFolder=True
-		self.requiredSync=True
 	
 	#def updateSiteFolderValue
 
@@ -553,7 +577,9 @@ class Bridge(QObject):
 			self.changesInSite=True
 			self.onlySync=False
 		else:
+			self.changesInSite=False
 			self.onlySync=True
+
 
 	#def updateMountValue
 
@@ -570,6 +596,10 @@ class Bridge(QObject):
 		if self.currentSiteConfig!=Bridge.siteManager.currentSiteConfig:
 			self.changesInSite=True
 			self.onlySync=False
+		else:
+			self.changesInSite=False
+			self.onlySync=True
+
 
 	#def manageAutoMount 
 

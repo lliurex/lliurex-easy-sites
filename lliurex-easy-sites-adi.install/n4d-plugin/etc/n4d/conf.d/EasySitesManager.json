@@ -60,7 +60,7 @@
                 "teachers"
             ]
         },
-        "sync_site_content":{
+        "sync_content":{
             "allowed_groups":[
                 "sudo",
                 "admins",
@@ -72,13 +72,6 @@
                 "sudo",
                 "admins",
                 "teachers"
-            ]
-        },
-        "mount_site_content":{
-            "allowed_groups":[
-                "sudo",
-                "admins",
-                "teachers"    
             ]
         },
         "manage_systemd_status":{
