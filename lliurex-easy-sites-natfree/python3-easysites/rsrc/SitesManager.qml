@@ -130,6 +130,49 @@ Rectangle{
         }
     }
 
+     ChangesDialog{
+        id:freeSpaceErrorWarning
+        dialogIcon:"/usr/share/icons/breeze/status/64/dialog-warning.svg"
+        dialogTitle:"lliurex-easy-sites"+" - "+i18nd("lliurex-easy-sites","Site")
+        dialogVisible:siteStackBridge.showFreeSpaceWarning
+        dialogMsg:i18nd("lliurex-easy-sites","The size of selected content is ")+siteStackBridge.freeSpaceChecked[1]+"\n"+i18nd("lliurex-easy-sites","If copied this content the available space on the system will be ")+siteStackBridge.freeSpaceChecked[3]+"\n"+i18nd("lliurex-easy-sites","Do you want to continue?")
+        dialogWidth:500
+        btnAcceptVisible:false
+        btnDiscardVisible:true
+        btnDiscardText:i18nd("lliurex-easy-sites","Yes")
+        btnDiscardIcon:"dialog-ok.svg"
+        btnCancelText:i18nd("lliurex-easy-sites","No")
+        btnCancelIcon:"dialog-cancel.svg"
+        Connections{
+            target:freeSpaceErrorWarning
+            function onDiscardDialogClicked(){
+                siteStackBridge.manageFreeSpaceDialogWarning("Accept")           
+            } 
+            function onRejectDialogClicked(){
+                siteStackBridge.manageFreeSpaceDialogWarning("Cancel")       
+            }
+        }
+    }
+
+    ChangesDialog{
+        id:freeSpaceErrorDialog
+        dialogIcon:"/usr/share/icons/breeze/status/64/dialog-warning.svg"
+        dialogTitle:"lliurex-easy-sites"+" - "+i18nd("lliurex-easy-sites","Site")
+        dialogVisible:siteStackBridge.showFreeSpaceError
+        dialogMsg:i18nd("lliurex-easy-sites","The size of selected content is ")+siteStackBridge.freeSpaceChecked[1]+"\n"+i18nd("lliurex-easy-sites","If cannot be copied because the available space on the system would only be ")+siteStackBridge.freeSpaceChecked[3]
+        dialogWidth:500
+        btnAcceptVisible:false
+        btnDiscardVisible:false
+        btnCancelText:i18nd("lliurex-easy-sites","Close")
+        btnCancelIcon:"dialog-close.svg"
+        Connections{
+            target:freeSpaceErrorDialog
+            function onRejectDialogClicked(){
+                siteStackBridge.closeFreeSpaceDialogError()       
+            }
+        }
+    }
+
    
     function getTextMessage(msgCode){
         switch (msgCode){

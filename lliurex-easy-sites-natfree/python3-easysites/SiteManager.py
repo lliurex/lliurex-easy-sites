@@ -20,6 +20,9 @@ from jinja2 import Environment
 from jinja2.loaders import FileSystemLoader
 from jinja2 import Template
 
+import psutil
+from pathlib import Path
+
 class SiteManager(object):
 
 	SITE_NAME_MISSING_ERROR=-19
@@ -28,6 +31,7 @@ class SiteManager(object):
 	IMAGE_FILE_MISSING_ERROR=-22
 	FOLDER_TOSYNC_MISSING_ERROR=-23
 	SITE_ICON_ERROR=-24
+	FREE_SPACE_ERROR=-25
 
 	ALL_DATA_CORRECT=0
 
@@ -51,7 +55,7 @@ class SiteManager(object):
 		self.systemdPath="/etc/systemd/system"
 		self.sitesIconsFolder="/var/www/easy-sites/icons"
 		self._getSystemLocale()
-		self.initValues()	
+		self.initValues()
 	
 	#def __init__	
 	
@@ -98,6 +102,7 @@ class SiteManager(object):
 		self.mountUnit=False
 		self.canMount=False
 		self.autoMount="disable"
+		self.freeSpaceChecked=[]
 		
 		self.currentSiteConfig={}
 		self.currentSiteConfig["id"]=self.siteToLoad
@@ -198,6 +203,8 @@ class SiteManager(object):
 		else:
 			self.canMount=False
 
+		self.freeSpaceChecked=[]
+
 	#def loadSiteConfig
 
 	def saveData(self,action,data,completeData=True):
@@ -206,7 +213,7 @@ class SiteManager(object):
 		error=False
 
 		result={}
-		
+				
 		if action in ["add","edit"]:
 			info=data[0]
 	
@@ -223,8 +230,8 @@ class SiteManager(object):
 			else:
 				info["systemdUnit"]=None
 		
+		
 		if action=="add" or action=="edit":
-
 			requiredSync=data[1]
 			generateSiteIcon=False
 			
@@ -316,7 +323,6 @@ class SiteManager(object):
 			if checkDuplicates:		
 				if data["id"] in sitesKeys:
 					return {"result":False,"code":SiteManager.SITE_NAME_DUPLICATE_ERROR,"data":""}
-			 			
 							
 		if not edit:
 			if data["sync_folder"]==None or data["sync_folder"]=="":
@@ -328,6 +334,10 @@ class SiteManager(object):
 				
 			else:
 				return {"result":False,"code":SiteManager.IMAGE_FILE_MISSING_ERROR,"data":""}
+		
+		if not data["mountUnit"]:
+			if not self.freeSpaceChecked[0]:
+				return {"result":False,"code":SiteManager.FREE_SPACE_ERROR,"data":""}
 		
 		if checkImage==None:
 			return {"result":True,"code":SiteManager.ALL_DATA_CORRECT,"data":""}
@@ -544,6 +554,37 @@ class SiteManager(object):
 
 	#def changeAllSiteStatus
 
+	def checkFreeSpace(self,syncFrom):
+
+		freeSpaceBytes=psutil.disk_usage("/").free
+		freespaceGb=round(psutil.disk_usage("/").free/(1024**3),2)
+		folderToCheck=Path(syncFrom)
+		sizeOfContentBytes=sum(f.stat().st_size for f in folderToCheck.rglob('*') if f.is_file())
+		sizeOfContentGb=round(sum(f.stat().st_size for f in folderToCheck.rglob('*') if f.is_file())/(1024**3),2)
+
+		canCopy=True
+		self.freeSpaceChecked=[]
+
+		if sizeOfContentGb<0.1:
+			sizeOfContent="%s MB"%str(round(sum(f.stat().st_size for f in folderToCheck.rglob('*') if f.is_file())/(1024**2),2))
+		else:
+			sizeOfContent="%s GB"%str(sizeOfContentGb)
+
+		
+		sizeAfterCopy=round((freeSpaceBytes-sizeOfContentBytes)/(1024**3),2)
+
+		if freespaceGb<5 or sizeAfterCopy<5:
+			canCopy=False
+		
+		self.freeSpaceChecked.append(canCopy)
+		self.freeSpaceChecked.append(sizeOfContent)
+		self.freeSpaceChecked.append("%s GB"%str(freespaceGb))
+		self.freeSpaceChecked.append("%s GB"%str(sizeAfterCopy))
+
+		return self.freeSpaceChecked
+
+	#def getFreeSpace
+
 	def _getSystemdUnitName(self,siteFolder):
 
 		try:
@@ -567,5 +608,6 @@ class SiteManager(object):
 				return False
 
 	#def _getSystemdUnitStatus
+
 
 #class SiteManager

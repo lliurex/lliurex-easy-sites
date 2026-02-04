@@ -332,7 +332,7 @@ Rectangle{
             messageLabel.visible=false
         }
       
-    } 
+    }
 
     ChangesDialog{
         id:settingsChangesDialog
@@ -364,6 +364,81 @@ Rectangle{
         }
     }
 
+    ChangesDialog{
+        id:removeSiteDialog
+        dialogIcon:"/usr/share/icons/breeze/status/64/dialog-warning.svg"
+        dialogTitle:"Easy-Sites"+" - "+i18nd("lliurex-easy-sites","Site List")
+        dialogMsg:{
+            if (sitesOptionsStackBridge.showRemoveSiteDialog[1]){
+                i18nd("lliurex-easy-sites","All sites will be deleted.\nDo yo want to continue?")
+            }else{
+                i18nd("lliurex-easy-sites","The site will be deleted.\nDo yo want to continue?")
+            }
+        }
+        dialogVisible:sitesOptionsStackBridge.showRemoveSiteDialog[0]
+        dialogWidth:320
+        btnAcceptVisible:false
+        btnAcceptText:""
+        btnDiscardText:i18nd("lliurex-easy-sites","Accept")
+        btnDiscardIcon:"dialog-ok.svg"
+        btnDiscardVisible:true
+        btnCancelText:i18nd("lliurex-easy-sites","Cancel")
+        btnCancelIcon:"dialog-cancel.svg"
+        Connections{
+           target:removeSiteDialog
+           function onDiscardDialogClicked(){
+                sitesOptionsStackBridge.manageRemoveSiteDialog('Accept')         
+           }
+           function onRejectDialogClicked(){
+                sitesOptionsStackBridge.manageRemoveSiteDialog('Cancel')       
+           }
+
+        }
+    }
+
+    ChangesDialog{
+        id:freeSpaceErrorWarning
+        dialogIcon:"/usr/share/icons/breeze/status/64/dialog-warning.svg"
+        dialogTitle:"lliurex-easy-sites"+" - "+i18nd("lliurex-easy-sites","Site")
+        dialogVisible:siteStackBridge.showFreeSpaceWarning
+        dialogMsg:i18nd("lliurex-easy-sites","The size of selected content is ")+siteStackBridge.freeSpaceChecked[1]+"\n"+i18nd("lliurex-easy-sites","If copied this content the available space on the system will be ")+siteStackBridge.freeSpaceChecked[3]+"\n"+i18nd("lliurex-easy-sites","Do you want to continue?")
+        dialogWidth:500
+        btnAcceptVisible:false
+        btnDiscardVisible:true
+        btnDiscardText:i18nd("lliurex-easy-sites","Yes")
+        btnDiscardIcon:"dialog-ok.svg"
+        btnCancelText:i18nd("lliurex-easy-sites","No")
+        btnCancelIcon:"dialog-cancel.svg"
+        Connections{
+            target:freeSpaceErrorWarning
+            function onDiscardDialogClicked(){
+                siteStackBridge.manageFreeSpaceDialogWarning("Accept")           
+            } 
+            function onRejectDialogClicked(){
+                siteStackBridge.manageFreeSpaceDialogWarning("Cancel")       
+            }
+        }
+    }
+
+    ChangesDialog{
+        id:freeSpaceErrorDialog
+        dialogIcon:"/usr/share/icons/breeze/status/64/dialog-warning.svg"
+        dialogTitle:"lliurex-easy-sites"+" - "+i18nd("lliurex-easy-sites","Site")
+        dialogVisible:siteStackBridge.showFreeSpaceError
+        dialogMsg:i18nd("lliurex-easy-sites","The size of selected content is ")+siteStackBridge.freeSpaceChecked[1]+"\n"+i18nd("lliurex-easy-sites","If cannot be copied because the available space on the system would only be ")+siteStackBridge.freeSpaceChecked[3]
+        dialogWidth:500
+        btnAcceptVisible:false
+        btnDiscardVisible:false
+        btnCancelText:i18nd("lliurex-easy-sites","Close")
+        btnCancelIcon:"dialog-close.svg"
+        Connections{
+            target:freeSpaceErrorDialog
+            function onRejectDialogClicked(){
+                siteStackBridge.closeFreeSpaceDialogError()       
+            }
+        }
+    }
+
     function getMessageText(){
 
          switch (siteStackBridge.showSiteFormMessage[1]){
@@ -381,6 +456,9 @@ Rectangle{
                 break;
             case -23:
                 var msg=i18nd("lliurex-easy-sites","You must indicate a folder to sync content");
+                break;
+            case -25:
+                var msg=i18nd("lliurex-easy-sites","The selected content exceeds the available space limit")
                 break;
             default:
                 var msg=""
