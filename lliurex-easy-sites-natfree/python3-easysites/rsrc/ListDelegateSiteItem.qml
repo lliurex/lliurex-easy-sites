@@ -51,6 +51,7 @@ Components.ListItem{
                 height:60
                 fillMode:Image.PreserveAspectFit
                 source:siteImg
+                cache:false
                 anchors.verticalCenter:parent.verticalCenter
                 anchors.left:parent.left
                 anchors.leftMargin:15

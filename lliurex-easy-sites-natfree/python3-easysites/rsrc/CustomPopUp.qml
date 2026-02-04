@@ -49,46 +49,47 @@ Popup {
 
     function getTextMessage(){
         switch (mainStackBridge.closePopUp[1]){
-            case 1:
+            case 13:
                 var msg=i18nd("lliurex-easy-sites","Loading basic configuration. Wait a moment...");
                 break;
-            case 2:
+            case 14:
                 var msg=i18nd("lliurex-easy-sites","Loading site info. Wait a moment...");
                 break;
-            case 3:
+            case 15:
                 var msg=i18nd("lliurex-easy-sites","Validating the data entered. Wait a moment...")
                 break;
-            case 4:
+            case 16:
                 var msg=i18nd("lliurex-easy-sites","Saving the data entered. Wait a moment...")
                 break;
-            case 5:
+            case 17:
                 var msg=i18nd("lliurex-easy-sites","Hiding the site. Wait a moment...")
                 break;
-            case 6:
+            case 18:
                 var msg=i18nd("lliurex-easy-sites","Showing the site. Wait a moment...")
                 break;
-            case 7:
-                var msg=i18nd("lliurex-easy-sites","Syncing new content. Wait a moment...")
+            case 19:
+                var msg=i18nd("lliurex-easy-sites","Updating site content. Wait a moment...")
                 break;
-            case 8:
+            case 20:
                 var msg=i18nd("lliurex-easy-sites","Deleting the site. Wait a moment...")
                 break;
-           case 9:
-                var msg=i18nd("lliurex-easy-sites","Deleting all sites. Wait a moment...")
-                break;
-            case 10:
-                var msg=i18nd("lliurex-easy-sites","Showing all sites. Wait a moment...")
-                break
-            case 11:
-                var msg=i18nd("lliurex-easy-sites","Hidding all sites. Wait a moment...")
-                break;
-            case 12:
+            case 21:
                 var msg=i18nd("lliurex-easy-sites","Mounting site content. Wait a moment...")
                 break;
-            case 13:
+            case 22:
                 var msg=i18nd("lliurex-easy-sites","Unmounting site content. Wait a moment...")
                 break;
-            default:
+            case 23:
+                var msg=i18nd("lliurex-easy-sites","Showing all sites. Wait a moment...")
+                break
+            case 24:
+                var msg=i18nd("lliurex-easy-sites","Hidding all sites. Wait a moment...")
+                break; 
+            case 25:
+                var msg=i18nd("lliurex-easy-sites","Deleting all sites. Wait a moment...")
+                break;
+       
+              default:
                 var msg=""
                 break;
         }

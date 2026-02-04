@@ -67,13 +67,6 @@
                 "teachers"
             ]
         },
-        "copy_image_to_site":{
-            "allowed_groups":[
-                "sudo",
-                "admins",
-                "teachers"
-            ]
-        },
         "manage_systemd_status":{
             "allowed_groups":[
                 "sudo",

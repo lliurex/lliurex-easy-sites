@@ -8,16 +8,16 @@ import copy
 import signal
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-NEW_SITE_CONFIG=1
-LOAD_SITE_CONFIG=2
-CHECK_DATA=3
-SAVE_DATA=4
-HIDE_SITE=5
-SHOW_SITE=6
-SYNC_CONTENT=7
-DELETE_SITE=8
-MOUNT_CONTENT=12
-UNMOUNT_CONTENT=13
+NEW_SITE_CONFIG=13
+LOAD_SITE_CONFIG=14
+CHECK_DATA=15
+SAVE_DATA=16
+HIDE_SITE=17
+SHOW_SITE=18
+SYNC_CONTENT=19
+DELETE_SITE=20
+MOUNT_CONTENT=21
+UNMOUNT_CONTENT=22
 
 class LoadSite(QThread):
 
@@ -667,7 +667,7 @@ class Bridge(QObject):
 	def _saveDataRet(self):
 
 		if self.saveData.ret["status"]:
-			self.core.sitesOptionsStack._updateSitesModel()
+			self.core.sitesOptionsStack.updateSitesModel()
 			self.core.sitesOptionsStack.showMainMessage=[True,self.saveData.ret["code"],"Ok"]
 		else:
 			self.core.sitesOptionsStack.showMainMessage=[True,self.saveData.ret["code"],"Error"]	

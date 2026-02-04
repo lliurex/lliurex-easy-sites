@@ -367,19 +367,19 @@ Rectangle{
     function getMessageText(){
 
          switch (siteStackBridge.showSiteFormMessage[1]){
-            case -1:
+            case -19:
                 var msg=i18nd("lliurex-easy-sites","You must indicate a name for the site");
                 break;
-            case -2:
+            case -20:
                 var msg=i18nd("lliurex-easy-sites","The name site is duplicate");
                 break;
-            case -5:
+            case -21:
                 var msg=i18nd("lliurex-easy-sites","Image file is not correct");
                 break;
-            case -7:
+            case -22:
                 var msg=i18nd("lliurex-easy-sites","You must indicate a image file");
                 break;
-            case -8:
+            case -23:
                 var msg=i18nd("lliurex-easy-sites","You must indicate a folder to sync content");
                 break;
             default:

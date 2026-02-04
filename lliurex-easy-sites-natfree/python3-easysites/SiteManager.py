@@ -20,18 +20,14 @@ from jinja2 import Environment
 from jinja2.loaders import FileSystemLoader
 from jinja2 import Template
 
-
-
 class SiteManager(object):
 
-	SITE_NAME_MISSING_ERROR=-1
-	SITE_NAME_DUPLICATE_ERROR=-2
-	IMAGE_FORMART_ERROR=-5
-	IMAGE_FILE_MISSING_ERROR=-7
-	FOLDER_TOSYNC_MISSING_ERROR=-8
-	SCP_CONTENT_TOSERVER_ERROR=-39
-	SCP_FILE_TOSERVER_ERROR=-40
-	SITE_ICON_ERROR=-41
+	SITE_NAME_MISSING_ERROR=-19
+	SITE_NAME_DUPLICATE_ERROR=-20
+	IMAGE_FORMART_ERROR=-21
+	IMAGE_FILE_MISSING_ERROR=-22
+	FOLDER_TOSYNC_MISSING_ERROR=-23
+	SITE_ICON_ERROR=-24
 
 	ALL_DATA_CORRECT=0
 
@@ -244,22 +240,17 @@ class SiteManager(object):
 					if os.path.basename(newImage)!=currentImg:
 						generateSiteIcon=True
 	
-			siteIconPath="%s%s.png"%(self.tmpIconPath,info["id"])
-
 			if generateSiteIcon:
+				siteIconPath="%s%s.png"%(self.tmpIconPath,info["id"])
 				result=self._generateSiteIcon(siteIconPath,newImage)
 			else:
+				siteIconPath=None
 				result["status"]=True
 			
 			if result["status"]:
 				if action=="add":			
 					result=self.client.EasySitesManager.create_new_site(info,siteIconPath)
-					if result['status']:
-						'''
-						if info["image"]["option"]=="custom":
-							self._copyImageFile(info["id"],newImage)
-						'''
-					else:
+					if not result['status']:
 						self.client.EasySitesManager.delete_site(info["id"],info["systemdUnit"])	
 					
 					self._removeTmpFiles(siteIconPath)		
@@ -270,13 +261,6 @@ class SiteManager(object):
 					confirmEdit=True
 					origId=self.currentSiteConfig["id"]
 					result=self.client.EasySitesManager.edit_site(info,siteIconPath,origId,requiredSync)
-					'''
-					if result['status']:
-						if confirmEdit:
-							if info["image"]["option"]=="custom":
-								if newImage!=os.path.basename(self.currentSiteConfig["image"]["img_path"]):
-									self._copyImageFile(info["id"],newImage)
-					'''
 					self._removeTmpFiles(siteIconPath)
 
 					self._debug("Edit new site: ",result)
@@ -288,8 +272,8 @@ class SiteManager(object):
 
 		elif action=="visibility":
 			info["visibility"]=data[1]
-			visible=data[1]
-			result=self.client.EasySitesManager.change_site_visibility(info,visible)
+			result=self.client.EasySitesManager.change_site_visibility(info)
+			
 			self._debug("Change visibility: ",result)
 
 		elif action=="mount":
@@ -384,8 +368,9 @@ class SiteManager(object):
 
 	def _removeTmpFiles(self,siteIconPath):
 	
-		if os.path.exists(siteIconPath):
-			os.remove(siteIconPath)
+		if siteIconPath!=None:
+			if os.path.exists(siteIconPath):
+				os.remove(siteIconPath)
 	
 	#def _removeTmpFiles		
 	

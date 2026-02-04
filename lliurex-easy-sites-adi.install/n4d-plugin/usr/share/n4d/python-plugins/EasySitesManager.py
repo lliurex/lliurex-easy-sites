@@ -9,37 +9,39 @@ import configparser
 
 class EasySitesManager:
 
-	DELETE_SITE_ERROR=-12
-	SYNC_CONTENT_ERROR=-13
-	RENAME_SITE_OLD_NOT_EXISTS_ERROR=-14
-	RENAME_SITE_PROBLEMS_ERROR=-15
-	CREATE_LINK_TEMPLATE_ERROR=-16
-	CREATE_SITE_ICON_ERROR=-17
-	CREATE_SYMLINK_FOLDER_ERROR=-18
-	HIDE_SHOW_SITE_ERROR=-19
-	READING_CONFIGURATION_FILE_ERROR=-21
-	SAVING_SITE_ERROR=-23
-	EDIT_SITE_ERROR=-30
-	ALL_SITES_REMOVED_ERROR=-31
-	ALL_SITE_SHOW_ERROR=-32
-	ALL_SITE_HIDE_ERROR=-33
-	COPY_IMAGE_ERROR=-34
-	MOUNT_CONTENT_ERROR=-35
-	UNMOUNT_CONTENT_ERROR=-36
-	STOP_UNIT_ERROR=-37
+	DELETE_SITE_ERROR=-1
+	SYNC_CONTENT_ERROR=-2
+	RENAME_SITE_OLD_NOT_EXISTS_ERROR=-3
+	RENAME_SITE_PROBLEMS_ERROR=-4
+	CREATE_SITE_ICON_ERROR=-5
+	CREATE_SYMLINK_FOLDER_ERROR=-6
+	READING_CONFIGURATION_FILE_ERROR=-7
+	SAVING_SITE_ERROR=-8
+	EDIT_SITE_ERROR=-9
+	ALL_SITES_REMOVED_ERROR=-10
+	ALL_SITE_SHOW_ERROR=-11
+	ALL_SITE_HIDE_ERROR=-12
+	MOUNT_CONTENT_ERROR=-13
+	UNMOUNT_CONTENT_ERROR=-14
+	AUTOMOUNT_ENABLE_ERROR=-15
+	AUTOMOUNT_DISABLE_ERROR=-16
+	SHOW_SITE_ERROR=-17
+	HIDE_SITE_ERROR=-18
 
-	ALL_CORRECT_CODE=0
-	SITE_SHOW_SUCCESSFUL=6
-	SITE_HIDE_SUCCESSFUL=7
-	EDIT_SITE_SUCCESSFUL=10
-	SITE_CREATED_SUCCESSFUL=11
-	DELETE_SITE_SUCCESSFUL=9
-	ALL_SITES_REMOVED_SUCCESSFUL=12
-	ALL_SITES_SHOW_SUCCESSFUL=13
-	ALL_SITES_HIDE_SUCCESSFUL=14
-	SYNC_CONTENT_CORRECT=15
-	MOUNT_CONTENT_CORRECT=16
-	START_UNIT_CORRECT=17
+	ALL_SUCCESSFULL_CODE=0
+	EDIT_SITE_SUCCESSFUL=1
+	SITE_CREATED_SUCCESSFUL=2
+	DELETE_SITE_SUCCESSFUL=3
+	ALL_SITES_REMOVED_SUCCESSFUL=4
+	ALL_SITES_SHOW_SUCCESSFUL=5
+	ALL_SITES_HIDE_SUCCESSFUL=6
+	SYNC_CONTENT_SUCCESSFULL=7
+	MOUNT_CONTENT_SUCCESSFULL=8
+	UNMOUNT_CONTENT_SUCCESSFULL=9
+	AUTOMOUNT_ENABLE_SUCCESSFULL=10
+	AUTOMOUNT_DISABLE_SUCCESSFULL=11
+	SHOW_SITE_SUCCESSFULL=12
+	HIDE_SITE_SUCCESSFULL=13
 
 	def __init__(self):
 
@@ -77,7 +79,7 @@ class EasySitesManager:
 					pass	
 
 		if cont_errors==0:
-			result={"status":True,"msg":"Configurations files readed successfuly","code":EasySitesManager.ALL_CORRECT_CODE,"data":self.sites_config}
+			result={"status":True,"msg":"Configurations files readed successfuly","code":EasySitesManager.ALL_SUCCESSFULL_CODE,"data":self.sites_config}
 		else:				
 			result={"status":False,"msg":"","code":EasySitesManager.READING_CONFIGURATION_FILE_ERROR,"data":self.sites_config}
 
@@ -96,7 +98,7 @@ class EasySitesManager:
 				f.close()
 				status=True
 				msg="Site config saved successfully"
-				code=""
+				code=EasySitesManager.EDIT_SITE_SUCCESSFUL
 		except Exception as e:
 			status=False
 			msg="Unabled to saved site config: "+str(e)
@@ -151,13 +153,14 @@ class EasySitesManager:
 	
 	def edit_site(self,info,pixbuf_path,origId,requiredSync=False):
 
-		actions_todo=self._get_actions_todo(info,origId,requiredSync)
+		actions_todo=self._get_actions_todo(info,origId,requiredSync,pixbuf_path)
 		result_backup=self._make_tmp_site_backup(origId)
 		error=False
 		icon_changed=False
 		visible_changed=False
 		rename_changed=False
-		tmpsystemdUnit=info["systemdUnit"]		
+		tmpsystemdUnit=info["systemdUnit"]
+		must_write_conf=True		
 
 		if result_backup['status']:
 			if "rename" in actions_todo:
@@ -182,6 +185,15 @@ class EasySitesManager:
 						if not result_auto_mount["status"]:
 							error=True
 							result=result_auto_mount
+
+					else:
+						if 'visibility' in actions_todo:
+							must_write_conf=False
+							result_visibility=self.change_site_visibility(info).get('return',None)
+							result=result_visibility
+							if not result["status"]:
+								error=True
+									
 				if not error:
 					if "site_config" in actions_todo:
 						error=False
@@ -195,13 +207,14 @@ class EasySitesManager:
 			if error:
 				self._remove_tmp_site_backup(pixbuf_path,True)
 			else:
-				result_write=self.write_conf(info).get('return',None)
-				if result_write['status']:
-					result={"status":True,"msg":"","code":EasySitesManager.EDIT_SITE_SUCCESSFUL,"data":""}	
-				else:
-					self._undo_edit_changes(origId,info,rename_changed,icon_changed,link_changed,info["systemdUnit"])
-					result=result_write
-	
+				if must_write_conf:
+					result_write=self.write_conf(info).get('return',None)
+					if result_write['status']:
+						result={"status":True,"msg":"","code":EasySitesManager.EDIT_SITE_SUCCESSFUL,"data":""}	
+					else:
+						self._undo_edit_changes(origId,info,rename_changed,icon_changed,link_changed,info["systemdUnit"])
+						result=result_write
+		
 				self._remove_tmp_site_backup(pixbuf_path,True)
 
 		else:
@@ -210,7 +223,6 @@ class EasySitesManager:
 
 		if result["status"]:
 			ret=self._create_sites_html()
-			result["data"]=tmpsystemdUnit
 
 		return n4d.responses.build_successful_call_response(result)
 
@@ -250,14 +262,23 @@ class EasySitesManager:
 
 	#def delete_site	
 
-	def change_site_visibility(self,info,visible,createHtml=True):
+	def change_site_visibility(self,info,createHtml=True):
 
-		info['visibility']=visible
+		if info["visibility"]:
+			code_ok=EasySitesManager.SHOW_SITE_SUCCESSFULL
+			code_error=EasySitesManager.SHOW_SITE_ERROR
+		else:
+			code_ok=EasySitesManager.HIDE_SITE_SUCCESSFULL
+			code_error=EasySitesManager.HIDE_SITE_ERROR
+
 		result=self.write_conf(info).get('return',None)
-	
+		
 		if result['status']:
+			result['code']=code_ok
 			if createHtml:
 				ret=self._create_sites_html()
+		else:
+			result['code']=code_error
 
 		return n4d.responses.build_successful_call_response(result)
 
@@ -313,18 +334,6 @@ class EasySitesManager:
 
 	#def change_all_sites_visibility
 
-	def copy_image_to_site(self,fileToCopy,destPath):
-
-		try:
-			shutil.copy2(fileToCopy,destPath)
-			result={"status":True,"msg":"Image copied successfully","code":"","data":""}	
-		except Exception as e:
-			result={"status":False,"msg":str(e),"code":EasySitesManager.COPY_IMAGE_ERROR,"data":""}
-	
-		return n4d.responses.build_successful_call_response(result)
-
-	#def copy_file_to_site
-
 	def sync_content(self,siteId,syncFrom):
 
 		if self.sites_config[siteId]["mountUnit"]:
@@ -347,16 +356,23 @@ class EasySitesManager:
 
 	def manage_systemd_status(self,systemdUnit,action):
 
+		if action=="start":
+			code_ok=EasySitesManager.MOUNT_CONTENT_SUCCESSFULL
+			code_error=EasySitesManager.MOUNT_CONTENT_ERROR
+		else:
+			code_ok=EasySitesManager.UNMOUNT_CONTENT_SUCCESSFULL
+			code_error=EasySitesManager.UNMOUNT_CONTENT_ERROR
+		
 		if os.path.exists(os.path.join(self.systemdDest,systemdUnit)):
 			tmpSystemdUnit="'%s'"%systemdUnit
 			cmd="systemctl %s %s"%(action,tmpSystemdUnit)
 			try:
 				p=subprocess.run(cmd,shell=True,check=True)
-				result={"status":True,"msg":"%s systemdUnit successfully"%action,"code":"","data":""}
+				result={"status":True,"msg":"%s systemdUnit successfully"%action,"code":code_ok,"data":""}
 			except subprocess.CalledProcessError as e:
-				result={"status":False,"msg":"%s systemdUnit error:%s"%(action,str(e)),"code":"","data":""}
+				result={"status":False,"msg":"%s systemdUnit error:%s"%(action,str(e)),"code":code_error,"data":""}
 		else:
-			result={"status":False,"msg":"%s systemdUnit error: Unit not exists%s"%action,"code":"","data":""}
+			result={"status":False,"msg":"%s systemdUnit error: Unit not exists%s"%action,"code":code_error,"data":""}
 
 		return n4d.responses.build_successful_call_response(result)
 	
@@ -364,16 +380,23 @@ class EasySitesManager:
 
 	def manage_auto_mount(self,systemdUnit,auto_mount):
 
+		if auto_mount=="enable":
+			code_ok=EasySitesManager.AUTOMOUNT_ENABLE_SUCCESSFULL
+			code_error=EasySitesManager.AUTOMOUNT_ENABLE_ERROR
+		else:
+			code_ok=EasySitesManager.AUTOMOUNT_DISABLE_SUCCESSFULL
+			code_error=EasySitesManager.AUTOMOUNT_DISABLE_ERROR
+
 		if os.path.exists(os.path.join(self.systemdDest,systemdUnit)):
 			tmpSystemdUnit="'%s'"%systemdUnit
 			cmd="systemctl %s %s"%(auto_mount,tmpSystemdUnit)
 			try:
 				p=subprocess.run(cmd,shell=True,check=True)
-				result={"status":True,"msg":"%s systemdUnit successfully"%auto_mount,"code":"","data":""}
+				result={"status":True,"msg":"%s systemdUnit successfully"%auto_mount,"code":code_ok,"data":""}
 			except subprocess.CalledProcessError as e:
-				result={"status":False,"msg":"%s systemdUnit error:%s"%(auto_mount,str(e)),"code":"","data":""}
+				result={"status":False,"msg":"%s systemdUnit error:%s"%(auto_mount,str(e)),"code":code_error,"data":""}
 		else:
-			result={"status":False,"msg":"%s systemdUnit error: Unit not exits%s"%autoRunr,"code":"","data":""}
+			result={"status":False,"msg":"%s systemdUnit error: Unit not exits%s"%autoRunr,"code":code_error,"data":""}
 
 		return n4d.responses.build_successful_call_response(result)
 
@@ -587,8 +610,9 @@ class EasySitesManager:
 			if os.path.exists(self.backup_path):
 				shutil.rmtree(self.backup_path)
 
-		if os.path.exists(pixbuf_path):
-			os.remove(pixbuf_path)	
+		if pixbuf_path!=None:
+			if os.path.exists(pixbuf_path):
+				os.remove(pixbuf_path)	
 
 	#def _remove_tmp_site_backup					
 
@@ -618,7 +642,7 @@ class EasySitesManager:
 			
 	#def _undo_edit_changes
 				
-	def _get_actions_todo(self,info,origId,requiredSync):
+	def _get_actions_todo(self,info,origId,requiredSync,pixbuf_path):
 
 		actions=[]
 		
@@ -627,24 +651,24 @@ class EasySitesManager:
 		if info["id"]!=origId:
 			actions.append("rename")
 		else:
-			if info["visibility"]!=self.sites_config[origId]["visibility"] or info["description"]!=self.sites_config[origId]["description"]:
+			if info["visibility"]!=self.sites_config[origId]["visibility"]:
+				actions.append("visibility")
+			
+			if info["description"]!=self.sites_config[origId]["description"]:
 				actions.append("site_config")
 
-			if info["image"]["img_path"]!=self.sites_config[origId]["image"]["img_path"]:
+			if pixbuf_path != None:
 				icon=True
 				actions.append("icon")
 
-			if info["mountUnit"]!=self.sites_config[origId]["mountUnit"]:
-				actions.append("mount_config")
+			if info["sync_folder"]!=self.sites_config[origId]["sync_folder"]:
+				actions.append("sync_content")
 			else:
-				if info["sync_folder"]!=self.sites_config[origId]["sync_folder"]:
+				if not info["mountUnit"] and requiredSync:
 					actions.append("sync_content")
 				else:
-					if not info["mountUnit"] and requiredSync:
-						actions.append("sync_content")
-					else:
-						if info["auto_mount"]!=self.sites_config[origId]["auto_mount"]:
-							actions.append("manage_auto_mount")
+					if info["auto_mount"]!=self.sites_config[origId]["auto_mount"]:
+						actions.append("manage_auto_mount")
 		
 		return actions	
 
@@ -713,7 +737,7 @@ class EasySitesManager:
 
 		try:
 			shutil.copytree(syncFrom,destPath,dirs_exist_ok=True)
-			result={"status":True,"msg":"Content synchronized successfully","code":EasySitesManager.SYNC_CONTENT_CORRECT,"data":""}	
+			result={"status":True,"msg":"Content synchronized successfully","code":EasySitesManager.SYNC_CONTENT_SUCCESSFULL,"data":""}	
 		except Exception as e:
 			result={"status":False,"msg":str(e),"code":EasySitesManager.SYNC_CONTENT_ERROR,"data":""}
 
@@ -730,7 +754,7 @@ class EasySitesManager:
 				ret=self.manage_systemd_status(systemdUnit,"start").get('return',None)
 
 		if ret["status"]:
-			result={"status":True,"msg":"Mount unit successfully","code":EasySitesManager.MOUNT_CONTENT_CORRECT,"data":""}
+			result={"status":True,"msg":"Mount unit successfully","code":EasySitesManager.MOUNT_CONTENT_SUCCESSFULL,"data":""}
 		else:
 			result={"status":False,"msg":ret["msg"],"code":EasySitesManager.MOUNT_CONTENT_ERROR,"data":""}
 
