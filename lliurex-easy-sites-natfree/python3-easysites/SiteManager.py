@@ -219,9 +219,10 @@ class SiteManager(object):
 	
 		elif action in ["sync","visibility","mount"]:
 			info=self.sitesConfig[data[0]]
+			'''
 			if self.origImagePath!="":
 				info["image"]["img_path"]=self.origImagePath
-		
+			'''
 		if completeData:
 			newImage=info["image"]["img_path"]
 			info.update(self._formatData(info,action))
@@ -336,7 +337,7 @@ class SiteManager(object):
 				return {"result":False,"code":SiteManager.IMAGE_FILE_MISSING_ERROR,"data":""}
 		
 		if not data["mountUnit"]:
-			if not self.freeSpaceChecked[0]:
+			if len(self.freeSpaceChecked)>0 and not self.freeSpaceChecked[0]:
 				return {"result":False,"code":SiteManager.FREE_SPACE_ERROR,"data":""}
 		
 		if checkImage==None:

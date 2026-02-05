@@ -348,6 +348,7 @@ class Bridge(QObject):
 		self.siteToLoad=""
 		self.onlySync=False
 		self.requiredSync=False
+		self.checkContentSize=False
 
 		if self.folderFromMenu==None:
 			self.core.mainStack.closePopUp=[False,NEW_SITE_CONFIG]
@@ -387,6 +388,7 @@ class Bridge(QObject):
 		self.freeSpaceChecked=Bridge.siteManager.freeSpaceChecked
 		self.showFreeSpaceError=False
 		self.showFreeSpaceWarning=False
+		self.checkContentSize=False
 
 	#def _initializeVars
 
@@ -600,10 +602,13 @@ class Bridge(QObject):
 			self.currentSiteConfig["sync_folder"]=value
 			self.changesInSite=True
 			self.requiredSync=True
+			if not self.currentSiteConfig["mountUnit"]:
+				self.checkContentSize=True
 		else:
 			if not self.currentSiteConfig["mountUnit"]:
 				self.changesInSite=True
 				self.requiredSync=True
+				self.checkContentSize=True
 
 		if os.path.exists(value):
 			self.canMount=True
@@ -702,14 +707,15 @@ class Bridge(QObject):
 	def applySiteChanges(self):
 
 		self.canApplyContent=True
-		if not self.currentSiteConfig["mountUnit"]:
-			self.freeSpaceChecked=Bridge.siteManager.checkFreeSpace(self.currentSiteConfig["sync_folder"])
-			if not self.freeSpaceChecked[0]:
-				self.showFreeSpaceError=True
-				self.canApplyContent=False
-			else:
-				self.showFreeSpaceWarning=True
-				self.canApplyContent=False
+		if self.currentSiteConfig["sync_folder"]!="":
+			if not self.currentSiteConfig["mountUnit"] and self.checkContentSize:
+				self.freeSpaceChecked=Bridge.siteManager.checkFreeSpace(self.currentSiteConfig["sync_folder"])
+				if not self.freeSpaceChecked[0]:
+					self.showFreeSpaceError=True
+					self.canApplyContent=False
+				else:
+					self.showFreeSpaceWarning=True
+					self.canApplyContent=False
 
 		if self.canApplyContent:
 			self._applySiteChanges()
