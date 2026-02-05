@@ -8,14 +8,14 @@ Standards-Version: 4.1.2
 
 Package: lliurex-easy-sites
 Architecture: all
-Depends: n4d,n4d-lliurex-base,python3-jinja2,python3-n4d-client
+Depends: n4d,n4d-lliurex-base,python3-jinja2,python3-n4d-client,python3-pil,python3-cairosvg, n4d-qt-agent, python3-pyside2.qtqml, python3-pyside2.qtquick, python3-pyside2.qtgui, python3-pyside2.qtwidgets, python3-pyside2.qtquickwidgets
 Recommends:lliurex-easysites-zerocenter-files(=${binary:Version})
 Description: Contains lliurex-easy-sites
  This package contains the : lliurex-easy-sites gui
 
 Package: n4d-easysites
 Architecture: all
-Depends: ${misc:Depends}, ${python3:Depends},n4d, n4d-server-plugins
+Depends: ${misc:Depends}, ${python3:Depends},n4d
 Description: Easy Sites plugin
   Plugins supporting easy sites functionality
 
@@ -25,8 +25,15 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, zero-center
 Description: Files to zero-center 
  Provides files to zero-center: app, zmd and banner files
 
-Package: lliurex-easy-sites-adi
-Architecture:all
-Depends: ${shlibs:Depends}, ${misc:Depends}, lliurex-easy-sites, apache2
-Description: Contains lliurex-easy-sites-adi
- Provides all necessary to run lliurex-easy-sites in adi
+Package: lliurex-easy-sites-natfree
+Architecture: all
+Depends: n4d,n4d-lliurex-base,python3-jinja2,python3-n4d-client,python3-pil,python3-cairosvg, n4d-qt-agent, python3-pyside2.qtqml, python3-pyside2.qtquick, python3-pyside2.qtgui, python3-pyside2.qtwidgets, python3-pyside2.qtquickwidgets,lliurex-apache-config,n4d-easysites-natfree
+Recommends:lliurex-easysites-zerocenter-files(=${binary:Version})
+Description: Contains lliurex-easy-sites
+ This package contains the : lliurex-easy-sites gui
+
+Package: n4d-easysites-natfree
+Architecture: all
+Depends: ${misc:Depends}, ${python3:Depends},n4d
+Description: Easy Sites plugin
+  Plugins supporting easy sites functionality

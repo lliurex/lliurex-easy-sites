@@ -1,8 +1,20 @@
 #!/bin/bash
 
-xgettext --join-existing ./lliurex-easy-sites/python3-easysites/MainWindow.py -o ./translations/lliurex-easy-sites.pot
-xgettext --join-existing ./lliurex-easy-sites/python3-easysites/SiteBox.py -o ./translations/lliurex-easy-sites.pot
-xgettext --join-existing ./lliurex-easy-sites/python3-easysites/EditBox.py -o ./translations/lliurex-easy-sites.pot
-xgettext --join-existing ./lliurex-easy-sites/python3-easysites/rsrc/easy-sites.ui -o ./translations/lliurex-easy-sites.pot
+xgettext --join-existing -kde -ki18nd:2 ./lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml -o ./translations/lliurex-easy-sites/lliurex-easy-sites.pot
+xgettext --join-existing -kde -ki18nd:2 ./lliurex-easy-sites/python3-easysites/rsrc/ImageSelector.qml -o ./translations/lliurex-easy-sites/lliurex-easy-sites.pot
+xgettext --join-existing -kde -ki18nd:2 ./lliurex-easy-sites/python3-easysites/rsrc/ListDelegateSiteItem.qml -o ./translations/lliurex-easy-sites/lliurex-easy-sites.pot
+xgettext --join-existing -kde -ki18nd:2 ./lliurex-easy-sites/python3-easysites/rsrc/LoadWaiting.qml -o ./translations/lliurex-easy-sites/lliurex-easy-sites.pot
+xgettext --join-existing -kde -ki18nd:2 ./lliurex-easy-sites/python3-easysites/rsrc/MainOptions.qml -o ./translations/lliurex-easy-sites/lliurex-easy-sites.pot
+xgettext --join-existing -kde -ki18nd:2 ./lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml -o ./translations/lliurex-easy-sites/lliurex-easy-sites.pot
+xgettext --join-existing -kde -ki18nd:2 ./lliurex-easy-sites/python3-easysites/rsrc/SitesOptions.qml -o ./translations/lliurex-easy-sites/lliurex-easy-sites.pot
+xgettext --join-existing -kde -ki18nd:2 ./lliurex-easy-sites/python3-easysites/rsrc/SitesList.qml -o ./translations/lliurex-easy-sites/lliurex-easy-sites.pot
+xgettext --join-existing -kde -ki18nd:2 ./lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml -o ./translations/lliurex-easy-sites/lliurex-easy-sites.pot
+
+
+
+
+
+
+
 
 

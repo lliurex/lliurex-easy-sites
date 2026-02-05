@@ -1,0 +1,23 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=lliurex-easy-sites
+Name[es]=Creación de lugares Web
+Name[ca]=Creació de llocs Web
+Name[ca_ES]=Creació de llocs Web
+Name[ca_ES@valencia]=Creació de llocs Web
+Name[ca_ES.UTF-8@valencia]=Creació de llocs Web
+Comment=Creación de lugares Web
+Comment[es]=Creación de los sitios web de la pagina del servidor
+Comment[ca]=Creació del llocs web a la pàgina del servidor
+Comment[ca_ES]=Creació del llocs web a la pàgina del servidor
+Comment[ca_ES@valencia]=Creació del llocs web a la pàgina del servidor
+Comment[ca_ES.UTF-8@valencia]=Creació del llocs web a la pàgina del servidor
+Exec=lliurex-easy-sites
+TryExec=lliurex-easy-sites
+Terminal=false
+Icon=lliurex-easy-sites
+Type=Application
+GenericName=lliurex-easy-sites
+NoDisplay=true
+Categories=Network;

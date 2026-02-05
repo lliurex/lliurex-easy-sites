@@ -1,0 +1,85 @@
+{
+    "SETUP": {
+        "type": "python",
+        "path": "EasySitesManager.py",
+        "class": "EasySitesManager"
+    },
+    "METHODS": {
+        "read_conf": {
+            "allowed_groups": [
+                "*",
+                "anonymous"
+            ]
+        },
+        "write_conf": {
+            "allowed_groups": [
+                "sudo",
+                "admins",
+                "teachers"
+            ]
+        },
+        "create_new_site": {
+            "allowed_groups": [
+                "sudo",
+                "admins",
+                "teachers"
+            ]
+        },
+        "edit_site": {
+            "allowed_groups": [
+                "sudo",
+                "admins",
+                "teachers"
+            ]
+        },
+        "delete_site": {
+            "allowed_groups": [
+                "sudo",
+                "admins",
+                "teachers"
+            ]
+        },
+        "change_site_visibility": {
+            "allowed_groups": [
+                "sudo",
+                "admins",
+                "teachers"
+            ]
+        },
+        "delete_all_sites":{
+            "allowed_groups":[
+                "sudo",
+                "admins",
+                "teachers"
+            ]
+        },
+        "change_all_sites_visibility": {
+            "allowed_groups": [
+                "sudo",
+                "admins",
+                "teachers"
+            ]
+        },
+        "sync_content":{
+            "allowed_groups":[
+                "sudo",
+                "admins",
+                "teachers"
+            ]
+        },
+        "manage_systemd_status":{
+            "allowed_groups":[
+                "sudo",
+                "admins",
+                "teachers"    
+            ]
+        },
+        "manage_auto_mount":{
+           "allowed_groups":[
+                "sudo",
+                "admins",
+                "teachers"    
+            ]
+        }
+    }
+}
