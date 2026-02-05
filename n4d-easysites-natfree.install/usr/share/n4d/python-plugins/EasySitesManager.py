@@ -51,7 +51,8 @@ class EasySitesManager:
 		self.icons_path="/var/www/easy-sites/icons"
 		self.site_folder="/usr/share/lliurex-easy-sites/easy-sites"
 		self.sites_template="/usr/share/lliurex-easy-sites/templates/sites_template.html"
-		self.sites_path="/var/www/easy-sites/sites.html"
+		self.sites_html_template="/usr/share/lliurex-easy-sites/templates/sites.html"
+		self.sites_html="/var/www/easy-sites/sites.html"
 		self.systemdUnitTemplate="/usr/share/lliurex-easy-sites/templates/systemd_mount.template"
 		self.systemdDest="/etc/systemd/system"
 		
@@ -408,6 +409,8 @@ class EasySitesManager:
 			os.makedirs(self.net_folder)
 			self._fix_folder_perm()
 
+		if not os.path.exists(self.sites_html):
+			shutil.copy2(self.sites_html_template,self.sites_html)
 		'''
 		if not os.path.isdir(self.var_folder):
 			shutil.copytree(self.site_folder,self.var_folder)
@@ -704,7 +707,7 @@ class EasySitesManager:
 
 			content=content.replace("{{SITES}}",sites_content)
 
-			with open(self.sites_path,'w') as fd:
+			with open(self.sites_html,'w') as fd:
 				fd.write(content)
 
 			return True
