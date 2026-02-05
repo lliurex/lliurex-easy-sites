@@ -1,8 +1,7 @@
 function loadSites() {
     fetch('sites.html')
         .then(response => {
-            // Verificar si la petición fue exitosa (status 200-299)
-            //if (!response.ok) throw new Error('Error de red: ' + response.status);
+            if (!response.ok) throw new Error('sites html not found: ' + response.status);
             return response.text();
         })
         .then(text => {
