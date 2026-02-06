@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-05 10:39+0100\n"
+"POT-Creation-Date: 2026-02-06 13:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -164,6 +164,15 @@ msgstr ""
 msgid "Unabled to create a site with selected folder"
 msgstr ""
 
+#: lliurex-easy-sites-natfree/python3-easysites/rsrc/MainOptions.qml:25
+#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteOptions.qml:18
+msgid "Sites"
+msgstr ""
+
+#: lliurex-easy-sites-natfree/python3-easysites/rsrc/MainOptions.qml:37
+msgid "Help"
+msgstr ""
+
 #: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:16
 msgid "New Site"
 msgstr ""
@@ -205,7 +214,7 @@ msgid "Mount selected content in site folder"
 msgstr ""
 
 #: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:227
-msgid "Unit mount"
+msgid "Content mount:"
 msgstr ""
 
 #: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:236
@@ -319,10 +328,6 @@ msgstr ""
 
 #: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:461
 msgid "The selected content exceeds the available space limit"
-msgstr ""
-
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteOptions.qml:18
-msgid "Sites"
 msgstr ""
 
 #: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesList.qml:32

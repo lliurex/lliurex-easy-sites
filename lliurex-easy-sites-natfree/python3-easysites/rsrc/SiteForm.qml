@@ -224,7 +224,7 @@ Rectangle{
 
             Text{
                 id:autoMount
-                text:i18nd("lliurex-easy-sites","Unit mount")
+                text:i18nd("lliurex-easy-sites","Content mount:")
                 Layout.alignment:Qt.AlignRight
                 Layout.topMargin:15
                 visible:mountOption.checked
