@@ -53,8 +53,9 @@ class EasySitesManager:
 		self.sites_template="/usr/share/lliurex-easy-sites/templates/sites_template.html"
 		self.sites_html_template="/usr/share/lliurex-easy-sites/templates/sites.html"
 		self.sites_html="/var/www/easy-sites/sites.html"
-		self.systemdUnitTemplate="/usr/share/lliurex-easy-sites/templates/systemd_mount.template"
+		self.systemdUnit_template="/usr/share/lliurex-easy-sites/templates/systemd_mount.template"
 		self.systemdDest="/etc/systemd/system"
+		self.index_mount_template="/usr/share/lliurex-easy-sites/templates/index_mount_template.html"
 		
 	def read_conf(self):
 		
@@ -112,7 +113,7 @@ class EasySitesManager:
 
 	def create_new_site(self,info,pixbuf_path):
 
-		result_create=self._create_new_site_folder(info["id"])
+		result_create=self._create_new_site_folder(info["id"],info["mountUnit"])
 		error=False
 		if result_create['status']:
 			result_icon=self._create_site_icon(info["id"],pixbuf_path)
@@ -254,7 +255,7 @@ class EasySitesManager:
 
 				return self._delete_site_conf(siteId,createHtml)
 			else:
-				return ret
+				return n4d.responses.build_successful_call_response(ret)
 
 		except Exception as e:
 			print(str(e))
@@ -409,15 +410,6 @@ class EasySitesManager:
 			os.makedirs(self.net_folder)
 			self._fix_folder_perm()
 
-		if not os.path.exists(self.sites_html):
-			shutil.copy2(self.sites_html_template,self.sites_html)
-		'''
-		if not os.path.isdir(self.var_folder):
-			shutil.copytree(self.site_folder,self.var_folder)
-			cmd="ln -s /var/www/easy-sites /var/www/html/easy-sites"
-			os.system(cmd)
-		'''
-	
 	#def _create_dirs			
 	
 	def _create_conf(self):
@@ -458,7 +450,7 @@ class EasySitesManager:
 	
 	#def _delete_site_conf
 
-	def _create_new_site_folder(self,siteId):
+	def _create_new_site_folder(self,siteId,mountUnit):
 
 		try:
 			new_site="easy-"+siteId
@@ -466,6 +458,10 @@ class EasySitesManager:
 			
 			if not os.path.isdir(new_site_path):
 				os.makedirs(new_site_path)
+
+			if mountUnit:
+				if os.path.exists(new_site_path):
+					shutil.copy2(self.index_mount_template,os.path.join(new_site_path,"index.html"))
 		
 			result={"status":True,"msg":"Site folder create successfully","code":"","data":""}
 								
@@ -683,36 +679,42 @@ class EasySitesManager:
 		available_sites=os.listdir(self.config_dir)
 		sites_content=""
 
-		for item in available_sites:
-			item_path=os.path.join(self.config_dir,item)
+		if len(available_sites)>0:
+			for item in available_sites:
+				item_path=os.path.join(self.config_dir,item)
 
-			if os.path.isfile(item_path) and 'easy-' in item_path:
-				try:
-					with open(item_path,'r') as fd:
-						data=json.load(fd)
+				if os.path.isfile(item_path) and 'easy-' in item_path:
+					try:
+						with open(item_path,'r') as fd:
+							data=json.load(fd)
 
-					if data["visibility"]:
-						sites_content+='  <a href="%s" title="%s">\n'%(data["url"],data["name"])
-						sites_content+='     <div class="cardlink">\n'
-						sites_content+='         <img class="cardicon" src="icons/%s" alt="">\n'%data["icon"]
-						sites_content+='         <div class="cardname">%s</div>\n'%data["name"]
-						sites_content+='     </div>\n'
-						sites_content+='  </a>\n'
-				except Exception as e:
-					pass
+						if data["visibility"]:
+							sites_content+='  <a href="%s" title="%s">\n'%(data["url"],data["name"])
+							sites_content+='     <div class="cardlink">\n'
+							sites_content+='         <img class="cardicon" src="icons/%s" alt="">\n'%data["icon"]
+							sites_content+='         <div class="cardname">%s</div>\n'%data["name"]
+							sites_content+='     </div>\n'
+							sites_content+='  </a>\n'
+					except Exception as e:
+						pass
 
-		try:
-			with open(self.sites_template,'r') as fd:
-				content=fd.read()
+			try:
+				with open(self.sites_template,'r') as fd:
+					content=fd.read()
 
-			content=content.replace("{{SITES}}",sites_content)
+				content=content.replace("{{SITES}}",sites_content)
 
-			with open(self.sites_html,'w') as fd:
-				fd.write(content)
+				with open(self.sites_html,'w') as fd:
+					fd.write(content)
+
+				return True
+			except Exception as e:
+				return False
+		else:
+			if os.path.exists(self.sites_html):
+				os.remove(self.sites_html)
 
 			return True
-		except Exception as e:
-			return False
 
 	#def _create_sites_html
 	
@@ -776,7 +778,7 @@ class EasySitesManager:
 				abort=not result["status"]
 			
 			if not abort:
-				shutil.copy(self.systemdUnitTemplate,tmpFile)
+				shutil.copy(self.systemdUnit_template,tmpFile)
 				configFile=configparser.ConfigParser()
 				configFile.optionxform=str
 				configFile.read(tmpFile)
