@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 13:27+0100\n"
+"POT-Creation-Date: 2026-02-09 10:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -303,6 +303,11 @@ msgstr ""
 #: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:162
 msgid ""
 "If cannot be copied because the available space on the system would only be "
+msgstr ""
+
+#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:428
+#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:162
+msgid "bellow the 5 GB security limit."
 msgstr ""
 
 #: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:432

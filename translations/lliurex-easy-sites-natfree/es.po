@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 13:27+0100\n"
-"PO-Revision-Date: 2026-02-06 13:28+0100\n"
+"POT-Creation-Date: 2026-02-09 10:51+0100\n"
+"PO-Revision-Date: 2026-02-09 10:52+0100\n"
 "Last-Translator: lliurex <lliurex@gva.es>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -313,8 +313,12 @@ msgstr "No"
 msgid ""
 "If cannot be copied because the available space on the system would only be "
 msgstr ""
-"No puede copiarse porque el espacio disponible en el sistema sería inferior "
-"a "
+"No puede copiarse porque el espacio disponible en el sistema sería sólo de "
+
+#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:428
+#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:162
+msgid "bellow the 5 GB security limit."
+msgstr "inferior al límite de seguridad de 5 GB."
 
 #: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:432
 #: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:166
