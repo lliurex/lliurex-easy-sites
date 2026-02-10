@@ -136,7 +136,7 @@ Rectangle {
                         statusFilter:sitesOptionsStackBridge.filterStatusValue
 
                         delegate: ListDelegateSiteItem{
-                            width:sitesTable.width
+                            width:sitesTable.width-18
                             siteId:model.id
                             siteImg:model.img
                             siteName:model.name
@@ -145,6 +145,9 @@ Rectangle {
                             isVisible:model.isVisible
                             siteUrl:model.url
                             siteFolder:model.folder
+                            mountUnit:model.mountUnit
+                            canMount:model.canMount
+                            isActive:model.isActive
                         }
                     }
                     Kirigami.PlaceholderMessage { 

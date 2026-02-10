@@ -130,7 +130,7 @@ Rectangle{
             }
             Text{
                 id:folderLabel
-                text:i18nd("lliurex-easy-sites","Sync content from:")
+                text:i18nd("lliurex-easy-sites","Get content from:")
                 Layout.alignment:Qt.AlignRight
                 Layout.topMargin:15
             }
@@ -143,7 +143,7 @@ Rectangle{
                     id:siteFolder
                     text:{
                         if (siteStackBridge.siteFolder==""){
-                            i18nd("lliurex-easy-sites","<specify the folder to sync content>")
+                            i18nd("lliurex-easy-sites","<specify the folder to get content>")
                         }else{
                             siteStackBridge.siteFolder
                         }
@@ -171,6 +171,87 @@ Rectangle{
                     ToolTip.text:i18nd("lliurex-easy-sites","Click to select folder")
                     onClicked:siteFolderDialog.open()
                 }
+            }
+
+            Text{
+                id:syncOption
+                text:""
+            }
+            ButtonGroup{
+                buttons:typeOptions.children
+            }
+
+            Column{
+                id:typeOptions
+                spacing:5
+                Layout.alignment:Qt.AlignTop
+
+                RadioButton{
+                    id:copyOption
+                    checked:!siteStackBridge.mountUnit
+                    text:i18nd("lliurex-easy-sites","Copy selected content to site folder")
+                    enabled:{
+                        if (siteStackBridge.actionType=="edit"){
+                            false
+                        }else{
+                            siteStackBridge.canMount
+                        }
+                    }
+                    onToggled:{
+                        if (checked){
+                            siteStackBridge.updateMountValue(false)
+                        }
+                    }
+                }
+
+                RadioButton{
+                    id:mountOption
+                    checked:siteStackBridge.mountUnit
+                    text:i18nd("lliurex-easy-sites","Mount selected content in site folder")
+                    enabled:{
+                        if (siteStackBridge.actionType=="edit"){
+                            false
+                        }else{
+                            siteStackBridge.canMount
+                        }
+                    }
+                    onToggled:{
+                        if (checked){
+                            siteStackBridge.updateMountValue(true)
+                        }
+                    }
+                }
+            }
+
+            Text{
+                id:autoMount
+                text:i18nd("lliurex-easy-sites","Content mount:")
+                Layout.alignment:Qt.AlignRight
+                Layout.topMargin:15
+                visible:mountOption.checked
+                enabled:siteStackBridge.canMount
+            }
+
+            CheckBox {
+                id:autoMountCb
+                text:i18nd("lliurex-easy-sites","Automatic mounting at system startup")
+                checked:{
+                    if (siteStackBridge.autoMount=="enable"){
+                        true
+                    }else{
+                        false
+                    }
+                }
+                font.pointSize: 10
+                focusPolicy: Qt.NoFocus
+                visible:mountOption.checked
+                enabled:siteStackBridge.canMount
+                onToggled:{
+                   siteStackBridge.manageAutoMount(checked)
+                }
+
+                Layout.alignment:Qt.AlignLeft
+                Layout.topMargin:15
             }
 
             Text{
@@ -285,23 +366,98 @@ Rectangle{
         }
     }
 
+    ChangesDialog{
+        id:removeSiteDialog
+        dialogIcon:"/usr/share/icons/breeze/status/64/dialog-warning.svg"
+        dialogMsg:{
+            if (sitesOptionsStackBridge.showRemoveSiteDialog[1]){
+                i18nd("lliurex-easy-sites","All sites will be deleted.\nDo yo want to continue?")
+            }else{
+                i18nd("lliurex-easy-sites","The site will be deleted.\nDo yo want to continue?")
+            }
+        }
+        dialogVisible:sitesOptionsStackBridge.showRemoveSiteDialog[0]
+        dialogWidth:320
+        btnAcceptVisible:false
+        btnAcceptText:""
+        btnDiscardText:i18nd("lliurex-easy-sites","Accept")
+        btnDiscardIcon:"dialog-ok.svg"
+        btnDiscardVisible:true
+        btnCancelText:i18nd("lliurex-easy-sites","Cancel")
+        btnCancelIcon:"dialog-cancel.svg"
+        Connections{
+           target:removeSiteDialog
+           function onDiscardDialogClicked(){
+                sitesOptionsStackBridge.manageRemoveSiteDialog('Accept')         
+           }
+           function onRejectDialogClicked(){
+                sitesOptionsStackBridge.manageRemoveSiteDialog('Cancel')       
+           }
+
+        }
+    }
+
+    ChangesDialog{
+        id:freeSpaceErrorWarning
+        dialogIcon:"/usr/share/icons/breeze/status/64/dialog-warning.svg"
+        dialogVisible:siteStackBridge.showFreeSpaceWarning
+        dialogMsg:i18nd("lliurex-easy-sites","The size of selected content is ")+siteStackBridge.freeSpaceChecked[1]+".\n"+i18nd("lliurex-easy-sites","If copied this content the available space on the system will be ")+siteStackBridge.freeSpaceChecked[3]+".\n"+i18nd("lliurex-easy-sites","Do you want to continue?.")
+        dialogWidth:500
+        btnAcceptVisible:false
+        btnDiscardVisible:true
+        btnDiscardText:i18nd("lliurex-easy-sites","Yes")
+        btnDiscardIcon:"dialog-ok.svg"
+        btnCancelText:i18nd("lliurex-easy-sites","No")
+        btnCancelIcon:"dialog-cancel.svg"
+        Connections{
+            target:freeSpaceErrorWarning
+            function onDiscardDialogClicked(){
+                siteStackBridge.manageFreeSpaceDialogWarning("Accept")           
+            } 
+            function onRejectDialogClicked(){
+                siteStackBridge.manageFreeSpaceDialogWarning("Cancel")       
+            }
+        }
+    }
+
+    ChangesDialog{
+        id:freeSpaceErrorDialog
+        dialogIcon:"/usr/share/icons/breeze/status/64/dialog-warning.svg"
+        dialogVisible:siteStackBridge.showFreeSpaceError
+        dialogMsg:i18nd("lliurex-easy-sites","The size of selected content is ")+siteStackBridge.freeSpaceChecked[1]+".\n"+i18nd("lliurex-easy-sites","If cannot be copied because the available space on the system would only be ")+siteStackBridge.freeSpaceChecked[3]+", "+i18nd("lliurex-easy-sites","bellow the 5 GB security limit.")
+        dialogWidth:500
+        btnAcceptVisible:false
+        btnDiscardVisible:false
+        btnCancelText:i18nd("lliurex-easy-sites","Close")
+        btnCancelIcon:"dialog-close.svg"
+        Connections{
+            target:freeSpaceErrorDialog
+            function onRejectDialogClicked(){
+                siteStackBridge.closeFreeSpaceDialogError()       
+            }
+        }
+    }
+
     function getMessageText(){
 
          switch (siteStackBridge.showSiteFormMessage[1]){
-            case -1:
+            case -19:
                 var msg=i18nd("lliurex-easy-sites","You must indicate a name for the site");
                 break;
-            case -2:
+            case -20:
                 var msg=i18nd("lliurex-easy-sites","The name site is duplicate");
                 break;
-            case -5:
+            case -21:
                 var msg=i18nd("lliurex-easy-sites","Image file is not correct");
                 break;
-            case -7:
+            case -22:
                 var msg=i18nd("lliurex-easy-sites","You must indicate a image file");
                 break;
-            case -8:
+            case -23:
                 var msg=i18nd("lliurex-easy-sites","You must indicate a folder to sync content");
+                break;
+            case -25:
+                var msg=i18nd("lliurex-easy-sites","The selected content exceeds the available space limit")
                 break;
             default:
                 var msg=""

@@ -10,9 +10,9 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 from . import SitesModel
 
-SHOW_ALL_SITES=10
-HIDE_ALL_SITES=11
-REMOVING_ALL_SITES=9
+SHOW_ALL_SITES=23
+HIDE_ALL_SITES=24
+REMOVING_ALL_SITES=25
 
 
 class ChangeAllSitesStatus(QThread):
@@ -71,7 +71,7 @@ class Bridge(QObject):
 	
 	def loadConfig(self):
 
-		self._updateSitesModel()
+		self.updateSitesModel()
 		self._manageOptions()
 	
 	#def loadConfig
@@ -159,15 +159,16 @@ class Bridge(QObject):
 
 	#def _setFilterStatusValue
 
-	def _updateSitesModel(self):
+	def updateSitesModel(self):
 
 		ret=self._sitesModel.clear()
 		sitesEntries=Bridge.siteManager.sitesConfigData
+
 		for item in sitesEntries:
 			if item["id"]!="":
-				self._sitesModel.appendRow(item["id"],item["img"],item["name"],item["createdBy"],item["updatedBy"],item["isVisible"],item["url"],item["folder"])
-	
-	#def _updatesitesModel
+				self._sitesModel.appendRow(item["id"],item["img"],item["name"],item["createdBy"],item["updatedBy"],item["isVisible"],item["url"],item["folder"],item["mountUnit"],item["canMount"],item["isActive"])
+
+	#def updateSitesModel
 
 	@Slot(str)
 	def manageStatusFilter(self,value):
@@ -195,7 +196,7 @@ class Bridge(QObject):
 
 	def _changeSiteStatusRet(self):
 
-		self._updateSitesModel()
+		self.updateSitesModel()
 
 		if self.changeStatus.ret['status']:
 			self.showMainMessage=[True,self.changeStatus.ret["code"],"Ok"]
@@ -248,7 +249,7 @@ class Bridge(QObject):
 
 	def _removeAllSitesProcessRet(self):
 
-		self._updateSitesModel()
+		self.updateSitesModel()
 
 		if self.removeAllSitesProcess.ret['status']:
 			self.showMainMessage=[True,self.removeAllSitesProcess.ret["code"],"Ok"]

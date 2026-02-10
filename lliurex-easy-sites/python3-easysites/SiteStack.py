@@ -8,14 +8,16 @@ import copy
 import signal
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-NEW_SITE_CONFIG=1
-LOAD_SITE_CONFIG=2
-CHECK_DATA=3
-SAVE_DATA=4
-HIDE_SITE=5
-SHOW_SITE=6
-SYNC_CONTENT=7
-DELETE_SITE=8
+NEW_SITE_CONFIG=13
+LOAD_SITE_CONFIG=14
+CHECK_DATA=15
+SAVE_DATA=16
+HIDE_SITE=17
+SHOW_SITE=18
+SYNC_CONTENT=19
+DELETE_SITE=20
+MOUNT_CONTENT=21
+UNMOUNT_CONTENT=22
 
 class LoadSite(QThread):
 
@@ -95,13 +97,21 @@ class Bridge(QObject):
 		self._siteDescription=Bridge.siteManager.siteDescription
 		self._isSiteVisible=Bridge.siteManager.isSiteVisible
 		self._siteFolder=Bridge.siteManager.siteFolder
+		self._mountUnit=Bridge.siteManager.mountUnit
+		self._canMount=Bridge.siteManager.canMount
+		self._autoMount=Bridge.siteManager.autoMount
 		self._siteCurrentOption=0
 		self._showSiteFormMessage=[False,"","Ok"]
 		self._showChangesInSiteDialog=False
 		self._changesInSite=False
 		self._actionType="add"
+		self._freeSpaceChecked=Bridge.siteManager.freeSpaceChecked
+		self._showFreeSpaceError=False
+		self._showFreeSpaceWarning=False
 		self.onlySync=True
 		self.requiredMoveToStack=True
+		self.canSyncContent=True
+		self.canApplyContent=True
 
 	#def _init__
 
@@ -145,7 +155,7 @@ class Bridge(QObject):
 			self._siteDescription=siteDescription
 			self.on_siteDescription.emit()
 
-	#def _setBellSound
+	#def _setSiteDescription
 
 	def _getIsSiteVisible(self):
 
@@ -173,13 +183,55 @@ class Bridge(QObject):
 			self._siteFolder=siteFolder
 			self.on_siteFolder.emit()
 
-	#def _setBellDuration
+	#def _setSiteFolder
+
+	def _getMountUnit(self):
+
+		return self._mountUnit
+
+	#def _getMountUnit
+
+	def _setMountUnit(self,mountUnit):
+
+		if self._mountUnit!=mountUnit:
+			self._mountUnit=mountUnit
+			self.on_mountUnit.emit()
+
+	#def _setMountUnit
+
+	def _getAutoMount(self):
+
+		return self._autoMount
+
+	#def _getAutoMount
+
+	def _setAutoMount(self,autoMount):
+
+		if self._autoMount!=autoMount:
+			self._autoMount=autoMount
+			self.on_autoMount.emit()
+
+	#def _setAutoMount
+
+	def _getCanMount(self):
+
+		return self._canMount
+
+	#def _getCanMount
+
+	def _setCanMount(self,canMount):
+
+		if self._canMount!=canMount:
+			self._canMount=canMount
+			self.on_canMount.emit()
+
+	#def _setCanMount
 
 	def _getSiteCurrentOption(self):
 
 		return self._siteCurrentOption
 
-	#def _getBellCurrentOption	
+	#def _getSiteCurrentOption	
 
 	def _setSiteCurrentOption(self,siteCurrentOption):
 		
@@ -187,7 +239,7 @@ class Bridge(QObject):
 			self._siteCurrentOption=siteCurrentOption
 			self.on_siteCurrentOption.emit()
 
-	#def _setBellCurrentOption
+	#def _setSiteCurrentOption
 
 	def _getShowChangesInSiteDialog(self):
 
@@ -245,6 +297,48 @@ class Bridge(QObject):
 
 	#def _setActionType
 
+	def _getFreeSpaceChecked(self):
+
+		return self._freeSpaceChecked
+
+	#def _getFreeSpaceChecked
+
+	def _setFreeSpaceChecked(self,freeSpaceChecked):
+
+		if self._freeSpaceChecked!=freeSpaceChecked:
+			self._freeSpaceChecked=freeSpaceChecked
+			self.on_freeSpaceChecked.emit()
+
+	#def _setFreeSpaceChecked
+
+	def _getShowFreeSpaceError(self):
+
+		return self._showFreeSpaceError
+
+	#def _getShowFreeSpaceError
+
+	def _setShowFreeSpaceError(self,showFreeSpaceError):
+
+		if self._showFreeSpaceError!=showFreeSpaceError:
+			self._showFreeSpaceError=showFreeSpaceError
+			self.on_showFreeSpaceError.emit()
+
+	#def _setShowFreeSpaceError
+
+	def _getShowFreeSpaceWarning(self):
+
+		return self._showFreeSpaceWarning
+
+	#def _getShowFreeSpaceWarning
+
+	def _setShowFreeSpaceWarning(self,showFreeSpaceWarning):
+
+		if self._showFreeSpaceWarning!=showFreeSpaceWarning:
+			self._showFreeSpaceWarning=showFreeSpaceWarning
+			self.on_showFreeSpaceWarning.emit()
+
+	#def setShowFreeSpaceWarning
+
 	@Slot()
 	def addNewSite(self,folderPath=None):
 
@@ -254,6 +348,7 @@ class Bridge(QObject):
 		self.siteToLoad=""
 		self.onlySync=False
 		self.requiredSync=False
+		self.checkContentSize=False
 
 		if self.folderFromMenu==None:
 			self.core.mainStack.closePopUp=[False,NEW_SITE_CONFIG]
@@ -287,6 +382,13 @@ class Bridge(QObject):
 		self.siteFolder=Bridge.siteManager.siteFolder
 		self.showSiteFormMessage=[False,"","Ok"]
 		self.changesInSite=False
+		self.mountUnit=Bridge.siteManager.mountUnit
+		self.autoMount=Bridge.siteManager.autoMount
+		self.canMount=Bridge.siteManager.canMount
+		self.freeSpaceChecked=Bridge.siteManager.freeSpaceChecked
+		self.showFreeSpaceError=False
+		self.showFreeSpaceWarning=False
+		self.checkContentSize=False
 
 	#def _initializeVars
 
@@ -334,6 +436,7 @@ class Bridge(QObject):
 
 		action="visibility"
 		completeData=False
+
 		self.requiredMoveToStack=False
 		if data[1]:
 			msgCode=SHOW_SITE
@@ -380,12 +483,44 @@ class Bridge(QObject):
 	def syncSiteContent(self,data):
 
 		action="sync"
-		completeData=False
-		self.requiredMoveToStack=False
-		self.saveDataChanges(action,data,completeData,SYNC_CONTENT)
+		self.canSyncContent=True
+		if not Bridge.siteManager.sitesConfig[data[0]]["mountUnit"]:
+			self.dataForSync=data
+			self.freeSpaceChecked=Bridge.siteManager.checkFreeSpace(data[1])
+			if not self.freeSpaceChecked[0]:
+				self.showFreeSpaceError=True
+				self.canSyncContent=False
+			else:
+				self.showFreeSpaceWarning=True
+				self.canSyncContent=False
+		
+		if self.canSyncContent:
+			completeData=False
+			self.requiredMoveToStack=False
+
+			self.saveDataChanges(action,data,completeData,SYNC_CONTENT)
 
 	#def syncSiteContent
 
+	@Slot('QVariantList')
+	def manageMountStatus(self,data):
+
+		action="mount"
+		completeData=False
+
+		self.requiredMoveToStack=False
+		if data[1]:
+			data[1]="start"
+			msgCode=MOUNT_CONTENT
+		else:
+			data[1]="stop"
+			msgCode=UNMOUNT_CONTENT
+
+		self.saveDataChanges(action,data,completeData,msgCode)
+
+	#def manageMountStatus
+
+	@Slot(str)
 	def removeSite(self,siteId):
 
 		action="delete"
@@ -465,9 +600,21 @@ class Bridge(QObject):
 
 		if self.currentSiteConfig["sync_folder"]!=value:
 			self.currentSiteConfig["sync_folder"]=value
+			self.changesInSite=True
+			self.requiredSync=True
+			if not self.currentSiteConfig["mountUnit"]:
+				self.checkContentSize=True
+		else:
+			if not self.currentSiteConfig["mountUnit"]:
+				self.changesInSite=True
+				self.requiredSync=True
+				self.checkContentSize=True
 
-		self.requiredSync=True
-		self.changesInSite=True
+		if os.path.exists(value):
+			self.canMount=True
+		else:
+			self.canMount=False
+			
 	
 	#def updateSiteFolderValue
 
@@ -487,6 +634,48 @@ class Bridge(QObject):
 
 	#def updateIsSiteVisibleValue
 
+	@Slot(bool)
+	def updateMountValue(self,value):
+
+		if value!=self.mountUnit:
+			self.mountUnit=value
+			self.currentSiteConfig["mountUnit"]=self.mountUnit
+
+		if self.currentSiteConfig!=Bridge.siteManager.currentSiteConfig:
+			self.changesInSite=True
+			self.onlySync=False
+		else:
+			self.changesInSite=False
+			self.onlySync=True
+
+	#def updateMountValue
+
+	@Slot(bool)
+	def manageAutoMount(self,value):
+
+		if value:
+			self.autoMount="enable"
+		else:
+			self.autoMount="disable"
+
+		self.currentSiteConfig["auto_mount"]=self.autoMount
+		
+		if self.currentSiteConfig!=Bridge.siteManager.currentSiteConfig:
+			self.changesInSite=True
+			self.onlySync=False
+		else:
+			self.changesInSite=False
+			self.onlySync=True
+
+	#def manageAutoMount
+
+	@Slot()
+	def closeFreeSpaceDialogError(self):
+
+		self.showFreeSpaceError=False
+
+	#def closeFreeSpaceDialogError
+
 	@Slot(str)
 	def manageChangesDialog(self,action):
 
@@ -501,12 +690,37 @@ class Bridge(QObject):
 
 	#def manageChangesDialog
 
+	@Slot(str)
+	def manageFreeSpaceDialogWarning(self,action):
+
+		self.showFreeSpaceWarning=False
+		if action=="Accept":
+			if not self.canApplyContent:
+				self._applySiteChanges()
+			elif not self.canSyncContent:
+				self.requiredMoveToStack=False
+				self.saveDataChanges("sync",self.dataForSync,False,SYNC_CONTENT)
+	
+	#def manageChangesDialog
+
 	@Slot()
 	def applySiteChanges(self):
 
-		self._applySiteChanges()
+		self.canApplyContent=True
+		if self.currentSiteConfig["sync_folder"]!="":
+			if not self.currentSiteConfig["mountUnit"] and self.checkContentSize:
+				self.freeSpaceChecked=Bridge.siteManager.checkFreeSpace(self.currentSiteConfig["sync_folder"])
+				if not self.freeSpaceChecked[0]:
+					self.showFreeSpaceError=True
+					self.canApplyContent=False
+				else:
+					self.showFreeSpaceWarning=True
+					self.canApplyContent=False
 
-	#def applyBellChanges
+		if self.canApplyContent:
+			self._applySiteChanges()
+
+	#def applySiteChanges
 
 	def _applySiteChanges(self):
 
@@ -551,7 +765,7 @@ class Bridge(QObject):
 	def _saveDataRet(self):
 
 		if self.saveData.ret["status"]:
-			self.core.sitesOptionsStack._updateSitesModel()
+			self.core.sitesOptionsStack.updateSitesModel()
 			self.core.sitesOptionsStack.showMainMessage=[True,self.saveData.ret["code"],"Ok"]
 		else:
 			self.core.sitesOptionsStack.showMainMessage=[True,self.saveData.ret["code"],"Error"]	
@@ -600,6 +814,15 @@ class Bridge(QObject):
 	on_siteFolder=Signal()
 	siteFolder=Property(str,_getSiteFolder,_setSiteFolder,notify=on_siteFolder)
 
+	on_mountUnit=Signal()
+	mountUnit=Property(bool,_getMountUnit,_setMountUnit,notify=on_mountUnit)
+
+	on_canMount=Signal()
+	canMount=Property(bool,_getCanMount,_setCanMount,notify=on_canMount)
+
+	on_autoMount=Signal()
+	autoMount=Property(str,_getAutoMount,_setAutoMount,notify=on_autoMount)
+
 	on_isSiteVisible=Signal()
 	isSiteVisible=Property(bool,_getIsSiteVisible,_setIsSiteVisible,notify=on_isSiteVisible)
 
@@ -617,6 +840,15 @@ class Bridge(QObject):
 
 	on_actionType=Signal()
 	actionType=Property(str,_getActionType,_setActionType,notify=on_actionType)
+
+	on_freeSpaceChecked=Signal()
+	freeSpaceChecked=Property('QVariantList',_getFreeSpaceChecked,_setFreeSpaceChecked,notify=on_freeSpaceChecked)
+
+	on_showFreeSpaceError=Signal()
+	showFreeSpaceError=Property(bool,_getShowFreeSpaceError,_setShowFreeSpaceError,notify=on_showFreeSpaceError)
+
+	on_showFreeSpaceWarning=Signal()
+	showFreeSpaceWarning=Property(bool,_getShowFreeSpaceWarning,_setShowFreeSpaceWarning,notify=on_showFreeSpaceWarning)
 
 #class Bridge
 

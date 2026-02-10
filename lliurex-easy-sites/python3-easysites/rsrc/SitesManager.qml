@@ -128,89 +128,145 @@ Rectangle{
         }
     }
 
+     ChangesDialog{
+        id:freeSpaceErrorWarning
+        dialogIcon:"/usr/share/icons/breeze/status/64/dialog-warning.svg"
+        dialogVisible:siteStackBridge.showFreeSpaceWarning
+        dialogMsg:i18nd("lliurex-easy-sites","The size of selected content is ")+siteStackBridge.freeSpaceChecked[1]+".\n"+i18nd("lliurex-easy-sites","If copied this content the available space on the system will be ")+siteStackBridge.freeSpaceChecked[3]+".\n"+i18nd("lliurex-easy-sites","Do you want to continue?.")
+        dialogWidth:500
+        btnAcceptVisible:false
+        btnDiscardVisible:true
+        btnDiscardText:i18nd("lliurex-easy-sites","Yes")
+        btnDiscardIcon:"dialog-ok.svg"
+        btnCancelText:i18nd("lliurex-easy-sites","No")
+        btnCancelIcon:"dialog-cancel.svg"
+        Connections{
+            target:freeSpaceErrorWarning
+            function onDiscardDialogClicked(){
+                siteStackBridge.manageFreeSpaceDialogWarning("Accept")           
+            } 
+            function onRejectDialogClicked(){
+                siteStackBridge.manageFreeSpaceDialogWarning("Cancel")       
+            }
+        }
+    }
+
+    ChangesDialog{
+        id:freeSpaceErrorDialog
+        dialogIcon:"/usr/share/icons/breeze/status/64/dialog-warning.svg"
+        dialogVisible:siteStackBridge.showFreeSpaceError
+        dialogMsg:i18nd("lliurex-easy-sites","The size of selected content is ")+siteStackBridge.freeSpaceChecked[1]+".\n"+i18nd("lliurex-easy-sites","If cannot be copied because the available space on the system would only be ")+siteStackBridge.freeSpaceChecked[3]+", "+i18nd("lliurex-easy-sites","bellow the 5 GB security limit.")
+        dialogWidth:500
+        btnAcceptVisible:false
+        btnDiscardVisible:false
+        btnCancelText:i18nd("lliurex-easy-sites","Close")
+        btnCancelIcon:"dialog-close.svg"
+        Connections{
+            target:freeSpaceErrorDialog
+            function onRejectDialogClicked(){
+                siteStackBridge.closeFreeSpaceDialogError()       
+            }
+        }
+    }
+
    
     function getTextMessage(msgCode){
         switch (msgCode){
-            case -12:
+            case -1:
                 var msg=i18nd("lliurex-easy-sites","Unable to delete the site")
                 break;
-            case -13:
+            case -2:
                 var msg=i18nd("lliurex-easy-sites","Unable to create folder to the site")
                 break;
-            case -14:
+            case -3:
                 var msg=i18nd("lliurex-easy-sites","Unable to rename the site. Old site not exists")
                 break;
-            case -15:
+            case -4:
                 var msg=i18nd("lliurex-easy-sites","Unable to rename the site due to problems in process")
                 break;
-            case -16:
-                var msg=i18nd("lliurex-easy-sites","Unable to create the link template for the site")
-                break;
-            case -17:
+            case -5:
                 var msg=i18nd("lliurex-easy-sites","Unable to create the icon for the site")
                 break;
-            case -18:
+            case -6:
                 var msg=i18nd("lliurex-easy-sites","Unable to create the symbolic link for the site")
                 break;                
-            case -19:
-                var msg=i18nd("lliurex-easy-sites","Unabled to change the visibility of the site")
-                break;
-            case -21:
+            case -7:
                 var msg=i18nd("lliurex-easy-sites","Error reading configuration files of the sites")
                 break;
-            case -23:
+            case -8:
                 var msg=i18nd("lliurex-easy-sites","Error writing changes in the site configuration file")
                 break;
-            case -30:
+            case -9:
                 var msg=i18nd("lliurex-easy-sites","Unable to edit the site")
                 break;
-            case -31:
+            case -10:
                 var msg=i18nd("lliurex-easy-sites","Error removing all sites")
                 break;
-            case -32:
+            case -11:
                 var msg=i18nd("lliurex-easy-sites","Error showing all sites")
                 break;
-            case -33:
+            case -12:
                 var msg=i18nd("lliurex-easy-sites","Error hiding all sites")
                 break;
-            case -37:
-                var msg=i18nd("lliurex-easy-sites","Error reading configuration files of the sites")
+            case -13:
+                var msg=i18nd("lliurex-easy-sites","Unable to mount content for the site")
                 break;
-            case -39:
-                var msg=i18nd("lliurex-easy-sites","Unable to sync the content")
+            case -14:
+                var msg=i18nd("lliurex-easy-sites","Unable to unmount content for the site")
                 break;
-            case -40:
-                var msg=i18nd("lliurex-easy-sites","Unable to send site icon to server")
+            case -15:
+                var msg=i18nd("lliurex-easy-sites","Unable to configure automatic content mount for the site")
                 break;
-            case -41:
+            case -16:
+                var msg=i18nd("lliurex-easy-sites","Unable to disable automatic content mount for the site")
+                break;
+            case -17:
+                var msg=i18nd("lliurex-easy-sites","Unable to show site")
+                break;
+            case -18:
+                var msg=i18nd("lliurex-easy-sites","Unable to hide site")
+                break;
+            case -24:
                 var msg=i18nd("lliurex-easy-sites","Unable to generate icon for the site")
                 break;
-            case 6:
-                var msg=i18nd("lliurex-easy-sites","Site is now visible again")
-                break;
-            case 7:
-                var msg=i18nd("lliurex-easy-sites","Site has been hideen")
-                break;
-            case 8:
-                var msg=i18nd("lliurex-easy-sites","The content has been synchronized successfully")
-                break;
-            case 9:
-                var msg=i18nd("lliurex-easy-sites","Site has been successfully deleted")
-                break;
-            case 10:
+            case 1:
                 var msg=i18nd("lliurex-easy-sites","Site has been successfully edited")
                 break;
-            case 11:
+            case 2:
                 var msg=i18nd("lliurex-easy-sites","Site has been successfully created")
                 break;
-            case 12:
+            case 3:
+                var msg=i18nd("lliurex-easy-sites","Site has been successfully deleted")
+                break;
+             case 4:
                 var msg=i18nd("lliurex-easy-sites","All sites have been successfully removed")
                 break;
-            case 13:
+            case 5:
                 var msg=i18nd("lliurex-easy-sites","All sites are now visible again")
                 break;
-            case 14:
+            case 6:
                 var msg=i18nd("lliurex-easy-sites","All sites have been hidden successfully")
+                break;
+            case 7:
+                var msg=i18nd("lliurex-easy-sites","Content copied successfully")
+                break;
+            case 8:
+                var msg=i18nd("lliurex-easy-sites","Content mounted successfully")
+                break;
+            case 9:
+                var msg=i18nd("lliurex-easy-sites","Content unmounted successfully")
+                break;
+            case 10:
+                var msg=i18nd("lliurex-easy-sites","Automatic content mount enable successfully")
+                break;
+            case 11:
+                var msg=i18nd("lliurex-easy-sites","Automatic content mount disable successfully")
+                break;
+            case 12:
+                var msg=i18nd("lliurex-easy-sites","Site is now visible")
+                break;
+            case 13:
+                var msg=i18nd("lliurex-easy-sites","Site is now hidden")
                 break;
             default:
                 var msg=""
