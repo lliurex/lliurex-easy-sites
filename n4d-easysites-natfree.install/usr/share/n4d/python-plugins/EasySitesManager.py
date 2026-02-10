@@ -6,6 +6,7 @@ import codecs
 import shutil
 import n4d.responses
 import configparser
+from pathlib import Path
 
 class EasySitesManager:
 
@@ -151,6 +152,7 @@ class EasySitesManager:
 		else:
 			result={'status':False,'msg':"Unable to create site","code":result["code"],"data":""}
 
+		self._clean_folder()
 		return n4d.responses.build_successful_call_response(result)
 			
 	#def create_new_site
@@ -227,7 +229,8 @@ class EasySitesManager:
 
 		if result["status"]:
 			ret=self._create_sites_html()
-
+			
+		self._clean_folder()
 		return n4d.responses.build_successful_call_response(result)
 
 	#def edit_site		
@@ -248,13 +251,14 @@ class EasySitesManager:
 				symlink="easy-"+siteId
 				symlink_path=os.path.join(self.var_folder,symlink)		
 				if os.path.exists(symlink_path):
-					os.remove(symlink_path)
+					os.unlink(symlink_path)
 
 				site_folder="easy-"+siteId
 				site_folder_path=os.path.join(self.net_folder,site_folder)	
 				if os.path.exists(site_folder_path):
 					shutil.rmtree(site_folder_path)
 
+				self._clean_folder()
 				return self._delete_site_conf(siteId,createHtml)
 			else:
 				return n4d.responses.build_successful_call_response(ret)
@@ -572,8 +576,7 @@ class EasySitesManager:
 				if origId!=None:
 					old_symlink="easy-"+origId
 					old_symlink_path=os.path.join(self.var_folder,old_symlink)
-					if os.path.exists(old_symlink_path):
-						os.unlink(old_symlink_path)
+					os.unlink(old_symlink_path)
 
 			result={"status":True,"msg":"link to /net create successfully","code":"","data":""}
 
@@ -838,6 +841,21 @@ class EasySitesManager:
 				return False
 
 	#def _get_systemdUnit_status
+	
+	def _clean_folder(self):
+		
+		if os.path.exists(self.var_folder):
+			try:
+				folder_to_clean=Path(self.var_folder)
+				for path in folder_to_clean.iterdir():
+					if path.is_symlink() and not path.exists():
+						path.unlink(missing_ok=True)
+			except:
+				pass
+					
+	#def _clean_folder
+		
+		
 
 #class SiteManager					
 	
