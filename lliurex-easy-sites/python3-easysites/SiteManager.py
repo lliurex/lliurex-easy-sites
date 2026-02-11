@@ -20,21 +20,20 @@ from jinja2 import Environment
 from jinja2.loaders import FileSystemLoader
 from jinja2 import Template
 
-
+import psutil
+from pathlib import Path
 
 class SiteManager(object):
 
-	SITE_NAME_MISSING_ERROR=-1
-	SITE_NAME_DUPLICATE_ERROR=-2
-	IMAGE_FORMART_ERROR=-5
-	IMAGE_FILE_MISSING_ERROR=-7
-	FOLDER_TOSYNC_MISSING_ERROR=-8
-	SCP_CONTENT_TOSERVER_ERROR=-39
-	SCP_FILE_TOSERVER_ERROR=-40
-	SITE_ICON_ERROR=-41
+	SITE_NAME_MISSING_ERROR=-19
+	SITE_NAME_DUPLICATE_ERROR=-20
+	IMAGE_FORMART_ERROR=-21
+	IMAGE_FILE_MISSING_ERROR=-22
+	FOLDER_TOSYNC_MISSING_ERROR=-23
+	SITE_ICON_ERROR=-24
+	FREE_SPACE_ERROR=-25
 
 	ALL_DATA_CORRECT=0
-	SYNC_CONTENT_CORRECT=8
 
 	def __init__(self,server=None):
 
@@ -52,24 +51,13 @@ class SiteManager(object):
 		self.tmpIconPath="/tmp/easy-"
 		self.loadError=False
 		self.origImagePath=""
-		self.detectFlavour()
+		self.systemdPath="/etc/systemd/system"
+		self.sitesIconsFolder="/var/www/easy-sites/icons"
 		self._getSystemLocale()
-		self.initValues()	
+		self.initValues()
 	
 	#def __init__	
 	
-	def detectFlavour(self):
-		
-		cmd='lliurex-version -v'
-		p=subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
-		result=p.communicate()[0]
-
-		if type(result) is bytes:
-			result=result.decode()
-		self.flavours = [ x.strip() for x in result.split(',') ]
-
-	#def detect_flavour
-
 	def createN4dClient(self,ticket,passwd):
 
 		ticket=ticket.replace('##U+0020##',' ')
@@ -112,6 +100,10 @@ class SiteManager(object):
 		self.siteUrl=""
 		self.isSiteVisible=True
 		self.origImagePath=""
+		self.mountUnit=False
+		self.canMount=False
+		self.autoMount="disable"
+		self.freeSpaceChecked=[]
 		
 		self.currentSiteConfig={}
 		self.currentSiteConfig["id"]=self.siteToLoad
@@ -123,12 +115,16 @@ class SiteManager(object):
 		self.currentSiteConfig["site_folder"]=self.siteFolder
 		self.currentSiteConfig["sync_folder"]=""
 		self.currentSiteConfig["url"]=self.siteUrl
+		self.currentSiteConfig["icon"]=""
 		self.currentSiteConfig["visibility"]=self.isSiteVisible
 		self.currentSiteConfig["author"]=""
 		self.currentSiteConfig["updated_by"]=""
 		self.currentSiteConfig["date_creation"]=""
 		self.currentSiteConfig["last_update"]=""
-	
+		self.currentSiteConfig["mountUnit"]=self.mountUnit
+		self.currentSiteConfig["systemdUnit"]=None
+		self.currentSiteConfig["auto_mount"]=self.autoMount
+
 	#def initValues		
 
 	def readConf(self):
@@ -155,11 +151,25 @@ class SiteManager(object):
 			tmp["url"]=self.sitesConfig[item]["url"]
 			tmp["folder"]=self.sitesConfig[item]["site_folder"]
 			tmp["isVisible"]=self.sitesConfig[item]["visibility"]
+			tmp["mountUnit"]=self.sitesConfig[item]["mountUnit"]
 			if self.sitesConfig[item]["image"]["option"]=="stock":
-				tmp["img"]=os.path.join(self.stockImagesFolder,"custom.png")
+				tmp["img"]=self.sitesConfig[item]["image"]["img_path"]
 			else:
 				tmp["img"]=self._getImageFromSite(self.sitesConfig[item]["image"]["img_path"])
 
+			if os.path.exists(self.sitesConfig[item]["sync_folder"]):
+				self.canMount=True
+			else:
+				self.canMount=False
+			
+			tmp["canMount"]=self.canMount
+			
+			if tmp["mountUnit"]:
+				isActive=self._getSystemdUnitStatus(self.sitesConfig[item]["systemdUnit"])
+				tmp["isActive"]=isActive
+			else:
+				tmp["isActive"]=False
+			
 			self.sitesConfigData.append(tmp)
 
 	#def _getSitesConfig
@@ -171,29 +181,31 @@ class SiteManager(object):
 		self.origImagePath=self.currentSiteConfig["image"]["img_path"]
 
 		self.siteName=self.currentSiteConfig["name"]
+		
 		if self.currentSiteConfig["image"]["option"]=="stock":
 			error=False
 			imgPath=self.currentSiteConfig["image"]["img_path"]
 		else:
-			if "http:" in self.currentSiteConfig["image"]["img_path"]:
-				imgName=self.currentSiteConfig["image"]["img_path"].split("/.")[1]
-			else:
-				imgName=self.currentSiteConfig["image"]["img_path"].split("/")[-1]
-
-			if os.path.exists(os.path.join(self.imageDir,imgName)):
-				error=False
-				imgPath=os.path.join(self.imageDir,imgName)
-			else:
+			error=False
+			imgPath=self.currentSiteConfig["image"]["img_path"]
+			if not os.path.exists(imgPath):
 				error=True
 				imgPath=os.path.join(self.stockImagesFolder,"no_disp.png")
-
 			self.currentSiteConfig["image"]["img_path"]=imgPath
-
+		
 		self.siteImage=[self.currentSiteConfig["image"]["option"],imgPath,error]
 		self.siteDescription=self.currentSiteConfig["description"]
 		self.siteFolder=self.currentSiteConfig["sync_folder"]
 		self.isSiteVisible=self.currentSiteConfig["visibility"]
-		
+		self.mountUnit=self.currentSiteConfig["mountUnit"]
+		self.autoMount=self.currentSiteConfig["auto_mount"]
+		if os.path.exists(self.currentSiteConfig["sync_folder"]):
+			self.canMount=True
+		else:
+			self.canMount=False
+
+		self.freeSpaceChecked=[]
+
 	#def loadSiteConfig
 
 	def saveData(self,action,data,completeData=True):
@@ -202,96 +214,89 @@ class SiteManager(object):
 		error=False
 
 		result={}
-		
+				
 		if action in ["add","edit"]:
 			info=data[0]
-		elif action in ["sync","visibility"]:
+	
+		elif action in ["sync","visibility","mount"]:
 			info=self.sitesConfig[data[0]]
+			'''
 			if self.origImagePath!="":
 				info["image"]["img_path"]=self.origImagePath
-		
+			'''
 		if completeData:
 			newImage=info["image"]["img_path"]
 			info.update(self._formatData(info,action))
+			if info["mountUnit"]:
+				info["systemdUnit"]=self._getSystemdUnitName(info["site_folder"])
+			else:
+				info["systemdUnit"]=None
+		
 		
 		if action=="add" or action=="edit":
-
 			requiredSync=data[1]
 			generateSiteIcon=False
 			
 			if action=="add":
 				generateSiteIcon=True
+				info["icon"]="easy-%s.png"%info["id"]
 			else:
 				if info["id"]!=self.currentSiteConfig["id"]:
 					generateSiteIcon=True
+					info["icon"]="easy-%s.png"%info["id"]
 				else:
 					currentImg=os.path.basename(self.currentSiteConfig["image"]["img_path"])
 					if os.path.basename(newImage)!=currentImg:
 						generateSiteIcon=True
 	
-			siteIconPath="%s%s.png"%(self.tmpIconPath,info["id"])
-
 			if generateSiteIcon:
+				siteIconPath="%s%s.png"%(self.tmpIconPath,info["id"])
 				result=self._generateSiteIcon(siteIconPath,newImage)
 			else:
+				siteIconPath=None
 				result["status"]=True
 			
 			if result["status"]:
 				if action=="add":			
 					result=self.client.EasySitesManager.create_new_site(info,siteIconPath)
-					if result['status']:
-						resultSync=self.syncContent(info["id"],info["sync_folder"])
-						if resultSync['status']:
-							if info["image"]["option"]=="custom":
-								self.copyImageFile(info["id"],newImage)
-						else:
-							self.client.EasySitesManager.delete_site(info["id"])	
-							result=resultSync
+					if not result['status']:
+						self.client.EasySitesManager.delete_site(info["id"],info["systemdUnit"])	
 					
-					self.removeTmpFiles(siteIconPath)		
+					self._removeTmpFiles(siteIconPath)		
 					
 					self._debug("Create new site: ",result)
 
 				elif action=="edit":	
 					confirmEdit=True
 					origId=self.currentSiteConfig["id"]
-					result=self.client.EasySitesManager.edit_site(info,siteIconPath,origId)
-					if result['status']:
-						if requiredSync:
-							resultSync=self.syncContent(info["id"],info["sync_folder"])
-							if not resultSync['status']:
-								confirmEdit=False
-								result=resulSync
-						if confirmEdit:
-							if info["image"]["option"]=="custom":
-								if newImage!=os.path.basename(self.currentSiteConfig["image"]["img_path"]):
-									self.copyImageFile(info["id"],newImage)
-
-					self.removeTmpFiles(siteIconPath)
+					result=self.client.EasySitesManager.edit_site(info,siteIconPath,origId,requiredSync)
+					self._removeTmpFiles(siteIconPath)
 
 					self._debug("Edit new site: ",result)
 
 		elif action=="delete":
 			siteId=data
-			result=self.client.EasySitesManager.delete_site(siteId)
+			result=self.client.EasySitesManager.delete_site(siteId,self.sitesConfig[siteId]["systemdUnit"])
 			self._debug("Delete site: ",result)
 
 		elif action=="visibility":
 			info["visibility"]=data[1]
-			visible=data[1]
-			result=self.client.EasySitesManager.change_site_visibility(info,visible)
+			result=self.client.EasySitesManager.change_site_visibility(info)
+			
 			self._debug("Change visibility: ",result)
 
+		elif action=="mount":
+			systemdUnit=info["systemdUnit"]
+			action=data[1]
+			result=self.client.EasySitesManager.manage_systemd_status(systemdUnit,action)
+
+			self._debug("Change mount status: ",result)
+		
 		elif action=="sync":
 			siteId=data[0]
 			syncFrom=data[1]
-			info["sync_folder"]=data[1]
-			result=self.syncContent(siteId,syncFrom)
+			result=self.client.EasySitesManager.sync_content(siteId,syncFrom)
 
-			if result['status']:
-				resultWrite=self.client.EasySitesManager.write_conf(info)
-				if not resultWrite['status']:
-					result=resultWrite
 			self._debug("Sync new content: ",result)
 		
 		if result["status"]:
@@ -320,7 +325,6 @@ class SiteManager(object):
 			if checkDuplicates:		
 				if data["id"] in sitesKeys:
 					return {"result":False,"code":SiteManager.SITE_NAME_DUPLICATE_ERROR,"data":""}
-			 			
 							
 		if not edit:
 			if data["sync_folder"]==None or data["sync_folder"]=="":
@@ -332,6 +336,10 @@ class SiteManager(object):
 				
 			else:
 				return {"result":False,"code":SiteManager.IMAGE_FILE_MISSING_ERROR,"data":""}
+		
+		if not data["mountUnit"]:
+			if len(self.freeSpaceChecked)>0 and not self.freeSpaceChecked[0]:
+				return {"result":False,"code":SiteManager.FREE_SPACE_ERROR,"data":""}
 		
 		if checkImage==None:
 			return {"result":True,"code":SiteManager.ALL_DATA_CORRECT,"data":""}
@@ -370,54 +378,17 @@ class SiteManager(object):
 
 	#def getSiteId
 
-	'''
-	def copySiteIconFile(self,siteIconPath):
-		
-		result={}
-		result['status']=True
-		
-		try:
-			copyPixBuf=self.localClient.ScpManager.send_file(self.credentials[0],self.credentials[1],self.serverIP,siteIconPath,"/tmp/")
-			return result
-		except n4d.client.CallFailedError as e:
-			result['status']=False
-			result['msg']=e
-			result['code']=SiteManager.SCP_FILE_TOSERVER_ERROR
-			return result
-
-	#def copySiteIconFile	
-	'''
-	def removeTmpFiles(self,siteIconPath):
+	def _removeTmpFiles(self,siteIconPath):
 	
-		if os.path.exists(siteIconPath):
-			os.remove(siteIconPath)
+		if siteIconPath!=None:
+			if os.path.exists(siteIconPath):
+				os.remove(siteIconPath)
 	
-	#def removeTmpFiles		
-
-	def syncContent(self,siteId,sync_from):
-		
-		destSite="easy-"+siteId
-		destSitePath=os.path.join(self.netFolder,destSite)
-		result={}
-		result['status']=True
-		result['code']=SiteManager.SYNC_CONTENT_CORRECT
-
-		try:
-			syncContent=self.client.EasySitesManager.sync_site_content(sync_from,destSitePath)
-			return result
-		except n4d.client.CallFailedError as e:
-			result['status']=False
-			result['msg']=e
-			result['code']=SiteManager.SCP_CONTENT_TOSERVER_ERROR
-			return result
-		
-	#def syncContent
-
-	def copyImageFile(self,siteId,copy_image):
+	#def _removeTmpFiles		
+	
+	def _copyImageFile(self,siteId,copy_image):
 
 		imageName=os.path.basename(copy_image)
-		if not os.path.exists(os.path.join(self.imageDir,imageName)):
-			shutil.copy(copy_image,self.imageDir)
 		tmpImage="."+imageName
 		destSite="easy-"+siteId
 		destSitePath=os.path.join(self.netFolder,destSite)
@@ -427,7 +398,7 @@ class SiteManager(object):
 		except n4d.client.CallFailedError as e:
 			pass
 	
-	#def copyImageFile
+	#def _copyImageFile
 
 	def _formatData(self,data,action):
 
@@ -444,7 +415,7 @@ class SiteManager(object):
 			if "no_disp" in imgBasename:
 				tmp["image"]["img_path"]=self.origImagePath
 			else:
-				tmp["image"]["img_path"]="%s/.%s"%(tmp["url"],imgBasename)
+				tmp["image"]["img_path"]="%s/easy-%s.png"%(self.sitesIconsFolder,data["id"])
 
 		if action=="add":
 			tmp["author"]=self.credentials[0]
@@ -511,22 +482,10 @@ class SiteManager(object):
 
 	def _getImageFromSite(self,imgPath):
 
-		imgFile=imgPath.split("/.")[1]
-		localImgPath=os.path.join(self.imageDir,imgFile)
-
-		if os.path.exists(localImgPath):
-			return localImgPath
+		if os.path.exists(imgPath):
+			return imgPath
 		else:
-			try:
-				req=urllib2.Request(imgPath)
-				res=urllib2.urlopen(req)
-				f=open(localImgPath,"wb")
-				f.write(res.read())
-				f.close()
-				return localImgPath
-			except Exception as e:
-				return os.path.join(self.stockImagesFolder,"no_disp.png")
-
+			return os.path.join(self.stockImagesFolder,"no_disp.png")
 
 	#def _getImageFromSite	
 
@@ -596,6 +555,61 @@ class SiteManager(object):
 		return result
 
 	#def changeAllSiteStatus
+
+	def checkFreeSpace(self,syncFrom):
+
+		freeSpaceBytes=psutil.disk_usage("/").free
+		freespaceGb=round(psutil.disk_usage("/").free/(1024**3),2)
+		folderToCheck=Path(syncFrom)
+		sizeOfContentBytes=sum(f.stat().st_size for f in folderToCheck.rglob('*') if f.is_file())
+		sizeOfContentGb=round(sum(f.stat().st_size for f in folderToCheck.rglob('*') if f.is_file())/(1024**3),2)
+
+		canCopy=True
+		self.freeSpaceChecked=[]
+
+		if sizeOfContentGb<0.1:
+			sizeOfContent="%s MB"%str(round(sum(f.stat().st_size for f in folderToCheck.rglob('*') if f.is_file())/(1024**2),2))
+		else:
+			sizeOfContent="%s GB"%str(sizeOfContentGb)
+
+		
+		sizeAfterCopy=round((freeSpaceBytes-sizeOfContentBytes)/(1024**3),2)
+
+		if freespaceGb<5 or sizeAfterCopy<5:
+			canCopy=False
+		
+		self.freeSpaceChecked.append(canCopy)
+		self.freeSpaceChecked.append(sizeOfContent)
+		self.freeSpaceChecked.append("%s GB"%str(freespaceGb))
+		self.freeSpaceChecked.append("%s GB"%str(sizeAfterCopy))
+
+		return self.freeSpaceChecked
+
+	#def getFreeSpace
+
+	def _getSystemdUnitName(self,siteFolder):
+
+		try:
+			result=subprocess.run(['systemd-escape','-p','--suffix=mount',siteFolder],capture_output=True,text=True,check=True)
+			return result.stdout.strip().replace("'","")
+		except subprocess.CalledProcessError as e:
+			return None
+
+	#def _getSystemdUnitName
+
+	def _getSystemdUnitStatus(self,systemdUnit):
+
+		if os.path.exists(os.path.join(self.systemdPath,systemdUnit)):
+			try:
+				result=subprocess.run(["systemctl","is-active","--quiet", systemdUnit])
+				if result.returncode==0:
+					return True
+				else:
+					return False
+			except Exception as e:
+				return False
+
+	#def _getSystemdUnitStatus
 
 
 #class SiteManager

@@ -60,18 +60,25 @@
                 "teachers"
             ]
         },
-        "sync_site_content":{
+        "sync_content":{
             "allowed_groups":[
                 "sudo",
                 "admins",
                 "teachers"
             ]
         },
-        "copy_image_to_site":{
+        "manage_systemd_status":{
             "allowed_groups":[
                 "sudo",
                 "admins",
-                "teachers"
+                "teachers"    
+            ]
+        },
+        "manage_auto_mount":{
+           "allowed_groups":[
+                "sudo",
+                "admins",
+                "teachers"    
             ]
         }
     }

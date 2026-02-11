@@ -36,7 +36,7 @@ Popup {
         id:container
         color: "#ebeced"
         implicitWidth: dialogWidth
-        implicitHeight: 120
+        implicitHeight: 130
         anchors.topMargin:5
         anchors.leftMargin:5
 
@@ -53,6 +53,9 @@ Popup {
             anchors.left:dialogIcon.right
             anchors.verticalCenter:dialogIcon.verticalCenter
             anchors.leftMargin:10
+            width: 400
+            height:50
+            wrapMode:Text.WordWrap
         
         }
       
