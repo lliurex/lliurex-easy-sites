@@ -39,14 +39,13 @@ Components.ItemDelegate{
 
             MouseArea{
                 id:mouseAreaItem
-                anchors.fill:parent
+                width:containerItem.width
+                height: menuItem.height
                 hoverEnabled:true
                 propagateComposedEvents:true
 
                 onEntered:{
-                    if (!optionsMenu.activeFocus){
-                        listSites.currentIndex=filterModel.visibleElements.indexOf(index)
-                    }
+                    listSites.currentIndex=filterModel.visibleElements.indexOf(index)
                 }
 
             }
@@ -70,9 +69,9 @@ Components.ItemDelegate{
                 spacing:10
                 width:{
                     if (listSiteItem.ListView.isCurrentItem){
-                        parent.width-(siteState.width+siteActive.width+manageSiteBtn.width+150)
+                        parent.width-(siteState.width+siteActive.width+manageSiteBtn.width+130)
                     }else{
-                        parent.width-(siteState.width+siteActive.width+130)
+                        parent.width-(siteState.width+siteActive.width+110)
                     }
                 }
                

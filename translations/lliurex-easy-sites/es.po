@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-09 10:51+0100\n"
-"PO-Revision-Date: 2026-02-09 10:52+0100\n"
+"POT-Creation-Date: 2026-02-11 08:27+0100\n"
+"PO-Revision-Date: 2026-02-11 08:28+0100\n"
 "Last-Translator: lliurex <lliurex@gva.es>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -17,230 +17,220 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.4.2\n"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/CustomPopUp.qml:53
+#: lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml:53
 msgid "Loading basic configuration. Wait a moment..."
 msgstr "Cargando configuración básica. Espere un momento..."
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/CustomPopUp.qml:56
+#: lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml:56
 msgid "Loading site info. Wait a moment..."
 msgstr "Cargando información del sitio. Espere un momento..."
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/CustomPopUp.qml:59
+#: lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml:59
 msgid "Validating the data entered. Wait a moment..."
 msgstr "Validando los datos introducidos. Espere un momento..."
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/CustomPopUp.qml:62
+#: lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml:62
 msgid "Saving the data entered. Wait a moment..."
 msgstr "Guardando los cambios. Espere un momento..."
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/CustomPopUp.qml:65
+#: lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml:65
 msgid "Hiding the site. Wait a moment..."
 msgstr "Ocultando el sitio. Espere un momento..."
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/CustomPopUp.qml:68
+#: lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml:68
 msgid "Showing the site. Wait a moment..."
 msgstr "Mostrando el sitio. Espere un momento..."
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/CustomPopUp.qml:71
+#: lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml:71
 msgid "Updating site content. Wait a moment..."
 msgstr "Actualizando el contenido del sitio. Espere un momento..."
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/CustomPopUp.qml:74
+#: lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml:74
 msgid "Deleting the site. Wait a moment..."
 msgstr "Borrando el sitio. Espere un momento..."
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/CustomPopUp.qml:77
+#: lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml:77
 msgid "Mounting site content. Wait a moment..."
 msgstr "Montando el contenido del sitio. Espere un momento..."
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/CustomPopUp.qml:80
+#: lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml:80
 msgid "Unmounting site content. Wait a moment..."
 msgstr "Desmontando el contenido del sitio. Espere un momento..."
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/CustomPopUp.qml:83
+#: lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml:83
 msgid "Showing all sites. Wait a moment..."
 msgstr "Mostrando todos los sitios. Espere un momento..."
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/CustomPopUp.qml:86
+#: lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml:86
 msgid "Hidding all sites. Wait a moment..."
 msgstr "Ocultando todos los sitios. Espere un momento..."
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/CustomPopUp.qml:89
+#: lliurex-easy-sites/python3-easysites/rsrc/CustomPopUp.qml:89
 msgid "Deleting all sites. Wait a moment..."
 msgstr "Borrando todos los sitios. Espere un momento..."
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ImageSelector.qml:31
+#: lliurex-easy-sites/python3-easysites/rsrc/ImageSelector.qml:35
 msgid "Edit image for site"
 msgstr "Editar la imagen para el sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ImageSelector.qml:44
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:452
+#: lliurex-easy-sites/python3-easysites/rsrc/ImageSelector.qml:48
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:451
 msgid "Image file is not correct"
 msgstr "El fichero para la imagen no es correcto"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ImageSelector.qml:74
+#: lliurex-easy-sites/python3-easysites/rsrc/ImageSelector.qml:78
 msgid "From stock"
 msgstr "Por defecto"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ImageSelector.qml:100
+#: lliurex-easy-sites/python3-easysites/rsrc/ImageSelector.qml:104
 msgid "Custom image"
 msgstr "Imagen personalizada"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ImageSelector.qml:145
+#: lliurex-easy-sites/python3-easysites/rsrc/ImageSelector.qml:149
 msgid "Click to select an image"
 msgstr "Haga clic para seleccionar una imagen"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ImageSelector.qml:163
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:291
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:345
+#: lliurex-easy-sites/python3-easysites/rsrc/ImageSelector.qml:167
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:292
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:347
 msgid "Apply"
 msgstr "Aplicar"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ImageSelector.qml:190
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:305
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:349
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:385
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:119
+#: lliurex-easy-sites/python3-easysites/rsrc/ImageSelector.qml:194
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:306
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:351
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:386
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:117
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ListDelegateSiteItem.qml:85
+#: lliurex-easy-sites/python3-easysites/rsrc/ListDelegateSiteItem.qml:89
 msgid "Created by:"
 msgstr "Creado por:"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ListDelegateSiteItem.qml:85
+#: lliurex-easy-sites/python3-easysites/rsrc/ListDelegateSiteItem.qml:89
 msgid "Updated by:"
 msgstr "Actualizado por:"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ListDelegateSiteItem.qml:127
+#: lliurex-easy-sites/python3-easysites/rsrc/ListDelegateSiteItem.qml:131
 msgid "Click to manage this site"
 msgstr "Haga clic para gestionar este sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ListDelegateSiteItem.qml:140
+#: lliurex-easy-sites/python3-easysites/rsrc/ListDelegateSiteItem.qml:144
 msgid "Hide site"
 msgstr "Ocultar el sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ListDelegateSiteItem.qml:140
+#: lliurex-easy-sites/python3-easysites/rsrc/ListDelegateSiteItem.qml:144
 msgid "Show site"
 msgstr "Mostrar sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ListDelegateSiteItem.qml:145
+#: lliurex-easy-sites/python3-easysites/rsrc/ListDelegateSiteItem.qml:149
 msgid "Open site in browser"
 msgstr "Abrir el sitio en el navegador"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ListDelegateSiteItem.qml:150
+#: lliurex-easy-sites/python3-easysites/rsrc/ListDelegateSiteItem.qml:154
 msgid "Open folder"
 msgstr "Abrir carpeta del sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ListDelegateSiteItem.qml:156
+#: lliurex-easy-sites/python3-easysites/rsrc/ListDelegateSiteItem.qml:160
 msgid "Sync new content"
 msgstr "Sincronizar nuevo contenido"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ListDelegateSiteItem.qml:172
+#: lliurex-easy-sites/python3-easysites/rsrc/ListDelegateSiteItem.qml:176
 msgid "Unmount site content"
 msgstr "Desmontar el contenido del sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ListDelegateSiteItem.qml:172
+#: lliurex-easy-sites/python3-easysites/rsrc/ListDelegateSiteItem.qml:176
 msgid "Mount site content"
 msgstr "Montar el contenido del sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ListDelegateSiteItem.qml:192
+#: lliurex-easy-sites/python3-easysites/rsrc/ListDelegateSiteItem.qml:196
 msgid "Edit site"
 msgstr "Editar el sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/ListDelegateSiteItem.qml:197
+#: lliurex-easy-sites/python3-easysites/rsrc/ListDelegateSiteItem.qml:201
 msgid "Delete the site"
 msgstr "Borrar el sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/LoadWaiting.qml:40
+#: lliurex-easy-sites/python3-easysites/rsrc/LoadWaiting.qml:40
 msgid "Loading. Wait a moment..."
 msgstr "Cargando. Espere un momento..."
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/LoadWaiting.qml:61
+#: lliurex-easy-sites/python3-easysites/rsrc/LoadWaiting.qml:61
 msgid "Unabled to read sites configuration file"
 msgstr "No es leer los archivos de configuración de los sitios"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/LoadWaiting.qml:64
+#: lliurex-easy-sites/python3-easysites/rsrc/LoadWaiting.qml:64
 msgid "Unabled to create a site with selected folder"
 msgstr "No es posible crear el sitio con la carpeta seleccionada"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/MainOptions.qml:25
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteOptions.qml:18
+#: lliurex-easy-sites/python3-easysites/rsrc/MainOptions.qml:25
 msgid "Sites"
 msgstr "Sitios"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/MainOptions.qml:37
+#: lliurex-easy-sites/python3-easysites/rsrc/MainOptions.qml:37
 msgid "Help"
 msgstr "Ayuda"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:16
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:17
 msgid "New Site"
 msgstr "Nuevo sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:19
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:20
 msgid "Edit Site"
 msgstr "Editar sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:54
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:55
 msgid "Name:"
 msgstr "Nombre:"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:87
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:88
 msgid "Clic to edit the image"
 msgstr "Haga clic editar la imagen"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:116
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:117
 msgid "Description:"
 msgstr "Descripción:"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:132
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:133
 msgid "Get content from:"
 msgstr "Obtener contenido de:"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:145
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:146
 msgid "<specify the folder to get content>"
 msgstr "<especificar la carpeta para obtener el contenido>"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:170
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:171
 msgid "Click to select folder"
 msgstr "Haga clic para seleccionar una carpeta"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:191
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:192
 msgid "Copy selected content to site folder"
 msgstr "Copiar el contenido seleccionado en la carpeta del sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:209
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:210
 msgid "Mount selected content in site folder"
 msgstr "Montar el contenido seleccionado en la carpeta del sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:227
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:228
 msgid "Content mount:"
 msgstr "Montaje del contenido:"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:236
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:237
 msgid "Automatic mounting at system startup"
 msgstr "Montar automáticamente en el arranque del equipo"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:258
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:259
 msgid "State:"
 msgstr "Estado:"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:264
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:265
 msgid "Site visible in server main page"
 msgstr "Sitio visible en la página principal del servidor"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:340
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:402
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:426
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteOptions.qml:40
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:136
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:160
-msgid "Site"
-msgstr "Sitio"
-
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:342
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:344
 msgid ""
 "The are pending changes to save.\n"
 "Do you want save the changes or discard them?"
@@ -248,17 +238,12 @@ msgstr ""
 "Hay cambios pendientes de guardar.\n"
 "¿Desea guardar los cambios o descartarlos?"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:346
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:348
 msgid "Discard"
 msgstr "Descartar"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:370
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:104
-msgid "Site List"
-msgstr "Lista de sitios"
-
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:373
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:107
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:374
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:105
 msgid ""
 "All sites will be deleted.\n"
 "Do yo want to continue?"
@@ -266,8 +251,8 @@ msgstr ""
 "Se van a borrar todos los sitios.\n"
 "¿Desea continuar?"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:375
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:109
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:376
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:107
 msgid ""
 "The site will be deleted.\n"
 "Do yo want to continue?"
@@ -275,256 +260,262 @@ msgstr ""
 "Se va a borrar el sitio.\n"
 "¿Desea continuar?"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:382
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:116
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:383
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:114
 msgid "Accept"
 msgstr "Aceptar"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:404
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:428
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:138
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:162
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:404
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:427
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:135
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:158
 msgid "The size of selected content is "
 msgstr "El tamaño del contenido seleccionado es "
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:404
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:138
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:404
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:135
 msgid "If copied this content the available space on the system will be "
 msgstr ""
 "Si se copia este contenido el espacio disponible en el sistema será de "
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:404
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:138
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:404
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:135
 msgid "Do you want to continue?."
 msgstr "¿Desea continuar?."
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:408
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:142
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:408
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:139
 msgid "Yes"
 msgstr "Si"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:410
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:144
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:410
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:141
 msgid "No"
 msgstr "No"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:428
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:162
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:427
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:158
 msgid ""
 "If cannot be copied because the available space on the system would only be "
 msgstr ""
 "No puede copiarse porque el espacio disponible en el sistema sería sólo de "
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:428
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:162
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:427
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:158
 msgid "bellow the 5 GB security limit."
 msgstr "inferior al límite de seguridad de 5 GB."
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:432
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:166
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:431
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:162
 msgid "Close"
 msgstr "Cerrar"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:446
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:445
 msgid "You must indicate a name for the site"
 msgstr "Debe indicar un nombre para el sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:449
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:448
 msgid "The name site is duplicate"
 msgstr "El nombre del sitio esta duplicado"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:455
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:454
 msgid "You must indicate a image file"
 msgstr "Debe indicar un fichero para la imagen"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:458
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:457
 msgid "You must indicate a folder to sync content"
 msgstr "Debe indicar una carpeta para sincronizar su contenido"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SiteForm.qml:461
+#: lliurex-easy-sites/python3-easysites/rsrc/SiteForm.qml:460
 msgid "The selected content exceeds the available space limit"
 msgstr ""
 "El contenido seleccionado excede el límite de espacio disponible en el "
 "sistema"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesList.qml:32
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesList.qml:32
 msgid "Click to filter sites by status"
 msgstr "Haga clic para filtrar por estado"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesList.qml:42
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesList.qml:42
 msgid "Show visible sites"
 msgstr "Mostrar sitios visibles"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesList.qml:55
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesList.qml:55
 msgid "Show hidden sites"
 msgstr "Mostrar sitios ocultos"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesList.qml:67
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesList.qml:67
 msgid "Remove filter"
 msgstr "Eliminar filtro"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesList.qml:96
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesList.qml:96
 msgid "Search..."
 msgstr "Buscar..."
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesList.qml:160
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesList.qml:160
 msgid "No site is configured"
 msgstr "No hay sitios configurados"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesList.qml:162
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesList.qml:162
 msgid "No site found"
 msgstr "No se ha encontrado ningún sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:11
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:10
 msgid "Configured sites"
 msgstr "Sitios configurados"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:56
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:55
 msgid "Global Options"
 msgstr "Opciones globales"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:69
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:68
 msgid "Show all sites"
 msgstr "Mostrar todos los sitios"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:76
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:75
 msgid "Hide all sites"
 msgstr "Ocultar todos los sitios"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:83
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:82
 msgid "Delete alls sites"
 msgstr "Borrar todos los sitios"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:95
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:94
 msgid "New site"
 msgstr "Nuevo sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:180
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:176
 msgid "Unable to delete the site"
 msgstr "No es posible borrar el sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:183
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:179
 msgid "Unable to create folder to the site"
 msgstr "No es posible crear la carpeta para el sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:186
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:182
 msgid "Unable to rename the site. Old site not exists"
 msgstr "No es posible renombrar el sitio. El sitio antiguo no existe"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:189
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:185
 msgid "Unable to rename the site due to problems in process"
 msgstr "No es posible renombrar el sitio debido a problema en el proceso"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:192
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:188
 msgid "Unable to create the icon for the site"
 msgstr "No es posible crear el icono para el sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:195
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:191
 msgid "Unable to create the symbolic link for the site"
 msgstr "No es posible crear el enlace simbólico para el sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:198
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:194
 msgid "Error reading configuration files of the sites"
 msgstr "Error leyendo los ficheros de configuración de los sitios"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:201
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:197
 msgid "Error writing changes in the site configuration file"
 msgstr "Error escribiendo los cambios en el fichero de configuración del sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:204
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:200
 msgid "Unable to edit the site"
 msgstr "No es posible editar el sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:207
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:203
 msgid "Error removing all sites"
 msgstr "Se ha producido un error al borrar todos los sitios"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:210
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:206
 msgid "Error showing all sites"
 msgstr "Se ha producido un error al mostrar todos los sitios"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:213
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:209
 msgid "Error hiding all sites"
 msgstr "Se ha producido un error al ocultar todos los sitios"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:216
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:212
 msgid "Unable to mount content for the site"
 msgstr "No es posible montar el contenido para el sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:219
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:215
 msgid "Unable to unmount content for the site"
 msgstr "No es posible desmontar el contenido para el sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:222
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:218
 msgid "Unable to configure automatic content mount for the site"
 msgstr ""
 "No es posible activar el montaje automático del contenido para el sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:225
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:221
 msgid "Unable to disable automatic content mount for the site"
 msgstr ""
 "No es posible desactivar el montaje automático del contenido para el sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:228
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:224
 msgid "Unable to show site"
 msgstr "No es posible mostrar el sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:231
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:227
 msgid "Unable to hide site"
 msgstr "No es posible ocultar el sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:234
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:230
 msgid "Unable to generate icon for the site"
 msgstr "No es posible crear el icono para el sitio"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:237
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:233
 msgid "Site has been successfully edited"
 msgstr "El sitio se ha editado correctamente"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:240
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:236
 msgid "Site has been successfully created"
 msgstr "El sitio se ha creado correctamente"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:243
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:239
 msgid "Site has been successfully deleted"
 msgstr "El sitio se ha borrado correctamente"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:246
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:242
 msgid "All sites have been successfully removed"
 msgstr "Todos los sitios han sido borrados correctamente"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:249
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:245
 msgid "All sites are now visible again"
 msgstr "Todos los sitios ya son visibles de nuevo"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:252
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:248
 msgid "All sites have been hidden successfully"
 msgstr "Todos los sitios han sido ocultados correctamente"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:255
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:251
 msgid "Content copied successfully"
 msgstr "El contenido se ha copiado correctamente"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:258
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:254
 msgid "Content mounted successfully"
 msgstr "El contenido se ha montado correctamente"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:261
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:257
 msgid "Content unmounted successfully"
 msgstr "El contenido se ha desmontado correctamente"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:264
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:260
 msgid "Automatic content mount enable successfully"
 msgstr "El montaje automático del contenido se ha activado correctamente"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:267
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:263
 msgid "Automatic content mount disable successfully"
 msgstr "El montaje automático del contenido se ha desactivado correctamente"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:270
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:266
 msgid "Site is now visible"
 msgstr "El sitio ya es visible de nuevo"
 
-#: lliurex-easy-sites-natfree/python3-easysites/rsrc/SitesManager.qml:273
+#: lliurex-easy-sites/python3-easysites/rsrc/SitesManager.qml:269
 msgid "Site is now hidden"
 msgstr "El sitio ha sido ocultado"
+
+#~ msgid "Site"
+#~ msgstr "Sitio"
+
+#~ msgid "Site List"
+#~ msgstr "Lista de sitios"
