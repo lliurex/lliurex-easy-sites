@@ -1,6 +1,8 @@
 lliurex-easy-sites/lliurex-easy-sites /usr/sbin
 lliurex-easy-sites/lliurex-easy-sites-gui /usr/sbin
+lliurex-easy-sites/web/* /
 lliurex-easy-sites/data-files/images/* /usr/share/lliurex-easy-sites/images/
 lliurex-easy-sites/data-files/create-easy-site.desktop /usr/share/kio/servicemenus/
+lliurex-easy-sites/data-files/templates/* /usr/share/lliurex-easy-sites/templates/
 debian/output/usr/lib/python3.12/dist-packages/easysites /usr/lib/python3.12/dist-packages
 

@@ -15,7 +15,7 @@ Standards-Version: 4.1.2
 
 Package: lliurex-easy-sites
 Architecture: all
-Depends: n4d,n4d-lliurex-base,python3-jinja2,python3-n4d-client,python3-pil,python3-cairosvg, n4d-qt-agent, python3-pyside6.qtqml, python3-pyside6.qtquick, python3-pyside6.qtgui, python3-pyside6.qtwidgets, python3-pyside6.qtquickwidgets
+Depends: n4d,n4d-lliurex-base,python3-jinja2,python3-n4d-client,python3-pil,python3-cairosvg, n4d-qt-agent, python3-pyside6.qtqml, python3-pyside6.qtquick, python3-pyside6.qtgui, python3-pyside6.qtwidgets, python3-pyside6.qtquickwidgets, lliurex-apache-config, lliurex-firefox-settings (>= 0.25.6)
 Recommends:lliurex-easysites-zerocenter-files(=${binary:Version})
 Description: Contains lliurex-easy-sites
  This package contains the : lliurex-easy-sites gui
