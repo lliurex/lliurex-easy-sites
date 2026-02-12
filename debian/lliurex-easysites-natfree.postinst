@@ -1,0 +1,14 @@
+#!/bin/sh
+
+case "$1" in
+	configure)
+		newVersion=$(dpkg-query --showformat='${Version}' --show lliurex-easysites-natfree)
+      	tokenDir=/var/lib/lliurex-easysites-natfree/version
+      	echo "$newVersion" > "$tokenDir" || true
+		;;
+	*)
+		echo "Unknow action"
+		;;
+esac
+
+#DEBHELPER#

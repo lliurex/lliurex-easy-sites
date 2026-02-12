@@ -33,7 +33,7 @@ if __name__ == '__main__':
 	listdir_templates=map(lambda x:os.path.join('lliurex-easy-sites-natfree','data-files','templates',x),os.listdir('lliurex-easy-sites-natfree/data-files/templates'))
 
 
-	setup(name='lliurex-easy-sites-natfree',
+	setup(name='lliurex-easysites-natfree',
 		version='0.1',
 		description='Easy Sites',
 		long_description="""""",

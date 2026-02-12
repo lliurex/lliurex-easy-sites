@@ -20,7 +20,7 @@ class Tunnel(QObject):
 
 		clear=False
 		user=os.environ["USER"]
-		versionFile="/home/%s/.config/lliurex-easy-sites-natfree.conf"%user
+		versionFile="/home/%s/.config/lliurex-easysites-natfree.conf"%user
 		cachePath1="/home/%s/.cache/lliurex-easy-sites"%user
 		cachePath2="/home/%s/.cache/lliurex-easy-sites-gui"%user
 		installedVersion=self.getPackageVersion()
@@ -56,18 +56,15 @@ class Tunnel(QObject):
 
 	def getPackageVersion(self):
 
-		command = "LANG=C LANGUAGE=en apt-cache policy lliurex-easy-sites-natfree"
-		p = subprocess.Popen(command,shell=True,stdout=subprocess.PIPE)
-		installed = None
-		for line in iter(p.stdout.readline,b""):
-			if type(line) is bytes:
-				line=line.decode()
+		installedVersion="/var/lib/lliurex-easysites-natfree/version"
+		pkgVersion=""
 
-			stripedline = line.strip()
-			if stripedline.startswith("Installed"):
-				installed = stripedline.replace("Installed: ","")
+		if os.path.exists(installedVersion):
+			with open(installedVersion,'r') as fd:
+				pkgVersion=fd.readline()
+				fd.close()
 
-		return installed
+		return pkgVersion				
 
 	#def getPackageVersion
 

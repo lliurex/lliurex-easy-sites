@@ -32,7 +32,7 @@ if __name__ == '__main__':
 	listdir=map(lambda x:os.path.join('lliurex-easy-sites','data-files','images',x),os.listdir('lliurex-easy-sites/data-files/images'))
 
 
-	setup(name='lliurex-easy-sites',
+	setup(name='lliurex-easysites',
 		version='0.1',
 		description='Easy Sites',
 		long_description="""""",
