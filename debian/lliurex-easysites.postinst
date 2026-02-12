@@ -2,8 +2,8 @@
 
 case "$1" in
 	configure)
-		newVersion=$(dpkg-query --showformat='${Version}' --show lliurex-easy-sites)
-		tokenDir=/var/lib/lliurex-easy-sites/version
+		newVersion=$(dpkg-query --showformat='${Version}' --show lliurex-easysites)
+		tokenDir=/var/lib/lliurex-easysites/version
 		echo "$newVersion" > "$tokenDir" || true
 		;;
 	*)
