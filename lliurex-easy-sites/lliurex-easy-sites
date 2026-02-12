@@ -56,7 +56,7 @@ class Tunnel(QObject):
 
 	def getPackageVersion(self):
 
-		installedVersion="/var/lib/lliurex-easysites-natfree/version"
+		installedVersion="/var/lib/lliurex-easysites/version"
 		pkgVersion=""
 
 		if os.path.exists(installedVersion):
