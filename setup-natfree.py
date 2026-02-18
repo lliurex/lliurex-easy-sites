@@ -26,13 +26,14 @@ import os
 
 if __name__ == '__main__':
 	
-	pinstaller = poinstaller.PoInstaller('translations/lliurex-easy-sites','lliurex-easy-sites','')
+	pinstaller = poinstaller.PoInstaller('translations/lliurex-easy-sites-natfree','lliurex-easy-sites','')
 	pinstaller.build()
 	polist = pinstaller.setup_install()
-	listdir=map(lambda x:os.path.join('lliurex-easy-sites','data-files','images',x),os.listdir('lliurex-easy-sites/data-files/images'))
+	listdir_images=map(lambda x:os.path.join('lliurex-easy-sites-natfree','data-files','images',x),os.listdir('lliurex-easy-sites-natfree/data-files/images'))
+	listdir_templates=map(lambda x:os.path.join('lliurex-easy-sites-natfree','data-files','templates',x),os.listdir('lliurex-easy-sites-natfree/data-files/templates'))
 
 
-	setup(name='lliurex-easysites',
+	setup(name='lliurex-easysites-natfree',
 		version='0.1',
 		description='Easy Sites',
 		long_description="""""",
@@ -45,11 +46,11 @@ if __name__ == '__main__':
 		license='GPL',
 		platforms='UNIX',
 		packages = ['easysites'],
-		package_dir = {'easysites':'lliurex-easy-sites/python3-easysites'},
+		package_dir = {'easysites':'lliurex-easy-sites-natfree/python3-easysites'},
 		package_data = {'easysites':['rsrc/*']},
-		data_files = [('sbin',['lliurex-easy-sites/lliurex-easy-sites']),('sbin',['lliurex-easy-sites/lliurex-easy-sites-gui']),
-			      ('share/kservices5/ServiceMenus',['lliurex-easy-sites/data-files/create-easy-site.desktop']),
-			      ('share/lliurex-easy-sites/images',listdir),
+		data_files = [('sbin',['lliurex-easy-sites-natfree/lliurex-easy-sites']),('sbin',['lliurex-easy-sites-natfree/lliurex-easy-sites-gui']),
+			      ('share/kservices5/ServiceMenus',['lliurex-easy-sites-natfree/data-files/create-easy-site.desktop']),
+			      ('share/lliurex-easy-sites/images',listdir_images),('share/lliurex-easy-sites/templates',listdir_templates)
 			      ] + polist ,
 		classifiers=[
 			'Development Status :: 4 - Beta',

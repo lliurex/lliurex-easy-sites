@@ -94,7 +94,7 @@ class EasySitesManager:
 				f=open(element_path)
 				try:
 					content=json.load(f)
-					siteId=element.split("-")[1].split(".")[0]
+					siteId=content["id"]
 					self.sites_config[siteId]=content
 					result=self._update_from_site_link(siteId)
 					if result["status"]:
