@@ -246,6 +246,7 @@ class SiteManager(object):
 		siteId=siteId.lower().replace(" ","_")
 		siteId=re.sub('[^\w\s-]', '', siteId).strip()
 		siteId=re.sub('[-\s]+', '-', siteId)
+		siteId=re.sub('[_\s]+', '_', siteId)
 
 		return siteId
 

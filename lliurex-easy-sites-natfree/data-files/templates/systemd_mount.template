@@ -1,0 +1,12 @@
+[Unit]
+Description=Montaje de unidad para easy-sites
+After=network.target
+
+[Mount]
+What={{ORIG_FOLDER}}
+Where={{DEST_FOLDER}}
+Type=none
+Options=bind
+
+[Install]
+WantedBy=multi-user.target
