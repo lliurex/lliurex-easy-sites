@@ -35,7 +35,7 @@ Description: Files to zero-center
 
 Package: lliurex-easysites-natfree
 Architecture: all
-Depends: n4d,n4d-lliurex-base,python3-jinja2,python3-n4d-client,python3-pil,python3-cairosvg, n4d-qt-agent, python3-pyside2.qtqml, python3-pyside2.qtquick, python3-pyside2.qtgui, python3-pyside2.qtwidgets, python3-pyside2.qtquickwidgets,lliurex-apache-config,n4d-easysites-natfree (>= 16.16.14.6), lliurex-firefox-settings (>= 0.22.1)
+Depends: n4d,n4d-lliurex-base,python3-jinja2,python3-n4d-client,python3-pil,python3-cairosvg, n4d-qt-agent, python3-pyside2.qtqml, python3-pyside2.qtquick, python3-pyside2.qtgui, python3-pyside2.qtwidgets, python3-pyside2.qtquickwidgets,lliurex-apache-config,n4d-easysites-natfree (>= 16.17), lliurex-firefox-settings (>= 0.23)
 Replaces: lliurex-easy-sites-natfree (<< 16.17)
 Breaks: lliurex-easy-sites-natfree (<< 16.17)
 Recommends:lliurex-easysites-zerocenter-files(=${binary:Version})
