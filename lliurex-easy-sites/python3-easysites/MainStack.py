@@ -174,9 +174,9 @@ class Bridge(QObject):
 	def openHelp(self):
 		
 		if 'valencia' in self._systemLocale:
-			self.helpCmd='xdg-open https://wiki.edu.gva.es/lliurex/tiki-index.php?page=Easy+Sites.'
+			self.helpCmd='xdg-open https://wiki.edu.gva.es/lliurex/tiki-index.php?page=Easy-Sites-a-l%27aula-Lliurex-sense-servidor'
 		else:
-			self.helpCmd='xdg-open https://wiki.edu.gva.es/lliurex/tiki-index.php?page=Easy+Sites'
+			self.helpCmd='xdg-open https://wiki.edu.gva.es/lliurex/tiki-index.php?page=Easy-Sites-en-el-aula-LliureX-sin-servidor'
 		
 		self.openHelpT=threading.Thread(target=self._openHelp)
 		self.openHelpT.daemon=True
