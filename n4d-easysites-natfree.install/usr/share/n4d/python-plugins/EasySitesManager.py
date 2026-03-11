@@ -75,7 +75,11 @@ class EasySitesManager:
 				try:
 					content=json.load(f)
 					siteId=content["id"]
-					self.sites_config[siteId]=content
+					try:
+						test=content["mountUnit"]
+						self.sites_config[siteId]=content
+					except:
+						pass
 					f.close()
 				except:	
 					cont_errors+=1
